@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.12.RELEASE'
     id 'org.asciidoctor.convert' version '1.5.8'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'com.saiko'
@@ -17,6 +18,10 @@ ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
 
+jacoco {
+    toolVersion = '0.8.8'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -26,9 +31,20 @@ dependencies {
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
+}
+
+jacocoTestReport {
+    executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled false
+    }
 }
