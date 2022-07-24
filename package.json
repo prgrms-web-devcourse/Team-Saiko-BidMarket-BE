@@ -1,0 +1,14 @@
+{
+  "jira-prepare-commit-msg": {
+    "messagePattern": "[$J] $M",
+    "jiraTicketPattern": "([A-Z]+-\\d+)",
+    "commentChar": "#",
+    "isConventionalCommit": false,
+    "allowEmptyCommitMessage": false,
+    "gitRoot": ""
+  },
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "jira-prepare-commit-msg": "^1.6.2"
+  }
+}
