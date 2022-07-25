@@ -1,0 +1,24 @@
+name: Sonarqube
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'main'
+  pull_request:
+    branches:
+      - 'develop'
+      - 'main'
+
+jobs:
+  sonarqube:
+    runs-on: [self-hosted]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: ./gradle -Pprofile=ci sonarqube -x test
+          -Dsonar.github.pullRequest=${{ env.PR_NUMBER }}
+          -Dsonar.github.oauth=${{ secrets.SONAR_ACCESS_TOKEN }}
