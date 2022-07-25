@@ -9,10 +9,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.product.Category;
-import com.sun.istack.NotNull;
 
 @Entity
 public class Product extends BaseTime {
