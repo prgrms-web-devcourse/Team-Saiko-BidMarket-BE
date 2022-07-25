@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.product.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,9 @@ public class Image extends BaseTime {
   @NotNull
   private String url;
 
-  private boolean isThumbnail = false;
+  @NotNull
+  @Column(name = "\"order\"")
+  private int order;
 
   protected Image() {
   }
