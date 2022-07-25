@@ -2,34 +2,35 @@ name: Sonarqube
 
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  build:
-
-    runs-on: [ self-hosted ]
-
+  analysis:
+    runs-on: ubuntu-latest
+    env:
+      SONARQUBE_ID: test-pr
+      SONARQUBE_URL: ${{ secrets.SONARQUBE_URL }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Sonaqube Analysis
+        run: ./gradlew test sonarqube
+          -Dsonar.host.url=${{ env.SONARQUBE_URL }}
+          -Dsonar.projectKey=${{ env.SONARQUBE_ID }}
+          -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }}
+          -Dsonar.login=squ_e4012a0e9428914394dccbd9757579bab4c7f183
+
+      - name: Comment Sonarqube URL
+        uses: actions/github-script@v4
         with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew clean test
-
-  sonarqube:
-
-    runs-on: [ self-hosted ]
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: analysis
-        env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: ./gradlew -Pprofile=ci sonarqube -x test
-        -Dsonar.github.pullRequests=${{ env.PR_NUMBER }}
-        -Dsonar.github.oauth=${{ secret.SONAR_ACCESS_TOKEN }}
+          script: |
+            const { SONARQUBE_ID, SONARQUBE_URL, PR_NUMBER } = process.env
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📊 ${ SONARQUBE_ID }-${ PR_NUMBER } 분석 결과 확인 [링크](${SONARQUBE_URL})`
+            })

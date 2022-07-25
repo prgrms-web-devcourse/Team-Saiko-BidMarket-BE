@@ -53,7 +53,6 @@ sonarqube {
     properties {
         property 'sonar.host.url', 'http://3.39.218.101:80'
         property 'sonar.login', 'squ_e4012a0e9428914394dccbd9757579bab4c7f183'
-        property 'sonar.exclusions', 'src/test/java, **/*Test*.*'
         property 'sonar.github.endpoint', 'https://api.github.com'
         property 'sonar.github.repositroy', 'prgrms-web-devcourse/Team-Saiko-BidMarket-BE'
     }
