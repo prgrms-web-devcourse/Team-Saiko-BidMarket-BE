@@ -9,7 +9,7 @@ jobs:
   analysis:
     runs-on: ubuntu-latest
     env:
-      SONARQUBE_ID: test-pr
+      SONARQUBE_ID: BidMarket-pr
       SONARQUBE_URL: ${{ secrets.SONARQUBE_URL }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
