@@ -35,7 +35,7 @@ public class Product extends BaseTime {
   private String location;
 
   @Column(nullable = false)
-  private LocalDateTime expireDate;
+  private LocalDateTime expireAt;
 
   protected Product() {
   }
