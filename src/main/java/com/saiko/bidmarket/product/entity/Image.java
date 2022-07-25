@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.product.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
+import com.sun.istack.NotNull;
 
 @Entity
 public class Image extends BaseTime {
@@ -21,7 +21,7 @@ public class Image extends BaseTime {
   @JoinColumn(name = "product_id")
   private Product product;
 
-  @Column(nullable = false)
+  @NotNull
   private String url;
 
   private boolean isThumbnail = false;
