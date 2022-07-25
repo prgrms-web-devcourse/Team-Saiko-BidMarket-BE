@@ -1,24 +1,35 @@
 name: Sonarqube
 
 on:
-  push:
-    branches:
-      - 'develop'
-      - 'main'
   pull_request:
-    branches:
-      - 'develop'
-      - 'main'
+    branches: [ main ]
 
 jobs:
-  sonarqube:
-    runs-on: [self-hosted]
+  build:
+
+    runs-on: [ self-hosted ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew clean test
+
+  sonarqube:
+
+    runs-on: [ self-hosted ]
+
+    steps:
+      - uses: actions/checkout@v2
       - name: analysis
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: ./gradle -Pprofile=ci sonarqube -x test
-          -Dsonar.github.pullRequest=${{ env.PR_NUMBER }}
-          -Dsonar.github.oauth=${{ secrets.SONAR_ACCESS_TOKEN }}
+        run: ./gradlew -Pprofile=ci sonarqube -x test
+        -Dsonar.github.pullRequests=${{ env.PR_NUMBER }}
+        -Dsonar.github.oauth=${{ secret.SONAR_ACCESS_TOKEN }}
