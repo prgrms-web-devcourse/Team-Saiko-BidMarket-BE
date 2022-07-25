@@ -7,5 +7,6 @@ spring:
     hibernate:
       ddl-auto: update
     properties:
-      hibernate.dialect: org.hibernate.dialect.H2Dialect
-      hibernate.format_sql: true
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
