@@ -12,6 +12,7 @@ import javax.persistence.Id;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.product.Category;
+import com.sun.istack.NotNull;
 
 @Entity
 public class Product extends BaseTime {
@@ -19,22 +20,24 @@ public class Product extends BaseTime {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(length = 16, nullable = false)
+  @NotNull
+  @Column(length = 16)
   private String title;
 
-  @Column(length = 500, nullable = false)
+  @NotNull
+  @Column(length = 500)
   private String description;
 
-  @Column(nullable = false)
+  @NotNull
   private int minimumPrice;
 
-  @Column(nullable = false)
+  @NotNull
   @Enumerated(EnumType.STRING)
   private Category category;
 
   private String location;
 
-  @Column(nullable = false)
+  @NotNull
   private LocalDateTime expireAt;
 
   protected Product() {
