@@ -8,9 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
-import com.sun.istack.NotNull;
 
 @Entity
 public class Image extends BaseTime {
