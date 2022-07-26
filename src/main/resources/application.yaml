@@ -7,7 +7,9 @@ spring:
 
   sql:
     init:
-      schema-locations: classpath:sql/user/user_schema.sql
+      schema-locations:
+        - classpath:sql/user/user_schema.sql
+        - classpath:sql/product/product_schema.sql
       data-locations: classpath:sql/user/user_data.sql
       encoding: UTF-8
       mode: always
@@ -16,7 +18,7 @@ spring:
     database: mysql
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
       hibernate.format_sql: true
