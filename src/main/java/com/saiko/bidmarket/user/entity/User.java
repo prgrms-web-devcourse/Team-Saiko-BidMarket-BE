@@ -14,7 +14,6 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
-import com.sun.istack.NotNull;
 
 @Entity
 public class User extends BaseTime {
