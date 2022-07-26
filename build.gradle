@@ -25,6 +25,9 @@ jacoco {
 }
 
 dependencies {
+    // 테스트를 위해 임시 사용
+    implementation 'com.h2database:h2:2.1.212'
+
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -50,6 +53,16 @@ tasks.named('test') {
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
+}
+
+jacocoTestReport {
+    executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled false
+    }
 }
 
 sonarqube {
