@@ -23,12 +23,8 @@ public class User extends BaseTime {
   private Long id;
 
   @NotBlank
-  @Column(length = 64, unique = true)
-  private String email;
-
-  @NotBlank
   @Column(length = 20)
-  private String nickname;
+  private String username;
 
   @NotBlank
   @Column(length = 512)
@@ -38,23 +34,28 @@ public class User extends BaseTime {
   @Column(length = 20)
   private String provider;
 
+  @NotBlank
+  @Column(length = 80)
+  private String providerId;
+
   @ManyToOne(optional = false)
   @JoinColumn(name = "group_id")
   private Group group;
 
   protected User() {/*no-op*/}
 
-  public User(String email, String nickname, String profileImage, String provider, Group group) {
-    Assert.isTrue(isNotBlank(email), "Email must be provided");
-    Assert.isTrue(isNotBlank(nickname), "Nickname must be provided");
+  public User(String username, String profileImage, String provider, String providerId, Group group) {
+    Assert.isTrue(isNotBlank(username), "Username must be provided");
     Assert.isTrue(isNotBlank(profileImage), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(provider), "ProfileImage must be provided");
+    Assert.isTrue(isNotBlank(providerId), "ProviderId must be provided");
     Assert.notNull(group, "Group must be provided");
 
-    this.email = email;
-    this.nickname = nickname;
+    this.username = username;
     this.profileImage = profileImage;
     this.provider = provider;
+    this.providerId = providerId;
     this.group = group;
   }
+
 }
