@@ -31,14 +31,15 @@ CREATE TABLE `group_permission`
 CREATE TABLE `user`
 (
     id            bigint      NOT NULL AUTO_INCREMENT,
-    email         varchar(64) NOT NULL,
-    nickname      varchar(20) NOT NULL,
+    username      varchar(20) NOT NULL,
     provider      varchar(20) NOT NULL,
+    provider_id   varchar(80) NOT NULL,
     profile_image varchar(512) DEFAULT NULL,
     group_id      bigint      NOT NULL,
     created_at    timestamp,
     updated_at    timestamp,
     PRIMARY KEY (id),
-    CONSTRAINT unq_email UNIQUE (email),
+    CONSTRAINT unq_username UNIQUE (username),
+    CONSTRAINT unq_provider_and_id UNIQUE (provider, provider_id),
     CONSTRAINT fk_group_id_for_user FOREIGN KEY (group_id) REFERENCES `group` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );

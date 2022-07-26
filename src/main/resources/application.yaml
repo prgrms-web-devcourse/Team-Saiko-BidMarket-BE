@@ -30,5 +30,4 @@ spring:
           clientId: '{google client-id}'
           clientSecret: '{google client-secret}'
           scope:
-            - email
             - profile
