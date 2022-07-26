@@ -20,5 +20,6 @@ CREATE TABLE `image`
     `order`    int          not null,
     created_at datetime,
     updated_at datetime,
-    primary key (id)
+    primary key (id),
+    CONSTRAINT fk_product_id_for_image FOREIGN KEY (product_id) REFERENCES `product` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
