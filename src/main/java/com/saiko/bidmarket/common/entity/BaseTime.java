@@ -16,4 +16,11 @@ public class BaseTime {
   @LastModifiedBy
   private LocalDateTime updatedAt;
 
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
 }
