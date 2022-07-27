@@ -50,4 +50,32 @@ public class Product extends BaseTime {
 
   protected Product() {
   }
+
+  public Long getId() {
+    return id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public int getMinimumPrice() {
+    return minimumPrice;
+  }
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public LocalDateTime getExpireAt() {
+    return expireAt;
+  }
 }
