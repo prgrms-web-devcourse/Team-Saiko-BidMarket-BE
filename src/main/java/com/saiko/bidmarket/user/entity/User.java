@@ -58,4 +58,11 @@ public class User extends BaseTime {
     this.group = group;
   }
 
+  public String getUsername() {
+    return username;
+  }
+
+  public Group getGroup() {
+    return group;
+  }
 }
