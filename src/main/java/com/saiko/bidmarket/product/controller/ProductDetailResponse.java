@@ -13,6 +13,43 @@ public class ProductDetailResponse {
   private final String location;
   private final LocalDateTime expireAt;
   private final LocalDateTime createdAt;
+
+  public Long getId() {
+    return id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public int getMinimumPrice() {
+    return minimumPrice;
+  }
+
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public LocalDateTime getExpireAt() {
+    return expireAt;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
   private final LocalDateTime updatedAt;
   
   private ProductDetailResponse(Product product){
