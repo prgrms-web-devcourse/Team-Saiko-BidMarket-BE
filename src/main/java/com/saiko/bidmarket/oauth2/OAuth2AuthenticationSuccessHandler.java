@@ -18,7 +18,7 @@ import com.saiko.bidmarket.jwt.Jwt;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.service.UserService;
 
-public class OAuth2AuthenticationSuccessHandler  extends
+public class OAuth2AuthenticationSuccessHandler extends
     SavedRequestAwareAuthenticationSuccessHandler {
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -43,7 +43,7 @@ public class OAuth2AuthenticationSuccessHandler  extends
       IOException {
 
     if (authentication instanceof OAuth2AuthenticationToken) {
-      OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
+      OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken)authentication;
       OAuth2User principal = oauth2Token.getPrincipal();
       log.debug("Message {}, {}", principal.getName(), principal.getAttributes());
       String registrationId = oauth2Token.getAuthorizedClientRegistrationId();
@@ -63,7 +63,8 @@ public class OAuth2AuthenticationSuccessHandler  extends
   private String generateLoginSuccessJson(User user) {
     String token = generateToken(user);
     log.debug("Jwt({}) created for oauth2 login user {}", token, user.getUsername());
-    return "{\"token\":\"" + token + "\", \"username\":\"" + user.getUsername() + "\", \"group\":\"" + user.getGroup().getName() + "\"}";
+    return "{\"token\":\"" + token + "\", \"username\":\"" + user.getUsername() + "\", \"group\":\""
+        + user.getGroup().getName() + "\"}";
   }
 
   private String generateToken(User user) {
