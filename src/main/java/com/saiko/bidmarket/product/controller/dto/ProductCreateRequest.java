@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.product.controller.dto;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,21 +32,16 @@ public class ProductCreateRequest {
 
   private final String location;
 
-  @NotNull
-  private final LocalDateTime expireAt;
-
   public ProductCreateRequest(String title,
                               String description,
                               Category category,
                               int minimumPrice,
-                              String location,
-                              LocalDateTime expireAt) {
+                              String location) {
     this.title = title;
     this.description = description;
     this.category = category;
     this.minimumPrice = minimumPrice;
     this.location = location;
-    this.expireAt = expireAt;
   }
 
   public String getTitle() {
@@ -72,9 +66,5 @@ public class ProductCreateRequest {
 
   public String getLocation() {
     return location;
-  }
-
-  public LocalDateTime getExpireAt() {
-    return expireAt;
   }
 }

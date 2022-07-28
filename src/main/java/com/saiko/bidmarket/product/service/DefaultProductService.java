@@ -7,7 +7,8 @@ import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 @Service
 public class DefaultProductService implements ProductService {
   @Override
-  public void create(ProductCreateRequest productCreateRequest) {
+  public long create(ProductCreateRequest productCreateRequest) {
+    return 0;
   }
 }
 
