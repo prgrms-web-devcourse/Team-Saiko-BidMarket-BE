@@ -155,8 +155,7 @@ class DefaultUserServiceTest {
             .willReturn(Optional.empty());
 
         given(groupService.findByName(anyString())).willReturn(new Group());
-        Map<String, Object> properties = Map.of("name", "test", "picture", "testUrl");
-        Map<String, Object> attributes = Map.of("name", "test", "properties", properties);
+        Map<String, Object> attributes = Map.of("name", "test", "picture", "testUrl");
         OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(), attributes, "name");
 
         //when
