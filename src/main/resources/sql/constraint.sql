@@ -2,14 +2,19 @@
 
 ALTER TABLE `product`
     ADD CONSTRAINT `PK_PRODUCT` PRIMARY KEY (`id`);
+
 ALTER TABLE `image`
     ADD CONSTRAINT `PK_IMAGE` PRIMARY KEY (`id`);
+
 ALTER TABLE `permission`
     ADD CONSTRAINT `PK_PERMISSION` PRIMARY KEY (`id`);
+
 ALTER TABLE `group`
     ADD CONSTRAINT `PK_GROUP` PRIMARY KEY (`id`);
+
 ALTER TABLE `group_permission`
     ADD CONSTRAINT `PK_GROUP_PERMISSION` PRIMARY KEY (`id`);
+
 ALTER TABLE `user`
     ADD CONSTRAINT `PK_USER` PRIMARY KEY (`id`);
 
@@ -45,8 +50,10 @@ ALTER TABLE `user`
 
 ALTER TABLE `group_permission`
     ADD UNIQUE unq_group_id_permission_id (group_id, permission_id);
+
 ALTER TABLE `user`
     ADD UNIQUE unq_username (username);
+
 ALTER TABLE `user`
     ADD UNIQUE unq_provider_and_id (provider, provider_id);
 
