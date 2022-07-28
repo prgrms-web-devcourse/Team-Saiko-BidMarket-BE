@@ -1,5 +1,8 @@
 package com.saiko.bidmarket.product;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Category {
   DIGITAL_DEVICE("디지털 기기"),
   HOUSEHOLD_APPLIANCE("생활 가전"),
@@ -22,6 +25,21 @@ public enum Category {
 
   Category(String name) {
     this.name = name;
+  }
+
+  @JsonValue
+  public String getName() {
+    return name;
+  }
+
+  @JsonCreator
+  public static Category from(String name) {
+    for (Category category : Category.values()) {
+      if (category.getName().equals(name)) {
+        return category;
+      }
+    }
+    return null;
   }
 }
 
