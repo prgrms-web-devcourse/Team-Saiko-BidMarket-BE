@@ -9,7 +9,7 @@ CREATE TABLE `product`
     minimum_price int          not null,
     category      varchar(100) not null,
     location      varchar(100),
-    expire_at     datetime     not null,
+    expire_at     timestamp    not null,
     created_at    timestamp,
     updated_at    timestamp,
     primary key (id)
