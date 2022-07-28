@@ -10,8 +10,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saiko.bidmarket.product.Category;
 
 public class ProductCreateRequest {
@@ -34,12 +32,11 @@ public class ProductCreateRequest {
 
   private final String location;
 
-  @JsonCreator
-  public ProductCreateRequest(@JsonProperty("title") String title,
-                              @JsonProperty("description") String description,
-                              @JsonProperty("category") Category category,
-                              @JsonProperty("minimumPrice") int minimumPrice,
-                              @JsonProperty("location") String location) {
+  public ProductCreateRequest(String title,
+                              String description,
+                              Category category,
+                              int minimumPrice,
+                              String location) {
     this.title = title;
     this.description = description;
     this.category = category;
