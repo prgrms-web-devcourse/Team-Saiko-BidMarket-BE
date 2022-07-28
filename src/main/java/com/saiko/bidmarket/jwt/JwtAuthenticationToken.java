@@ -46,6 +46,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     return principal;
   }
 
+  @Override
   public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
 
     if (isAuthenticated) {
