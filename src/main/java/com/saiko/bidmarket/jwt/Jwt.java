@@ -90,6 +90,7 @@ public class Jwt {
     }
 
     Claims(DecodedJWT decodedJWT) {
+
       Claim username = decodedJWT.getClaim("username");
       if (!username.isNull())
         this.username = username.asString();

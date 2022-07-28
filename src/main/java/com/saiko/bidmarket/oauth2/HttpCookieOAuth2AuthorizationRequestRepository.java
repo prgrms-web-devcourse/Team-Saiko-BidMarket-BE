@@ -25,6 +25,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
   private final int cookieExpireSeconds;
 
   public HttpCookieOAuth2AuthorizationRequestRepository() {
+
     this(OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, 180);
   }
 

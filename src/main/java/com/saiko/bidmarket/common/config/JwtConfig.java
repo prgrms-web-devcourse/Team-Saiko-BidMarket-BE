@@ -18,6 +18,7 @@ public class JwtConfig {
   private final int expirySeconds;
 
   public JwtConfig(String header, String issuer, String clientSecret, int expirySeconds) {
+
     this.header = header;
     this.issuer = issuer;
     this.clientSecret = clientSecret;
