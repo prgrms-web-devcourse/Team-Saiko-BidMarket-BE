@@ -1,0 +1,15 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+= Bid Market
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+== Product
+=== Create Product
+==== Request
+include::{snippets}/Create product/http-request.adoc[]
+include::{snippets}/Create product/request-fields.adoc[]
+==== Response
+include::{snippets}/Create product/http-response.adoc[]
