@@ -6,13 +6,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.product.Category;
+import com.saiko.bidmarket.user.entity.User;
 
 @Entity
 public class Product extends BaseTime {
@@ -39,6 +43,10 @@ public class Product extends BaseTime {
 
   @NotNull
   private LocalDateTime expireAt;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User writer;
 
   protected Product() {
   }
