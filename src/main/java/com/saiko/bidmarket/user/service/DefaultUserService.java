@@ -53,19 +53,14 @@ public class DefaultUserService implements UserService {
       return user;
     } catch (NotFoundException e) {
       Map<String, Object> attributes = oAuth2User.getAttributes();
-      @SuppressWarnings("unchecked")
-      Map<String, Object> properties = (Map<String, Object>)attributes.get("properties");
 
-      if (properties == null) {
-        throw new IllegalArgumentException("OAuth2User properties is empty");
-      }
+      String username = (String)attributes.get("name");
+      String profileImage = (String)attributes.get("picture");
 
-      String username = (String)properties.get("name");
-      String profileImage = (String)properties.get("picture");
+      log.info("username : {} profileImage : {}", username, profileImage);
       Group group = groupService.findByName("USER_GROUP");
 
-      User user = new User(username, profileImage, authorizedClientRegistrationId, providerId,
-                           group);
+      User user = new User(username, profileImage, authorizedClientRegistrationId, providerId, group);
       return userRepository.save(user);
     }
   }
