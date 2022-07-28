@@ -141,9 +141,9 @@ public class WebSecurityConfig {
         /**
          * 예외처리 핸들러
          */
-        // .exceptionHandling()
-        // .accessDeniedHandler(accessDeniedHandler())
-        // .and()
+        .exceptionHandling()
+        .accessDeniedHandler(accessDeniedHandler())
+        .and()
         /**
          * Jwt 필터
          */
