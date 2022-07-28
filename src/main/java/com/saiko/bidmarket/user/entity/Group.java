@@ -33,10 +33,6 @@ public class Group {
   @OneToMany(mappedBy = "group")
   private List<GroupPermission> permissions = new ArrayList<>();
 
-  public Long getId() {
-    return id;
-  }
-
   public String getName() {
     return name;
   }
@@ -45,15 +41,6 @@ public class Group {
     return permissions.stream()
                       .map(gp -> new SimpleGrantedAuthority(gp.getPermission().getName()))
                       .collect(Collectors.toList());
-  }
-
-  @Override
-  public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-        .append("id", id)
-        .append("name", name)
-        .append("permissions", permissions)
-        .toString();
   }
 
 }
