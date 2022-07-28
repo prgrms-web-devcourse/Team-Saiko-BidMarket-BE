@@ -2,13 +2,13 @@ package com.saiko.bidmarket.product.controller;
 
 import static com.saiko.bidmarket.product.Category.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Stream;
@@ -95,7 +95,7 @@ class ProductApiControllerTest extends ControllerSetUp {
     @DisplayName("유효한 값이 전달되면")
     class ContextWithValidData {
       @Test
-      @DisplayName("상품을 저장한다")
+      @DisplayName("상품을 저장하고 상품의 id 값을 반환한다")
       void ItSaveProduct() throws Exception {
         //given
         HashMap<String, Object> requestMap = new HashMap<>();
@@ -104,10 +104,12 @@ class ProductApiControllerTest extends ControllerSetUp {
         requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
-        requestMap.put("expireAt", LocalDateTime.now().toString());
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
+
+        given(productService.create(any(ProductCreateRequest.class)))
+            .willReturn(1L);
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
@@ -135,9 +137,12 @@ class ProductApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("minimumPrice").type(JsonFieldType.NUMBER)
                                                                  .description("최소 가격"),
                                     fieldWithPath("location").type(JsonFieldType.STRING)
-                                                             .description("희망 거래 장소"),
-                                    fieldWithPath("expireAt").type(JsonFieldType.STRING)
-                                                             .description("낙찰 종료 기한"))));
+                                                             .description("희망 거래 장소")),
+                                responseFields(
+                                    fieldWithPath("id")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("상품 아이디")
+                                )));
       }
     }
 
@@ -156,7 +161,6 @@ class ProductApiControllerTest extends ControllerSetUp {
         requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
-        requestMap.put("expireAt", LocalDateTime.now().toString());
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
@@ -189,7 +193,6 @@ class ProductApiControllerTest extends ControllerSetUp {
         requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
-        requestMap.put("expireAt", LocalDateTime.now().toString());
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
@@ -221,7 +224,6 @@ class ProductApiControllerTest extends ControllerSetUp {
         requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
-        requestMap.put("expireAt", LocalDateTime.now().toString());
         requestMap.put("images", Arrays.asList("imageUrl1",
                                                "imageUrl2",
                                                "imageUrl3",
@@ -258,7 +260,6 @@ class ProductApiControllerTest extends ControllerSetUp {
         requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 100);
         requestMap.put("location", "관악구 신림동");
-        requestMap.put("expireAt", LocalDateTime.now().toString());
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
@@ -287,38 +288,6 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("minimumPrice", 10000);
-        requestMap.put("location", "관악구 신림동");
-        requestMap.put("expireAt", LocalDateTime.now().toString());
-        requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
-
-        String requestBody = objectMapper.writeValueAsString(requestMap);
-
-        //when
-        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .post(CREATE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
-
-        ResultActions response = mockMvc.perform(request);
-
-        //then
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("expireAt 가 null 이라면")
-    class ContextWithExpireAtNull {
-
-      @Test
-      @DisplayName("BadRequest 를 응답한다")
-      void ItResponseBadRequest() throws Exception {
-        //given
-        HashMap<String, Object> requestMap = new HashMap<>();
-        requestMap.put("title", "키보드팝니다");
-        requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});

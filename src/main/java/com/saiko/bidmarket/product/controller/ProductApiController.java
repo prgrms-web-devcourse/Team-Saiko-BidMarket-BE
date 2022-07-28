@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.service.ProductService;
 
 @RestController
@@ -24,7 +25,9 @@ public class ProductApiController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   // TODO: 로그인한 유저 정보 필요
-  public void create(@RequestBody @Valid ProductCreateRequest productCreateRequest) {
-    productService.create(productCreateRequest);
+  public ProductCreateResponse create(
+      @RequestBody @Valid ProductCreateRequest productCreateRequest) {
+    long productId = productService.create(productCreateRequest);
+    return ProductCreateResponse.from(productId);
   }
 }
