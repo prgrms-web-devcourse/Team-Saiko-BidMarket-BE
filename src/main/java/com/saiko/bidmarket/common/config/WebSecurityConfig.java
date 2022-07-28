@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -23,7 +22,6 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 import com.saiko.bidmarket.jwt.Jwt;
 import com.saiko.bidmarket.jwt.JwtAuthenticationFilter;
@@ -45,6 +43,7 @@ public class WebSecurityConfig {
 
   @Bean
   public AccessDeniedHandler accessDeniedHandler() {
+
     return (request, response, e) -> {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       Object principal = authentication != null ? authentication.getPrincipal() : null;
@@ -59,6 +58,7 @@ public class WebSecurityConfig {
 
   @Bean
   public Jwt jwt() {
+
     return new Jwt(
         jwtConfigure.getIssuer(),
         jwtConfigure.getClientSecret(),
@@ -73,6 +73,7 @@ public class WebSecurityConfig {
 
   @Bean
   public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+
     return new HttpCookieOAuth2AuthorizationRequestRepository();
   }
 
@@ -81,18 +82,21 @@ public class WebSecurityConfig {
       JdbcOperations jdbcOperations,
       ClientRegistrationRepository clientRegistrationRepository
   ) {
+
     return new JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository);
   }
 
   @Bean
   public OAuth2AuthorizedClientRepository authorizedClientRepository(
       OAuth2AuthorizedClientService authorizedClientService) {
+
     return new AuthenticatedPrincipalOAuth2AuthorizedClientRepository(authorizedClientService);
   }
 
   @Bean
   public OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(Jwt jwt,
                                                                                UserService userService) {
+
     return new OAuth2AuthenticationSuccessHandler(jwt, userService);
   }
 
