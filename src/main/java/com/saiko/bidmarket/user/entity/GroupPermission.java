@@ -22,10 +22,6 @@ public class GroupPermission {
   @JoinColumn(name = "permission_id")
   private Permission permission;
 
-  public Long getId() {
-    return id;
-  }
-
   public Group getGroup() {
     return group;
   }
