@@ -12,7 +12,9 @@ CREATE TABLE `product`
     expire_at     datetime     not null,
     created_at    timestamp,
     updated_at    timestamp,
-    primary key (id)
+    user_id bigint,
+    primary key (id),
+    CONSTRAINT fk_user_id_for_product FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE `image`
