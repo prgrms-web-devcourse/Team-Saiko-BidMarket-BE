@@ -101,7 +101,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("category", DIGITAL_DEVICE.getName());
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
@@ -158,7 +158,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", title);
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("category", DIGITAL_DEVICE.getName());
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
@@ -190,7 +190,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", description);
-        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("category", DIGITAL_DEVICE.getName());
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
@@ -221,7 +221,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("category", DIGITAL_DEVICE.getName());
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", Arrays.asList("imageUrl1",
@@ -257,7 +257,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("category", DIGITAL_DEVICE.getName());
         requestMap.put("minimumPrice", 100);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
@@ -288,6 +288,37 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
+        requestMap.put("minimumPrice", 10000);
+        requestMap.put("location", "관악구 신림동");
+        requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
+
+        String requestBody = objectMapper.writeValueAsString(requestMap);
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .post(CREATE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("category 가 존재하지 않는다면")
+    class ContextWithCategoryNotFound {
+
+      @Test
+      @DisplayName("BadRequest 를 응답한다")
+      void ItResponseBadRequest() throws Exception {
+        //given
+        HashMap<String, Object> requestMap = new HashMap<>();
+        requestMap.put("title", "키보드팝니다");
+        requestMap.put("description", "깨끗합니다");
+        requestMap.put("category", "존재하지 않는 카테고리");
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
