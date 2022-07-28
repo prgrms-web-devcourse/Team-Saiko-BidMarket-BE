@@ -118,6 +118,10 @@ public class WebSecurityConfig {
         .disable()
         .logout()
         .disable()
+        .authorizeHttpRequests()
+        .anyRequest()
+        .denyAll()
+        .and()
         /**
          * Session 사용하지 않음
          */
