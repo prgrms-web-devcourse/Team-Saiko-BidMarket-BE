@@ -1,0 +1,38 @@
+-- PK
+
+ALTER TABLE `product`          ADD CONSTRAINT `PK_PRODUCT`          PRIMARY KEY (`id`);
+ALTER TABLE `image`           ADD CONSTRAINT `PK_IMAGE`            PRIMARY KEY (`id`);
+ALTER TABLE `permission`       ADD CONSTRAINT `PK_PERMISSION`       PRIMARY KEY (`id`);
+ALTER TABLE `group`            ADD CONSTRAINT `PK_GROUP`            PRIMARY KEY (`id`);
+ALTER TABLE `group_permission` ADD CONSTRAINT `PK_GROUP_PERMISSION` PRIMARY KEY (`id`);
+ALTER TABLE `user`             ADD CONSTRAINT `PK_USER`             PRIMARY KEY (`id`);
+
+-- AUTO INCREMENT
+
+ALTER TABLE `product` MODIFY `id` BIGINT NOT NULL AUTO_INCREMENT FIRST;
+ALTER TABLE `image`   MODIFY `id` BIGINT NOT NULL AUTO_INCREMENT FIRST;
+ALTER TABLE `user`    MODIFY `id` BIGINT NOT NULL AUTO_INCREMENT FIRST;
+
+-- FK
+
+ALTER TABLE `product` ADD CONSTRAINT `FK_USER_ID_FOR_PRODUCT`
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE `image` ADD CONSTRAINT `FK_PRODUCT_ID_FOR_IMAGE`
+    FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE `group_permission` ADD CONSTRAINT `FK_GROUP_ID_FOR_GROUP_PERMISSION`
+    FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE `group_permission` ADD CONSTRAINT `FK_PERMISSION_ID_FOR_GROUP_PERMISSION`
+    FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE `user` ADD CONSTRAINT `FK_GROUP_ID_FOR_USER`
+    FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Unique
+
+ALTER TABLE `group_permission` ADD UNIQUE unq_group_id_permission_id (group_id, permission_id);
+ALTER TABLE `user`             ADD UNIQUE unq_username (username);
+ALTER TABLE `user`             ADD UNIQUE unq_provider_and_id (provider, provider_id);
+

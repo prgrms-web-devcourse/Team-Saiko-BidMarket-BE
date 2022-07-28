@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS `product` CASCADE;
 
 CREATE TABLE `product`
 (
-    id            bigint       not null auto_increment,
+    id            bigint       not null,
     title         varchar(16)  not null,
     description   varchar(500) not null,
     minimum_price int          not null,
@@ -12,19 +12,15 @@ CREATE TABLE `product`
     expire_at     timestamp    not null,
     created_at    timestamp,
     updated_at    timestamp,
-    user_id       bigint,
-    primary key (id),
-    CONSTRAINT fk_user_id_for_product FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    user_id       bigint
 );
 
 CREATE TABLE `image`
 (
-    id         bigint       not null auto_increment,
+    id         bigint       not null,
     product_id bigint,
     url        varchar(512) not null,
     `order`    int          not null,
     created_at timestamp,
-    updated_at timestamp,
-    primary key (id),
-    CONSTRAINT fk_product_id_for_image FOREIGN KEY (product_id) REFERENCES `product` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    updated_at timestamp
 );

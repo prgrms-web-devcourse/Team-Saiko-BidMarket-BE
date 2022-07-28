@@ -8,8 +8,9 @@ spring:
   sql:
     init:
       schema-locations:
-        - classpath:sql/user/user_schema.sql
         - classpath:sql/product/product_schema.sql
+        - classpath:sql/user/user_schema.sql
+        - classpath:sql/constraint.sql
       data-locations: classpath:sql/user/user_data.sql
       encoding: UTF-8
       mode: always
