@@ -169,8 +169,8 @@ class DefaultUserServiceTest {
                                                                           "profileImage");
 
         assertAll(
-            () -> assertEquals(savedUserUsername, "test"),
-            () -> assertEquals(savedUserProfileImg, "testUrl")
+            () -> assertEquals("test", savedUserUsername),
+            () -> assertEquals("testUrl", savedUserProfileImg)
         );
       }
     }
