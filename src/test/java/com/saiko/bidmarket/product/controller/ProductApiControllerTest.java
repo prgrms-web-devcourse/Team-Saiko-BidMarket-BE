@@ -47,6 +47,7 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
+import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.util.ControllerSetUp;
 
 @WebMvcTest(controllers = ProductApiController.class, excludeFilters = {
@@ -100,7 +101,7 @@ class ProductApiControllerTest extends ControllerSetUp {
     class ContextWithValidData {
       @Test
       @DisplayName("상품을 저장하고 상품의 id 값을 반환한다")
-      void ItSaveProduct() throws Exception {
+      void ItSaveProductAndReturnId() throws Exception {
         //given
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
@@ -112,7 +113,7 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
-        given(productService.create(any(ProductCreateRequest.class)))
+        given(productService.create(any(ProductCreateRequest.class), any(User.class)))
             .willReturn(1L);
 
         //when
@@ -124,7 +125,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(productService).create(any(ProductCreateRequest.class));
+        verify(productService).create(any(ProductCreateRequest.class), any(User.class));
         response.andExpect(status().isCreated())
                 .andDo(document("Create product",
                                 preprocessRequest(prettyPrint()),

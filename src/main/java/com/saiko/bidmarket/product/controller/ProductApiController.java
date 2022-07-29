@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.service.ProductService;
+import com.saiko.bidmarket.user.entity.Group;
+import com.saiko.bidmarket.user.entity.User;
 
 @RestController
 @RequestMapping("api/v1/products")
@@ -29,7 +31,9 @@ public class ProductApiController {
   // TODO: 로그인한 유저 정보 필요
   public ProductCreateResponse create(
       @RequestBody @Valid ProductCreateRequest productCreateRequest) {
-    long productId = productService.create(productCreateRequest);
+    long productId = productService.create(productCreateRequest,
+                                           new User("test", "image", "google", "1234",
+                                                    new Group()));
     return ProductCreateResponse.from(productId);
   }
 
