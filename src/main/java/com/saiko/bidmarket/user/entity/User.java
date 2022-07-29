@@ -46,7 +46,8 @@ public class User extends BaseTime {
 
   protected User() {/*no-op*/}
 
-  public User(String username, String profileImage, String provider, String providerId, Group group) {
+  public User(String username, String profileImage, String provider, String providerId,
+              Group group) {
     Assert.isTrue(isNotBlank(username), "Username must be provided");
     Assert.isTrue(isNotBlank(profileImage), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(provider), "ProfileImage must be provided");
@@ -60,8 +61,8 @@ public class User extends BaseTime {
     this.group = group;
   }
 
-  public String getStringId() {
-    return id.toString();
+  public Long getId() {
+    return id;
   }
 
   public String getUsername() {

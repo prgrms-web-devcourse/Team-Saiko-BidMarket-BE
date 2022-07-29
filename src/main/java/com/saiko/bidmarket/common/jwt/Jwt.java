@@ -81,7 +81,7 @@ public class Jwt {
 
   public static class Claims {
 
-    String userId;
+    Long userId;
     String[] roles;
     Date iat;
     Date exp;
@@ -93,7 +93,7 @@ public class Jwt {
 
       Claim userId = decodedJWT.getClaim("userId");
       if (!userId.isNull())
-        this.userId = userId.asString();
+        this.userId = userId.asLong();
       Claim roles = decodedJWT.getClaim("roles");
       if (!roles.isNull()) {
         this.roles = roles.asArray(String.class);
@@ -102,7 +102,7 @@ public class Jwt {
       this.exp = decodedJWT.getExpiresAt();
     }
 
-    public static Claims from(String userId, String[] roles) {
+    public static Claims from(Long userId, String[] roles) {
 
       Claims claims = new Claims();
       claims.userId = userId;

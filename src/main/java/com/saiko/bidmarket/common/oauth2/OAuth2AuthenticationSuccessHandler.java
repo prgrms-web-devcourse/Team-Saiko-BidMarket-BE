@@ -39,7 +39,6 @@ public class OAuth2AuthenticationSuccessHandler extends
       HttpServletResponse response,
       Authentication authentication)
       throws
-      ServletException,
       IOException {
 
     if (authentication instanceof OAuth2AuthenticationToken) {
@@ -62,11 +61,11 @@ public class OAuth2AuthenticationSuccessHandler extends
 
   private String generateLoginSuccessJson(User user) {
     String token = generateToken(user);
-    log.debug("Jwt({}) created for oauth2 login user {}", token, user.getStringId());
+    log.debug("Jwt({}) created for oauth2 login user {}", token, user.getId());
     return "{\"token\":\"" + token + "\"}";
   }
 
   private String generateToken(User user) {
-    return jwt.sign(Jwt.Claims.from(user.getStringId(), new String[]{"ROLE_USER"}));
+    return jwt.sign(Jwt.Claims.from(user.getId(), new String[]{"ROLE_USER"}));
   }
 }
