@@ -60,6 +60,10 @@ public class User extends BaseTime {
     this.group = group;
   }
 
+  public String getStringId() {
+    return id.toString();
+  }
+
   public String getUsername() {
     return username;
   }
