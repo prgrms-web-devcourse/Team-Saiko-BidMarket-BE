@@ -58,7 +58,7 @@ public class ProductDetailResponse {
     this.title = product.getTitle();
     this.description = product.getDescription();
     this.minimumPrice = product.getMinimumPrice();
-    this.categoryName = product.getCategory().name();
+    this.categoryName = product.getCategory().getName();
     this.location = product.getLocation();
     this.expireAt = product.getExpireAt();
     this.createdAt = product.getCreatedAt();
