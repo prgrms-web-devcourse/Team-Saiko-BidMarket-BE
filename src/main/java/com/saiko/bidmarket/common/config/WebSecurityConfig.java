@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -108,7 +109,7 @@ public class WebSecurityConfig {
   ) throws Exception {
 
     http.authorizeRequests()
-        .antMatchers("/api/v1/products/**").hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("USER", "ADMIN")
         .anyRequest().permitAll()
         .and()
         /**
