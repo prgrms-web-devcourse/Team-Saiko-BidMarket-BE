@@ -1,12 +1,11 @@
 package com.saiko.bidmarket.product.service;
 
-import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
-import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.product.entity.Product;
 
 public interface ProductService {
 
   Product findById(long id);
 
-  long create(ProductCreateRequest productCreateRequest, User writer);
+  long create(ProductCreateRequest productCreateRequest, Long userId);
 }
