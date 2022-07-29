@@ -23,41 +23,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.common.config.JwtConfig;
-import com.saiko.bidmarket.common.config.WebSecurityConfig;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
-import com.saiko.bidmarket.user.service.UserService;
 import com.saiko.bidmarket.util.ControllerSetUp;
 
 @WebMvcTest(controllers = ProductApiController.class)
-@WithMockUser(roles = "USER")
 class ProductApiControllerTest extends ControllerSetUp {
   @Autowired
   private ObjectMapper objectMapper;
@@ -95,6 +80,7 @@ class ProductApiControllerTest extends ControllerSetUp {
 
   @Nested
   @DisplayName("create 메서드는")
+  @WithMockUser(roles = "USER")
   class DescribeCreate {
 
     @Nested
@@ -347,6 +333,7 @@ class ProductApiControllerTest extends ControllerSetUp {
 
   @Nested
   @DisplayName("findById 메소드는")
+  @WithAnonymousUser
   class DescribeFindById {
 
     @Nested
