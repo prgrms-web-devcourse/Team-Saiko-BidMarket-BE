@@ -188,7 +188,7 @@ class DefaultUserServiceTest {
     class ContextReceiveNegativeValue {
 
       @ParameterizedTest
-      @ValueSource(longs = {0, -1})
+      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
       @DisplayName("IllegalArgumentException을 반환한다.")
       void itThrowIllegalArgumentException(long id) {
         //then
@@ -229,8 +229,6 @@ class DefaultUserServiceTest {
             "test",
             new Group()
             );
-
-        ReflectionTestUtils.setField(existUser, "id", existUserId);
 
         //when
         when(userRepository.findById(existUserId)).thenReturn(Optional.of(existUser));
