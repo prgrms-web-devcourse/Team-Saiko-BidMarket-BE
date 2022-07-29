@@ -62,12 +62,11 @@ public class OAuth2AuthenticationSuccessHandler extends
 
   private String generateLoginSuccessJson(User user) {
     String token = generateToken(user);
-    log.debug("Jwt({}) created for oauth2 login user {}", token, user.getUsername());
-    return "{\"token\":\"" + token + "\", \"username\":\"" + user.getUsername() + "\", \"group\":\""
-        + user.getGroup().getName() + "\"}";
+    log.debug("Jwt({}) created for oauth2 login user {}", token, user.getStringId());
+    return "{\"token\":\"" + token + "\"}";
   }
 
   private String generateToken(User user) {
-    return jwt.sign(Jwt.Claims.from(user.getUsername(), new String[]{"ROLE_USER"}));
+    return jwt.sign(Jwt.Claims.from(user.getStringId(), new String[]{"ROLE_USER"}));
   }
 }
