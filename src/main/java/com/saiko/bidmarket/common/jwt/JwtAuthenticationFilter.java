@@ -81,7 +81,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     String token = request.getHeader(headerKey);
 
-    if (isNotEmpty(token)) {
+    if (isNotBlank(token)) {
       log.debug("Jwt authorization api detected: {}", token);
       return URLDecoder.decode(token, StandardCharsets.UTF_8);
     }
