@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.*;
 import static org.apache.logging.log4j.util.Strings.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
