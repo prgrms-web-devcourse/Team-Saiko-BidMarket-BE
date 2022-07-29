@@ -44,7 +44,7 @@ public class Jwt {
     if (expirySecond > 0) {
       builder.withExpiresAt(new Date(now.getTime() + expirySecond * 1000L));
     }
-    builder.withClaim("username", claims.username);
+    builder.withClaim("userId", claims.userId);
     builder.withArrayClaim("roles", claims.roles);
     return builder.sign(algorithm);
   }
@@ -81,7 +81,7 @@ public class Jwt {
 
   public static class Claims {
 
-    String username;
+    String userId;
     String[] roles;
     Date iat;
     Date exp;
@@ -91,10 +91,10 @@ public class Jwt {
 
     Claims(DecodedJWT decodedJWT) {
 
-      Claim username = decodedJWT.getClaim("username");
-      if (!username.isNull())
-        this.username = username.asString();
-      Claim roles = decodedJWT.getClaim("role");
+      Claim userId = decodedJWT.getClaim("userId");
+      if (!userId.isNull())
+        this.userId = userId.asString();
+      Claim roles = decodedJWT.getClaim("roles");
       if (!roles.isNull()) {
         this.roles = roles.asArray(String.class);
       }
@@ -105,7 +105,7 @@ public class Jwt {
     public static Claims from(String username, String[] roles) {
 
       Claims claims = new Claims();
-      claims.username = username;
+      claims.userId = username;
       claims.roles = roles;
       return claims;
     }
@@ -113,7 +113,7 @@ public class Jwt {
     public Map<String, Object> asMap() {
 
       Map<String, Object> map = new HashMap<>();
-      map.put("username", username);
+      map.put("userId", userId);
       map.put("roles", roles);
       map.put("iat", iat());
       return map;
@@ -143,7 +143,7 @@ public class Jwt {
     public String toString() {
 
       return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-          .append("username", username)
+          .append("userId", userId)
           .append("roles", Arrays.toString(roles))
           .append("iat", iat)
           .append("exp", exp)
