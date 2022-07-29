@@ -60,6 +60,9 @@ public class Image extends BaseTime {
     }
 
     public Builder order(int order) {
+      Assert.isTrue(1 <= order, "order must be between 1 and 5!");
+      Assert.isTrue(5 >= order, "order must be between 1 and 5!");
+
       this.order = order;
       return this;
     }
