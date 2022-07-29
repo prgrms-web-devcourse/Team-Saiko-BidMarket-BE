@@ -6,9 +6,9 @@ import org.springframework.util.Assert;
 
 public class JwtAuthentication {
 
-  public final String token;
+  private final String token;
 
-  public final String userid;
+  private final String userid;
 
   public JwtAuthentication(String token, String userid) {
     Assert.hasText(token, "token must be provided");
@@ -25,5 +25,9 @@ public class JwtAuthentication {
         .append("token", token)
         .append("userId", userid)
         .build();
+  }
+
+  public String getUserid() {
+    return userid;
   }
 }
