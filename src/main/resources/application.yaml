@@ -34,7 +34,7 @@ spring:
             - profile
 
 jwt:
-  header: token
+  header: Authorization
   issuer: saiko
-  client-secret: EENY5W0eegTf1naQB2eDeyCLl5kRS2b8xa5c4qLdS0hmVjtbvo8tOyhPMcAmtPuQ
-  expiry-seconds: 60
+  client-secret: '{client-secret'
+  expiry-seconds: 100000
