@@ -20,21 +20,21 @@ public enum Category {
   PLANT("식물"),
   ETC("기타 중고 물품");
 
-  private final String name;
+  private final String displayName;
 
-  Category(String name) {
-    this.name = name;
+  Category(String displayName) {
+    this.displayName = displayName;
   }
 
   @JsonValue
-  public String getName() {
-    return name;
+  public String getDisplayName() {
+    return displayName;
   }
 
   @JsonCreator
   public static Category from(String name) {
     for (Category category : Category.values()) {
-      if (category.getName().equals(name)) {
+      if (category.getDisplayName().equals(name)) {
         return category;
       }
     }
