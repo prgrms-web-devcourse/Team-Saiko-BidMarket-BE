@@ -65,4 +65,11 @@ public class DefaultUserService implements UserService {
     }
   }
 
+  @Override
+  public User findById(long id) {
+    Assert.isTrue(id > 0, "userId must be positive");
+
+    return userRepository.findById(id)
+                         .orElseThrow(() -> new NotFoundException("User does not exist"));
+  }
 }

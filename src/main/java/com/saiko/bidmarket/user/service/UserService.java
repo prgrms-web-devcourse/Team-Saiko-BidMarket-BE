@@ -8,4 +8,6 @@ public interface UserService {
   User findByProviderAndProviderId(String provider, String providerId);
 
   User join(OAuth2User oAuth2User, String authorizedClientRegistrationId);
+
+  User findById(long id);
 }
