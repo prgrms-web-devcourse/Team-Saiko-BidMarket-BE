@@ -102,10 +102,10 @@ public class Jwt {
       this.exp = decodedJWT.getExpiresAt();
     }
 
-    public static Claims from(String username, String[] roles) {
+    public static Claims from(String userId, String[] roles) {
 
       Claims claims = new Claims();
-      claims.userId = username;
+      claims.userId = userId;
       claims.roles = roles;
       return claims;
     }
