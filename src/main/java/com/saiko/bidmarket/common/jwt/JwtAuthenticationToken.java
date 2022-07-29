@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.jwt;
+package com.saiko.bidmarket.common.jwt;
 
 import java.util.Collection;
 

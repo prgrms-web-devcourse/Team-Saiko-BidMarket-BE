@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.jwt;
+package com.saiko.bidmarket.common.jwt;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

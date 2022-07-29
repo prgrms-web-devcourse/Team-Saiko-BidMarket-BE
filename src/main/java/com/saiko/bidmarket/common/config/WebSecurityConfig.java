@@ -23,10 +23,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.saiko.bidmarket.jwt.Jwt;
-import com.saiko.bidmarket.jwt.JwtAuthenticationFilter;
-import com.saiko.bidmarket.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.saiko.bidmarket.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.saiko.bidmarket.common.jwt.Jwt;
+import com.saiko.bidmarket.common.jwt.JwtAuthenticationFilter;
+import com.saiko.bidmarket.common.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.saiko.bidmarket.common.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.saiko.bidmarket.user.service.UserService;
 
 @Configuration
