@@ -23,14 +23,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.springframework.beans.factory.annotation.Autowired;;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -40,8 +39,8 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
-import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.util.ControllerSetUp;
+import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
 @WebMvcTest(controllers = ProductApiController.class)
 class ProductApiControllerTest extends ControllerSetUp {
@@ -81,7 +80,7 @@ class ProductApiControllerTest extends ControllerSetUp {
 
   @Nested
   @DisplayName("create 메서드는")
-  @WithMockUser(roles = "USER")
+  @WithMockCustomLoginUser
   class DescribeCreate {
 
     @Nested
@@ -101,7 +100,7 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
-        given(productService.create(any(ProductCreateRequest.class), any(User.class)))
+        given(productService.create(any(ProductCreateRequest.class), any(Long.class)))
             .willReturn(1L);
 
         //when
@@ -113,7 +112,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(productService).create(any(ProductCreateRequest.class), any(User.class));
+        verify(productService).create(any(ProductCreateRequest.class), any(Long.class));
         response.andExpect(status().isCreated())
                 .andDo(document("Create product",
                                 preprocessRequest(prettyPrint()),

@@ -9,9 +9,9 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,11 +20,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Category;
-import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultProductServiceTest {
@@ -34,6 +35,9 @@ class DefaultProductServiceTest {
 
   @Mock
   private ProductRepository productRepository;
+
+  @Mock
+  private UserService userService;
 
   @Nested
   @DisplayName("findById 메소드는")
@@ -120,6 +124,7 @@ class DefaultProductServiceTest {
                                                                            Category.ETC,
                                                                            15000,
                                                                            "강남");
+      final Long userId = 1L;
       User writer = new User("제로", "image", "google", "1234", new Group());
 
       Product product = Product.builder()
@@ -135,9 +140,10 @@ class DefaultProductServiceTest {
 
       given(productRepository.save(any(Product.class)))
           .willReturn(product);
+      given(userService.findById(userId)).willReturn(writer);
 
       //when
-      long productId = productService.create(productCreateRequest, writer);
+      long productId = productService.create(productCreateRequest, userId);
 
       //then
       verify(productRepository).save(any(Product.class));
@@ -152,16 +158,16 @@ class DefaultProductServiceTest {
       @DisplayName("IllegalArgumentException 에러를 발생시킨다")
       void ItThrowsIllegalArgumentException() {
         //given
-        User writer = new User("제로", "image", "google", "123", new Group());
+        final Long userId = 1L;
 
         //when,then
         assertThrows(IllegalArgumentException.class,
-                     () -> productService.create(null, writer));
+                     () -> productService.create(null, userId));
       }
     }
 
     @Nested
-    @DisplayName("writer 파라미터에 null 값이 전달되면")
+    @DisplayName("userId 파라미터에 null 값이 전달되면")
     class ContextWithWriterNull {
 
       @Test
