@@ -104,9 +104,13 @@ public class WebSecurityConfig {
   public SecurityFilterChain filterChain(Jwt jwt,
                                          HttpSecurity http,
                                          OAuth2AuthorizedClientRepository repository,
-                                         OAuth2AuthenticationSuccessHandler handler) throws Exception {
+                                         OAuth2AuthenticationSuccessHandler handler
+  ) throws Exception {
 
-    http
+    http.authorizeRequests()
+        .antMatchers("/api/v1/products/**").hasAnyRole("USER", "ADMIN")
+        .anyRequest().permitAll()
+        .and()
         /**
          * formLogin, csrf, headers, http-basic, rememberMe, logout filter 비활성화
          */
@@ -122,10 +126,6 @@ public class WebSecurityConfig {
         .disable()
         .logout()
         .disable()
-        .authorizeHttpRequests()
-        .anyRequest()
-        .denyAll()
-        .and()
         /**
          * Session 사용하지 않음
          */
@@ -153,6 +153,6 @@ public class WebSecurityConfig {
          */
         .addFilterBefore(jwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
+    return http.build();
   }
 }
