@@ -8,14 +8,14 @@ public class JwtAuthentication {
 
   public final String token;
 
-  public final String username;
+  public final String userid;
 
-  public JwtAuthentication(String token, String username) {
+  public JwtAuthentication(String token, String userid) {
     Assert.hasText(token, "token must be provided");
-    Assert.hasText(username, "username must be provided");
+    Assert.hasText(userid, "username must be provided");
 
     this.token = token;
-    this.username = username;
+    this.userid = userid;
   }
 
   @Override
@@ -23,7 +23,7 @@ public class JwtAuthentication {
 
     return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
         .append("token", token)
-        .append("username", username)
+        .append("userId", userid)
         .build();
   }
 }
