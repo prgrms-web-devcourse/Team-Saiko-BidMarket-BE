@@ -2,6 +2,7 @@ package com.saiko.bidmarket.common.jwt;
 
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
+import static jdk.dynalink.linker.support.Guards.*;
 import static org.apache.logging.log4j.util.Strings.*;
 
 import java.io.IOException;
@@ -54,10 +55,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
           Jwt.Claims claims = verify(token.substring(7));
           log.debug("Jwt parse result: {}", claims);
 
-          String userId = claims.userId;
+          Long userId = claims.userId;
           List<GrantedAuthority> authorities = getAuthorities(claims);
 
-          if (isNotBlank(userId) && authorities.size() > 0) {
+          if (userId > 0 && authorities.size() > 0) {
             JwtAuthenticationToken authentication =
                 new JwtAuthenticationToken(new JwtAuthentication(token, userId), null,
                                            authorities);

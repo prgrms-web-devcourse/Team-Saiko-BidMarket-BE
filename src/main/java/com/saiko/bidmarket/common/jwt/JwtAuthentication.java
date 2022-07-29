@@ -8,11 +8,11 @@ public class JwtAuthentication {
 
   private final String token;
 
-  private final String userId;
+  private final Long userId;
 
-  public JwtAuthentication(String token, String userId) {
+  public JwtAuthentication(String token, Long userId) {
     Assert.hasText(token, "token must be provided");
-    Assert.hasText(userId, "userId must be provided");
+    Assert.isTrue(userId > 0, "userId must be provided");
 
     this.token = token;
     this.userId = userId;
@@ -27,7 +27,7 @@ public class JwtAuthentication {
         .build();
   }
 
-  public String getUserId() {
+  public Long getUserId() {
     return userId;
   }
 }
