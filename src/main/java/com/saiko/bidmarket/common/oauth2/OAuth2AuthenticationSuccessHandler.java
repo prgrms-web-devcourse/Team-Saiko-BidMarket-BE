@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.oauth2;
+package com.saiko.bidmarket.common.oauth2;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import com.saiko.bidmarket.jwt.Jwt;
+import com.saiko.bidmarket.common.jwt.Jwt;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.service.UserService;
 

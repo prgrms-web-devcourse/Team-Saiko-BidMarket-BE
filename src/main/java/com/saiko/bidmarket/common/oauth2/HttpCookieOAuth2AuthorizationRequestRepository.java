@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.oauth2;
+package com.saiko.bidmarket.common.oauth2;
 
 import static java.util.Optional.*;
 
