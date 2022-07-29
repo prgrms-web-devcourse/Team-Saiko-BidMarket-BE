@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,6 +25,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
@@ -175,6 +177,71 @@ class DefaultUserServiceTest {
       }
     }
 
+  }
+
+  @Order(3)
+  @Nested
+  @DisplayName("findById 메서드는")
+  class DescribeFindById {
+
+    @Nested
+    @DisplayName("id에 음수나 0이 들어오면")
+    class ContextReceiveNegativeValue {
+
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1})
+      @DisplayName("IllegalArgumentException을 반환한다.")
+      void itThrowIllegalArgumentException(long id) {
+        //then
+        Assertions.assertThatThrownBy(() -> defaultUserService.findById(id))
+                  .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않는 userId가 들어오면")
+    class ContextNotExistUserId {
+
+      @Test
+      @DisplayName("NotFoundException을 반환한다.")
+      void it() {
+        //given
+        final long notExistUserId = 1;
+
+        //then
+        Assertions.assertThatThrownBy(() -> defaultUserService.findById(notExistUserId))
+                  .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하는 userId가 들어오면")
+    class ContextExistUserId {
+
+      @Test
+      @DisplayName("해당 유저를 반환한다.")
+      void itReturnExistUser() {
+        //given
+        final long existUserId = 1;
+        final User existUser = new User(
+            "test",
+            "test",
+            "test",
+            "test",
+            new Group()
+            );
+
+        ReflectionTestUtils.setField(existUser, "id", existUserId);
+
+        //when
+        when(userRepository.findById(existUserId)).thenReturn(Optional.of(existUser));
+
+        final User actualUser = defaultUserService.findById(existUserId);
+
+        //then
+        Assertions.assertThat(actualUser).isEqualTo(existUser);
+      }
+    }
   }
 
 }
