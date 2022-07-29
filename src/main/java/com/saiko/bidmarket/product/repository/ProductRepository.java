@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.product.Repository;
+package com.saiko.bidmarket.product.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

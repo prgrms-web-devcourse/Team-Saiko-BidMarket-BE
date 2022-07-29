@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.product.controller.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.Min;
@@ -22,7 +21,7 @@ public class ProductCreateRequest {
   private final String description;
 
   @Size(max = 5)
-  private final List<String> images = new ArrayList<>();
+  private final List<String> images;
 
   @NotNull
   private final Category category;
@@ -32,13 +31,12 @@ public class ProductCreateRequest {
 
   private final String location;
 
-  public ProductCreateRequest(String title,
-                              String description,
-                              Category category,
-                              int minimumPrice,
+  public ProductCreateRequest(String title, String description,
+                              List<String> images, Category category, int minimumPrice,
                               String location) {
     this.title = title;
     this.description = description;
+    this.images = images;
     this.category = category;
     this.minimumPrice = minimumPrice;
     this.location = location;
