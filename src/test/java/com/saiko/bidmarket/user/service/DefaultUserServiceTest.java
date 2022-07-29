@@ -179,7 +179,6 @@ class DefaultUserServiceTest {
 
   }
 
-  @Order(3)
   @Nested
   @DisplayName("findById 메서드는")
   class DescribeFindById {
