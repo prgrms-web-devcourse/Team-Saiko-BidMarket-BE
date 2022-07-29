@@ -22,7 +22,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     this.credentials = credentials;
   }
 
-  JwtAuthenticationToken(
+  public JwtAuthenticationToken(
       Object principal,
       String credentials,
       Collection<? extends GrantedAuthority> authorities) {
