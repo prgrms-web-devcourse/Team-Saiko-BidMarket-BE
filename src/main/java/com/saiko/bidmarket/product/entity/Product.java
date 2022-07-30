@@ -107,6 +107,10 @@ public class Product extends BaseTime {
     return expireAt;
   }
 
+  public List<Image> getImages() {
+    return images;
+  }
+
   public static class Builder {
 
     private String title;

@@ -43,6 +43,10 @@ public class Image extends BaseTime {
     this.order = builder.order;
   }
 
+  public String getUrl() {
+    return url;
+  }
+
   public static class Builder {
 
     private Product product;

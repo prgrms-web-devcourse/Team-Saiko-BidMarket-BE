@@ -1,10 +1,13 @@
 package com.saiko.bidmarket.product.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
@@ -46,5 +49,9 @@ public class DefaultProductService implements ProductService {
                                    .build();
     return productRepository.save(product).getId();
   }
-}
 
+  @Override
+  public List<Product> findAll(ProductSelectRequest productSelectRequest) {
+    return null;
+  }
+}
