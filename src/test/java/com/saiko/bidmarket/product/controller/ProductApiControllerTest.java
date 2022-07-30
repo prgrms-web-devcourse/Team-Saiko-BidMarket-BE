@@ -537,9 +537,9 @@ class ProductApiControllerTest extends ControllerSetUp {
                         parameterWithName("sort").description("상품 정렬 기준")), responseFields(
                         fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
                         fieldWithPath("[].title").type(JsonFieldType.STRING).description("상품 제목"),
-                        fieldWithPath("[].image").type(JsonFieldType.STRING)
-                                                 .description("이미지")
-                                                 .optional(),
+                        fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
+                                                          .description("상품 썸네일 이미지")
+                                                          .optional(),
                         fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
                                                         .description("최소주문금액"),
                         fieldWithPath("[].expireAt").type(JsonFieldType.STRING)
