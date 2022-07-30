@@ -76,7 +76,7 @@ public class DefaultUserService implements UserService {
   }
 
   @Override
-  public void updateUser(Long id, UserUpdateRequest request) {
+  public void updateUser(long id, UserUpdateRequest request) {
 
   }
 }

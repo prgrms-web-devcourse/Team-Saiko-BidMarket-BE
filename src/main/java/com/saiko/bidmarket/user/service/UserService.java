@@ -12,5 +12,5 @@ public interface UserService {
 
   User findById(long id);
 
-  void updateUser(Long id, UserUpdateRequest request);
+  void updateUser(long id, UserUpdateRequest request);
 }
