@@ -32,7 +32,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -409,7 +408,6 @@ class ProductApiControllerTest extends ControllerSetUp {
     class ContextValidId {
 
       @Test
-      @WithAnonymousUser
       @DisplayName("해당 id를 가진 상품의 도메인 객체와 OK로 응답한다.")
       void itResponseOkWithProductDomainObjectHasInputId() throws Exception {
         // given
