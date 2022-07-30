@@ -51,6 +51,8 @@ public class Product extends BaseTime {
 
   private String location;
 
+  private String thumbnailImage;
+
   @NotNull
   private LocalDateTime expireAt;
 
@@ -76,6 +78,7 @@ public class Product extends BaseTime {
     this.location = builder.location;
     this.expireAt = LocalDateTime.now().plusDays(PROGRESSION_PERIOD_OF_BIDDING);
     this.images = createImages(builder.images);
+    this.thumbnailImage = createThumbnailImage(builder.images);
     this.writer = builder.writer;
   }
 
@@ -109,6 +112,10 @@ public class Product extends BaseTime {
 
   public List<Image> getImages() {
     return images;
+  }
+
+  public String getThumbnailImage() {
+    return thumbnailImage;
   }
 
   public User getWriter() {
@@ -182,6 +189,13 @@ public class Product extends BaseTime {
                                        .order(order.getAndIncrement())
                                        .build())
                     .collect(Collectors.toList());
+  }
+
+  private String createThumbnailImage(List<String> imageUrls) {
+    if (imageUrls == null || imageUrls.isEmpty()) {
+      return null;
+    }
+    return imageUrls.get(0);
   }
 }
 

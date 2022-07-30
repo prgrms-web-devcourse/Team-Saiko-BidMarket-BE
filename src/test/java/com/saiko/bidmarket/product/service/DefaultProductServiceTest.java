@@ -26,7 +26,6 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
-import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;
@@ -219,12 +218,12 @@ class DefaultProductServiceTest {
           .willReturn(List.of(product));
 
       //when
-      List<ProductSelectResponse> result = productService.findAll(productSelectRequest);
+      List<Product> result = productService.findAll(productSelectRequest);
 
       //then
       verify(productRepository).findAllProduct(any(PageRequest.class));
       assertThat(result.size()).isEqualTo(1);
-      assertThat(result.get(0).getId()).isEqualTo(product.getId());
+      assertThat(result.get(0)).isEqualTo(product);
     }
 
     @Nested
@@ -255,7 +254,7 @@ class DefaultProductServiceTest {
             .willReturn(Collections.EMPTY_LIST);
 
         //when
-        List<ProductSelectResponse> result = productService.findAll(productSelectRequest);
+        List<Product> result = productService.findAll(productSelectRequest);
 
         //then
         assertThat(result.size()).isEqualTo(0);
