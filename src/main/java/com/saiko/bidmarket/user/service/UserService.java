@@ -2,6 +2,7 @@ package com.saiko.bidmarket.user.service;
 
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.User;
 
 public interface UserService {
@@ -10,4 +11,6 @@ public interface UserService {
   User join(OAuth2User oAuth2User, String authorizedClientRegistrationId);
 
   User findById(long id);
+
+  void updateUser(Long id, UserUpdateRequest request);
 }

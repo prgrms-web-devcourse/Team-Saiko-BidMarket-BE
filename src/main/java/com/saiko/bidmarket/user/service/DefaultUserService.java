@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
@@ -60,7 +61,8 @@ public class DefaultUserService implements UserService {
       log.info("username : {} profileImage : {}", username, profileImage);
       Group group = groupService.findByName("USER_GROUP");
 
-      User user = new User(username, profileImage, authorizedClientRegistrationId, providerId, group);
+      User user = new User(username, profileImage, authorizedClientRegistrationId, providerId,
+                           group);
       return userRepository.save(user);
     }
   }
@@ -71,5 +73,10 @@ public class DefaultUserService implements UserService {
 
     return userRepository.findById(id)
                          .orElseThrow(() -> new NotFoundException("User does not exist"));
+  }
+
+  @Override
+  public void updateUser(Long id, UserUpdateRequest request) {
+
   }
 }
