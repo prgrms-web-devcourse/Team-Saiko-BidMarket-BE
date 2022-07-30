@@ -472,8 +472,6 @@ class ProductApiControllerTest extends ControllerSetUp {
                                                               .description("생성 시간"),
                                     fieldWithPath("updatedAt").type(JsonFieldType.STRING)
                                                               .description("수정 시간"),
-                                    fieldWithPath("writer.id").type(JsonFieldType.NUMBER)
-                                                              .description("작성자 식별자"),
                                     fieldWithPath("writer.name").type(JsonFieldType.STRING)
                                                                 .description("작성자 이름"),
                                     fieldWithPath("writer.profileImageUrl")
