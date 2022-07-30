@@ -72,4 +72,8 @@ public class User extends BaseTime {
   public Group getGroup() {
     return group;
   }
+
+  public String getProfileImage() {
+    return profileImage;
+  }
 }

@@ -10,7 +10,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,6 +42,7 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
+import com.saiko.bidmarket.product.entity.Image;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
 import com.saiko.bidmarket.user.entity.Group;
@@ -341,7 +341,6 @@ class ProductApiControllerTest extends ControllerSetUp {
 
   @Nested
   @DisplayName("findById 메소드는")
-  @WithAnonymousUser
   class DescribeFindById {
 
     @Nested
@@ -410,42 +409,40 @@ class ProductApiControllerTest extends ControllerSetUp {
     class ContextValidId {
 
       @Test
+      @WithAnonymousUser
       @DisplayName("해당 id를 가진 상품의 도메인 객체와 OK로 응답한다.")
       void itResponseOkWithProductDomainObjectHasInputId() throws Exception {
         // given
         long inputId = 1;
-        String title = "상품 타이틀";
-        String description = "상품 설명";
-        int minimumPrice = 10_000;
-        String location = "어디어디";
+        User writer = new User("제로", "image", "google", "123", new Group());
+        ReflectionTestUtils.setField(writer, "id", 1L);
 
-        int year = 2022;
-        int month = 7;
-        int day = 20;
-        int hour = 21;
-        int minute = 46;
-        int second = 0;
-
-        int daysOfWeek = 7;
-
-        LocalDateTime createdAt = LocalDateTime.of(year, month, day, hour, minute, second);
-        LocalDateTime updatedAt = LocalDateTime.of(year, month, day, hour, minute, second);
-        LocalDateTime expireAt = createdAt.plusDays(daysOfWeek);
-
-        Class<Product> productClass = Product.class;
-        Constructor<Product> productConstructor = productClass.getDeclaredConstructor();
-        productConstructor.setAccessible(true);
-        Product foundProduct = productConstructor.newInstance();
+        Product foundProduct = Product.builder()
+                                      .title("귤 팔아요")
+                                      .description("맛있어요")
+                                      .category(FOOD)
+                                      .images(Collections.emptyList())
+                                      .location("제주도")
+                                      .minimumPrice(1000)
+                                      .writer(writer)
+                                      .build();
 
         ReflectionTestUtils.setField(foundProduct, "id", inputId);
-        ReflectionTestUtils.setField(foundProduct, "title", title);
-        ReflectionTestUtils.setField(foundProduct, "description", description);
-        ReflectionTestUtils.setField(foundProduct, "minimumPrice", minimumPrice);
-        ReflectionTestUtils.setField(foundProduct, "category", DIGITAL_DEVICE);
-        ReflectionTestUtils.setField(foundProduct, "location", location);
-        ReflectionTestUtils.setField(foundProduct, "expireAt", expireAt);
-        ReflectionTestUtils.setField(foundProduct, "createdAt", createdAt);
-        ReflectionTestUtils.setField(foundProduct, "updatedAt", updatedAt);
+        ReflectionTestUtils.setField(foundProduct, "createdAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(foundProduct, "updatedAt", LocalDateTime.now());
+
+        Image image1 = Image.builder()
+                            .product(foundProduct)
+                            .url("image url1")
+                            .order(1)
+                            .build();
+        Image image2 = Image.builder()
+                            .product(foundProduct)
+                            .url("image url2")
+                            .order(2)
+                            .build();
+        List<Image> images = List.of(image1, image2);
+        ReflectionTestUtils.setField(foundProduct, "images", images);
 
         given(productService.findById(anyLong())).willReturn(foundProduct);
 
@@ -476,7 +473,20 @@ class ProductApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("createdAt").type(JsonFieldType.STRING)
                                                               .description("생성 시간"),
                                     fieldWithPath("updatedAt").type(JsonFieldType.STRING)
-                                                              .description("수정 시간")
+                                                              .description("수정 시간"),
+                                    fieldWithPath("writer.id").type(JsonFieldType.NUMBER)
+                                                              .description("작성자 식별자"),
+                                    fieldWithPath("writer.name").type(JsonFieldType.STRING)
+                                                                .description("작성자 이름"),
+                                    fieldWithPath("writer.profileImageUrl")
+                                        .type(JsonFieldType.STRING)
+                                        .description("작성자 이미지 주소"),
+                                    // fieldWithPath("imageUrls[]").type(JsonFieldType.ARRAY)
+                                    //                           .description("이미지 주소 리스트"),
+                                    fieldWithPath("imageUrls[].url").type(JsonFieldType.STRING)
+                                                                    .description("이미지 주소"),
+                                    fieldWithPath("imageUrls[].order").type(JsonFieldType.NUMBER)
+                                                                      .description("이미지 순서")
                                 )
                 ));
       }
@@ -507,7 +517,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(product, "updatedAt", LocalDateTime.now());
 
-        List<Product> products = Arrays.asList(product);
+        List<Product> products = List.of(product);
         given(productService.findAll(any(ProductSelectRequest.class))).willReturn(products);
 
         //when
