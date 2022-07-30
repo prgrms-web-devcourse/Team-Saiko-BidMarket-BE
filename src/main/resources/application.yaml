@@ -25,6 +25,7 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
       hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 1000
 
   security:
     oauth2.client:

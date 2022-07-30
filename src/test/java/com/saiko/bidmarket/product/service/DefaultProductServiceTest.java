@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.product.service;
 
+import static com.saiko.bidmarket.product.Category.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -7,6 +8,8 @@ import static org.mockito.BDDMockito.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,11 +19,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;
@@ -184,6 +190,75 @@ class DefaultProductServiceTest {
         //when,then
         assertThrows(IllegalArgumentException.class,
                      () -> productService.create(productCreateRequest, null));
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findAll 메서드는")
+  class DescribeFindAll {
+
+    @Test
+    @DisplayName("전체 상품을 반환한다")
+    void ItReturnProductList() {
+      //given
+      ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
+      User writer = new User("제로", "image", "google", "1234", new Group());
+      Product product = Product.builder()
+                               .title("세탁기 팔아요")
+                               .description("좋아요")
+                               .minimumPrice(100000)
+                               .category(HOUSEHOLD_APPLIANCE)
+                               .location("수원")
+                               .writer(writer)
+                               .images(null)
+                               .build();
+      ReflectionTestUtils.setField(product, "id", 1L);
+
+      given(productRepository.findAllProduct(any(PageRequest.class)))
+          .willReturn(List.of(product));
+
+      //when
+      List<ProductSelectResponse> result = productService.findAll(productSelectRequest);
+
+      //then
+      verify(productRepository).findAllProduct(any(PageRequest.class));
+      assertThat(result.size()).isEqualTo(1);
+      assertThat(result.get(0).getId()).isEqualTo(product.getId());
+    }
+
+    @Nested
+    @DisplayName("productSelectRequest 파라미터에 null 값이 전달되면")
+    class ContextWithProductSelectRequestNull {
+
+      @Test
+      @DisplayName("IllegalArgumentException 에러를 발생시킨다")
+      void ItThrowsIllegalArgumentException() {
+        //given
+        //when,then
+        assertThrows(IllegalArgumentException.class,
+                     () -> productService.findAll(null));
+      }
+    }
+
+    @Nested
+    @DisplayName("조회된 상품이 없다면")
+    class ContextWithProductListZero {
+
+      @Test
+      @DisplayName("빈 리스트를 반환한다")
+      void ItReturnEmptyList() {
+        //given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
+
+        given(productRepository.findAllProduct(any(PageRequest.class)))
+            .willReturn(Collections.EMPTY_LIST);
+
+        //when
+        List<ProductSelectResponse> result = productService.findAll(productSelectRequest);
+
+        //then
+        assertThat(result.size()).isEqualTo(0);
       }
     }
   }

@@ -1,7 +1,10 @@
 package com.saiko.bidmarket.product.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -9,6 +12,7 @@ import org.springframework.util.Assert;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
@@ -53,7 +57,18 @@ public class DefaultProductService implements ProductService {
   }
 
   @Override
-  public List<Product> findAll(ProductSelectRequest productSelectRequest) {
-    return null;
+  public List<ProductSelectResponse> findAll(ProductSelectRequest productSelectRequest) {
+    Assert.notNull(productSelectRequest, "ProductSelectRequest must be provided");
+    PageRequest pageRequest = PageRequest.of(productSelectRequest.getOffset(),
+                                             productSelectRequest.getLimit(),
+                                             Sort.Direction.valueOf(
+                                                 productSelectRequest.getSort()
+                                                                     .getOrder()
+                                                                     .toString()),
+                                             productSelectRequest.getSort().getProperty());
+    return productRepository.findAllProduct(pageRequest)
+                            .stream()
+                            .map((product) -> ProductSelectResponse.from(product))
+                            .collect(Collectors.toList());
   }
 }

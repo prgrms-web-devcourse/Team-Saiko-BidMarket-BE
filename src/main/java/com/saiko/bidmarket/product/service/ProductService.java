@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 
 public interface ProductService {
@@ -12,5 +13,5 @@ public interface ProductService {
 
   long create(ProductCreateRequest productCreateRequest, Long userId);
 
-  List<Product> findAll(ProductSelectRequest productSelectRequest);
+  List<ProductSelectResponse> findAll(ProductSelectRequest productSelectRequest);
 }
