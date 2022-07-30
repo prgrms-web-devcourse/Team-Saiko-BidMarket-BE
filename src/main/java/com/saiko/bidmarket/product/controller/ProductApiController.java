@@ -1,7 +1,6 @@
 package com.saiko.bidmarket.product.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -46,10 +45,7 @@ public class ProductApiController {
   @ResponseStatus(HttpStatus.OK)
   public List<ProductSelectResponse> findAll(
       @ModelAttribute @Valid ProductSelectRequest productSelectRequest) {
-    return productService.findAll(productSelectRequest)
-                         .stream()
-                         .map((product) -> ProductSelectResponse.from(product))
-                         .collect(Collectors.toList());
+    return productService.findAll(productSelectRequest);
   }
 
   @GetMapping("/{id}")
