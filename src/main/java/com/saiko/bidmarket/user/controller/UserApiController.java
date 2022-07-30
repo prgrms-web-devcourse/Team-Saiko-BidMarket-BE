@@ -30,10 +30,6 @@ public class UserApiController {
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody @Valid UserUpdateRequest request
   ) {
-    if (request.getImage() == null && request.getUsername() == null) {
-      throw new IllegalArgumentException("provide username or image");
-    }
-
     userService.updateUser(authentication.getUserId(), request);
   }
 }
