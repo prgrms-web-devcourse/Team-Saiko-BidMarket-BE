@@ -9,9 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -44,7 +41,7 @@ class UserApiControllerTest extends ControllerSetUp {
   class DescribeUpdateUser {
 
     @Nested
-    @DisplayName("유저 닉네임, 이미지의 유효한 수정 정보를 받으면")
+    @DisplayName("유저 닉네임, 이미지의 수정 정보를 받으면")
     class ContextValidNickNameAndImage {
 
       @Test
@@ -56,7 +53,7 @@ class UserApiControllerTest extends ControllerSetUp {
 
         //when
         final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .put(BASE_URL)
+            .patch(BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody);
 
@@ -79,21 +76,46 @@ class UserApiControllerTest extends ControllerSetUp {
     }
 
     @Nested
-    @DisplayName("비어있는 유저 닉네임을 인자로 받으면")
+    @DisplayName("이미지, 유저 닉네임을 모두 비어있는 인자로 받으면")
     class ContextBlankUserName {
 
-      @ParameterizedTest
-      @NullAndEmptySource
-      @ValueSource(strings = {"\t", "\n"})
+      @Test
       @DisplayName("400 BadRequest를 반환한다.")
-      void itThrow400BadRequest(String username) throws Exception {
+      void itThrow400BadRequest() throws Exception {
         //given
-        final UserUpdateRequest requestDto = new UserUpdateRequest(username, "test");
+        final String nullSource = null;
+        final UserUpdateRequest requestDto = new UserUpdateRequest(nullSource, nullSource);
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
         final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .put(BASE_URL)
+            .patch(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response
+            .andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("20자가 넘는 닉네임을 인자로 받으면")
+    class ContextOverLengthUserName {
+
+      @Test
+      @DisplayName("400 BadRequest를 반환한다.")
+      void itThrow400BadRequest() throws Exception {
+        //given
+        final String overLengthUsername = "testtesttesttesttesttestname";
+        final UserUpdateRequest requestDto = new UserUpdateRequest(overLengthUsername, null);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+
+        //when
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .patch(BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody);
 
