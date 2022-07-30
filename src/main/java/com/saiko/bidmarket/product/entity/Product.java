@@ -111,6 +111,10 @@ public class Product extends BaseTime {
     return images;
   }
 
+  public User getWriter() {
+    return writer;
+  }
+
   public static class Builder {
 
     private String title;

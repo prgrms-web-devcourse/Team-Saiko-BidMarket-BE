@@ -47,6 +47,10 @@ public class Image extends BaseTime {
     return url;
   }
 
+  public int getOrder() {
+    return order;
+  }
+
   public static class Builder {
 
     private Product product;

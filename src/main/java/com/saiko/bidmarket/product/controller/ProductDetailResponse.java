@@ -1,8 +1,13 @@
 package com.saiko.bidmarket.product.controller;
 
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.saiko.bidmarket.product.controller.dto.ImagBasicResponse;
 import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.user.entity.dto.UserBasicResponse;
 
 public class ProductDetailResponse {
   private final Long id;
@@ -13,6 +18,8 @@ public class ProductDetailResponse {
   private final String location;
   private final LocalDateTime expireAt;
   private final LocalDateTime createdAt;
+  private final UserBasicResponse writer;
+  private final List<ImagBasicResponse> imageUrls;
 
   public Long getId() {
     return id;
@@ -50,9 +57,17 @@ public class ProductDetailResponse {
     return updatedAt;
   }
 
+  public UserBasicResponse getWriter() {
+    return writer;
+  }
+
+  public List<ImagBasicResponse> getImageUrls() {
+    return imageUrls;
+  }
+
   private final LocalDateTime updatedAt;
-  
-  private ProductDetailResponse(Product product){
+
+  private ProductDetailResponse(Product product) {
     // 생성을 from 함수로만 하도록 제한
     this.id = product.getId();
     this.title = product.getTitle();
@@ -63,6 +78,11 @@ public class ProductDetailResponse {
     this.expireAt = product.getExpireAt();
     this.createdAt = product.getCreatedAt();
     this.updatedAt = product.getUpdatedAt();
+    this.writer = UserBasicResponse.from(product.getWriter());
+    this.imageUrls = product.getImages()
+                            .stream()
+                            .map(ImagBasicResponse::from)
+                            .collect(Collectors.toList());
   }
 
   public static ProductDetailResponse from(Product product) {
