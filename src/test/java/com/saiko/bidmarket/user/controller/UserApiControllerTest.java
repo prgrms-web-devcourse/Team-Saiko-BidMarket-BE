@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -76,7 +78,7 @@ class UserApiControllerTest extends ControllerSetUp {
     }
 
     @Nested
-    @DisplayName("이미지, 유저 닉네임을 모두 비어있는 인자로 받으면")
+    @DisplayName("이미지, 유저 닉네임을 모두 null 인자로 받으면")
     class ContextBlankUserName {
 
       @Test
@@ -85,6 +87,33 @@ class UserApiControllerTest extends ControllerSetUp {
         //given
         final String nullSource = null;
         final UserUpdateRequest requestDto = new UserUpdateRequest(nullSource, nullSource);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+
+        //when
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .patch(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response
+            .andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("null 이미지, empty 유저 닉네임을 인자로 받으면")
+    class ContextEmptyUsername {
+
+      @ParameterizedTest
+      @ValueSource(strings = {"", " ", "\n", "\t"})
+      @DisplayName("400 BadRequest를 반환한다.")
+      void itThrow400BadRequest(String empty) throws Exception {
+        //given
+        final String nullSource = null;
+        final UserUpdateRequest requestDto = new UserUpdateRequest(empty, "nullSource");
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
