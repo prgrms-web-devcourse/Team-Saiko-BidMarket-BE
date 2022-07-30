@@ -10,6 +10,7 @@ spring:
       schema-locations:
         - classpath:sql/product/product_schema.sql
         - classpath:sql/user/user_schema.sql
+        - classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
         - classpath:sql/constraint.sql
       data-locations: classpath:sql/user/user_data.sql
       encoding: UTF-8
@@ -28,8 +29,8 @@ spring:
     oauth2.client:
       registration:
         google:
-          clientId: ${google.client-id}
-          clientSecret: ${google.client-secret}
+          client-id: ${google.client-id}
+          client-secret: ${google.client-secret}
           scope:
             - profile
 
@@ -38,3 +39,6 @@ jwt:
   issuer: saiko
   client-secret: ${jwt.token-secret}
   expiry-seconds: 604800000
+
+server:
+  port: 80
