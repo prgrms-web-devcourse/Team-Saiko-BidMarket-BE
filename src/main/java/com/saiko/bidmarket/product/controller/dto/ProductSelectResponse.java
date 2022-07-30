@@ -9,18 +9,18 @@ import com.saiko.bidmarket.product.entity.Product;
 public class ProductSelectResponse {
   private final long id;
   private final String title;
-  private final String image;
+  private final String thumbnailImage;
   private final int minimumPrice;
   private final LocalDateTime expireAt;
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
-  public ProductSelectResponse(long id, String title, String image, int minimumPrice,
+  public ProductSelectResponse(long id, String title, String thumbnailImage, int minimumPrice,
                                LocalDateTime expireAt, LocalDateTime createdAt,
                                LocalDateTime updatedAt) {
     this.id = id;
     this.title = title;
-    this.image = image;
+    this.thumbnailImage = thumbnailImage;
     this.minimumPrice = minimumPrice;
     this.expireAt = expireAt;
     this.createdAt = createdAt;
@@ -49,8 +49,8 @@ public class ProductSelectResponse {
     return title;
   }
 
-  public String getImage() {
-    return image;
+  public String getThumbnailImage() {
+    return thumbnailImage;
   }
 
   public int getMinimumPrice() {
