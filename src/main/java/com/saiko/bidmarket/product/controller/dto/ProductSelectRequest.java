@@ -10,11 +10,26 @@ public class ProductSelectRequest {
   private int offset;
   @Positive
   private int limit;
-  private Sort sort = Sort.END_DATE_ASC;
+  private Sort sort;
 
   public ProductSelectRequest(int offset, int limit, Sort sort) {
     this.offset = offset;
     this.limit = limit;
     this.sort = sort;
+    if (sort == null) {
+      this.sort = Sort.END_DATE_ASC;
+    }
+  }
+
+  public int getOffset() {
+    return offset;
+  }
+
+  public int getLimit() {
+    return limit;
+  }
+
+  public Sort getSort() {
+    return sort;
   }
 }
