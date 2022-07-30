@@ -7,12 +7,15 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,9 +40,13 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
+import com.saiko.bidmarket.user.entity.Group;
+import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
