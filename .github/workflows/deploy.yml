@@ -32,8 +32,8 @@ jobs:
           spring.datasource.url: ${{secrets.RDS_URL}}
           spring.datasource.username: ${{secrets.RDS_USERNAME}}
           spring.datasoiurce.password: ${{secrets.RDS_PASSWORD}}
-          spring.security.oauth2.client.registration.google.client-id: ${{secretes.GOOGLE_CLIENT_ID}}
-          spring.security.oauth2.client.registration.google.client-secret: ${{secretes.GOOGLE_CLIENT_SECRET}}
+          spring.security.oauth2.client.registration.google.client-id: ${{secrets.GOOGLE_CLIENT_ID}}
+          spring.security.oauth2.client.registration.google.client-secret: ${{secrets.GOOGLE_CLIENT_SECRET}}
           jwt.client-secret: ${{secrets.JWT_TOKEN_SECRET}}
 
       - name: Grant execute permission for gradlew
