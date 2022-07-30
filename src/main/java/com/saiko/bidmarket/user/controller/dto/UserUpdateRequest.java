@@ -10,6 +10,7 @@ public class UserUpdateRequest {
   @NotBlank
   private final String username;
 
+  @NotBlank
   private final String profileImageUrl;
 
   public UserUpdateRequest(String username, String profileImageUrl) {
