@@ -41,7 +41,6 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
-import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Image;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
@@ -512,14 +511,8 @@ class ProductApiControllerTest extends ControllerSetUp {
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(product, "updatedAt", LocalDateTime.now());
 
-        ProductSelectResponse productSelectResponse = new ProductSelectResponse(1, "귤 팔아요", null,
-                                                                                1000,
-                                                                                LocalDateTime.now(),
-                                                                                LocalDateTime.now(),
-                                                                                LocalDateTime.now());
-
-        given(productService.findAll(any(ProductSelectRequest.class))).willReturn(
-            List.of(productSelectResponse));
+        given(productService.findAll(any(ProductSelectRequest.class)))
+            .willReturn(List.of(product));
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(BASE_URL)

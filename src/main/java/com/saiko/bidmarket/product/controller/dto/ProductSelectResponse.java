@@ -1,9 +1,7 @@
 package com.saiko.bidmarket.product.controller.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import com.saiko.bidmarket.product.entity.Image;
 import com.saiko.bidmarket.product.entity.Product;
 
 public class ProductSelectResponse {
@@ -29,16 +27,9 @@ public class ProductSelectResponse {
 
   public static ProductSelectResponse from(Product product) {
     return new ProductSelectResponse(product.getId(), product.getTitle(),
-                                     getThumbnailUrl(product.getImages()),
+                                     product.getThumbnailImage(),
                                      product.getMinimumPrice(), product.getExpireAt(),
                                      product.getCreatedAt(), product.getUpdatedAt());
-  }
-
-  private static String getThumbnailUrl(List<Image> images) {
-    if (images != null && images.size() >= 1) {
-      return images.get(0).getUrl();
-    }
-    return null;
   }
 
   public long getId() {
