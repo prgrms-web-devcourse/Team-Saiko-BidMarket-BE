@@ -481,8 +481,6 @@ class ProductApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("writer.profileImageUrl")
                                         .type(JsonFieldType.STRING)
                                         .description("작성자 이미지 주소"),
-                                    // fieldWithPath("imageUrls[]").type(JsonFieldType.ARRAY)
-                                    //                           .description("이미지 주소 리스트"),
                                     fieldWithPath("imageUrls[].url").type(JsonFieldType.STRING)
                                                                     .description("이미지 주소"),
                                     fieldWithPath("imageUrls[].order").type(JsonFieldType.NUMBER)
