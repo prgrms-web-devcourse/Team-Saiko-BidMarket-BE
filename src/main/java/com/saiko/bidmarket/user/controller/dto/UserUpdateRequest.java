@@ -10,19 +10,19 @@ public class UserUpdateRequest {
   @NotBlank
   private final String username;
 
-  private final String profileImageURL;
+  private final String profileImageUrl;
 
-  public UserUpdateRequest(String username, String profileImageURL) {
+  public UserUpdateRequest(String username, String profileImageUrl) {
 
     this.username = username;
-    this.profileImageURL = profileImageURL;
+    this.profileImageUrl = profileImageUrl;
   }
 
   public String getUsername() {
     return username;
   }
 
-  public String getProfileImageURL() {
-    return profileImageURL;
+  public String getProfileImageUrl() {
+    return profileImageUrl;
   }
 }
