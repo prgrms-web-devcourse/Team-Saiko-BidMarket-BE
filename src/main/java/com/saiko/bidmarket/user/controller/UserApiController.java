@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,12 +24,16 @@ public class UserApiController {
     this.userService = userService;
   }
 
-  @PutMapping
+  @PatchMapping
   @ResponseStatus(HttpStatus.OK)
   public void updateUser(
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody @Valid UserUpdateRequest request
   ) {
+    if (request.getImage() == null && request.getUsername() == null) {
+      throw new IllegalArgumentException("provide username or image");
+    }
+
     userService.updateUser(authentication.getUserId(), request);
   }
 }
