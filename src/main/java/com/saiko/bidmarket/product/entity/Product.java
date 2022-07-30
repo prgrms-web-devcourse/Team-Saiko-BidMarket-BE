@@ -170,14 +170,18 @@ public class Product extends BaseTime {
   }
 
   private List<Image> createImages(List<String> imageUrls) {
+    if (imageUrls == null) {
+      return new ArrayList<>();
+    }
+
     AtomicInteger order = new AtomicInteger(1);
     return imageUrls.stream()
-             .map((url) -> Image.builder()
-                                .url(url)
-                                .product(this)
-                                .order(order.getAndIncrement())
-                                .build())
-             .collect(Collectors.toList());
+                    .map((url) -> Image.builder()
+                                       .url(url)
+                                       .product(this)
+                                       .order(order.getAndIncrement())
+                                       .build())
+                    .collect(Collectors.toList());
   }
 }
 
