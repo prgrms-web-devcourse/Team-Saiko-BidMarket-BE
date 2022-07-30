@@ -79,34 +79,7 @@ class UserApiControllerTest extends ControllerSetUp {
     }
 
     @Nested
-    @DisplayName("null인 이미지 이미지, 유효한 유저 닉네임을 모두 인자로 받으면")
-    class ContextOnlyName {
-
-      @Test
-      @DisplayName("OK를 반환한다.")
-      void itThrow400BadRequest() throws Exception {
-        //given
-        final String nullSource = null;
-        final String username = "test";
-        final UserUpdateRequest requestDto = new UserUpdateRequest(username, nullSource);
-        final String requestBody = objectMapper.writeValueAsString(requestDto);
-
-        //when
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .patch(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
-
-        ResultActions response = mockMvc.perform(request);
-
-        //then
-        response
-            .andExpect(status().isOk());
-      }
-    }
-
-    @Nested
-    @DisplayName("null 이미지, 유저 닉네임을 모두 인자로 받으면")
+    @DisplayName("비어있는 이미지, 유저 닉네임을 모두 인자로 받으면")
     class ContextBlankUserName {
 
       @ParameterizedTest
@@ -115,8 +88,7 @@ class UserApiControllerTest extends ControllerSetUp {
       @DisplayName("400 BadRequest를 반환한다.")
       void itThrow400BadRequest(String nullAndEmpty) throws Exception {
         //given
-        final String nullSource = null;
-        final UserUpdateRequest requestDto = new UserUpdateRequest(nullAndEmpty, nullSource);
+        final UserUpdateRequest requestDto = new UserUpdateRequest(nullAndEmpty, nullAndEmpty);
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
@@ -134,7 +106,7 @@ class UserApiControllerTest extends ControllerSetUp {
     }
 
     @Nested
-    @DisplayName("유효한 이미지, empty 유저 닉네임을 인자로 받으면")
+    @DisplayName("유효한 이미지, 비어있는 유저 닉네임을 인자로 받으면")
     class ContextEmptyUsername {
 
       @ParameterizedTest
@@ -145,6 +117,34 @@ class UserApiControllerTest extends ControllerSetUp {
         //given
         final String validImage = "imageURL";
         final UserUpdateRequest requestDto = new UserUpdateRequest(empty, validImage);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+
+        //when
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .patch(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response
+            .andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("비어있는 이미지, 유효한 유저 닉네임을 인자로 받으면")
+    class ContextEmptyImage {
+
+      @ParameterizedTest
+      @NullAndEmptySource
+      @ValueSource(strings = {"", " ", "\n", "\t"})
+      @DisplayName("400 BadRequest를 반환한다.")
+      void itThrow400BadRequest(String empty) throws Exception {
+        //given
+        final String validUsername = "test";
+        final UserUpdateRequest requestDto = new UserUpdateRequest(validUsername, empty);
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
