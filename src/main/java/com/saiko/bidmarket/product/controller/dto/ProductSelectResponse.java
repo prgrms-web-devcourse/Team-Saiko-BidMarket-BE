@@ -29,12 +29,12 @@ public class ProductSelectResponse {
 
   public static ProductSelectResponse from(Product product) {
     return new ProductSelectResponse(product.getId(), product.getTitle(),
-                                     createImageUrl(product.getImages()),
+                                     getThumbnailUrl(product.getImages()),
                                      product.getMinimumPrice(), product.getExpireAt(),
                                      product.getCreatedAt(), product.getUpdatedAt());
   }
 
-  private static String createImageUrl(List<Image> images) {
+  private static String getThumbnailUrl(List<Image> images) {
     if (images != null && images.size() >= 1) {
       return images.get(0).getUrl();
     }
