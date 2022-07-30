@@ -70,7 +70,7 @@ class UserApiControllerTest extends ControllerSetUp {
                             requestFields(
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("변경할 유저 이름"),
-                                fieldWithPath("image").type(JsonFieldType.STRING)
+                                fieldWithPath("profileImageURL").type(JsonFieldType.STRING)
                                                       .description("변경할 유저 프로필 이미지")
                             )
             ));
