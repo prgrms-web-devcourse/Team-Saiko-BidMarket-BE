@@ -28,10 +28,10 @@ public class ProductApiController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  // TODO: 로그인한 유저 정보 필요
   public ProductCreateResponse create(
       @AuthenticationPrincipal JwtAuthentication authentication,
-      @RequestBody @Valid ProductCreateRequest productCreateRequest) {
+      @RequestBody @Valid ProductCreateRequest productCreateRequest
+  ) {
     long productId = productService.create(productCreateRequest, authentication.getUserId());
     return ProductCreateResponse.from(productId);
   }
