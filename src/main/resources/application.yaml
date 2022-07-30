@@ -28,13 +28,13 @@ spring:
     oauth2.client:
       registration:
         google:
-          clientId: '{google client-id}'
-          clientSecret: '{google client-secret}'
+          clientId: ${google.client-id}
+          clientSecret: ${google.client-secret}
           scope:
             - profile
 
 jwt:
   header: Authorization
   issuer: saiko
-  client-secret: '{client-secret'
-  expiry-seconds: 100000
+  client-secret: ${jwt.token-secret}
+  expiry-seconds: 604800000
