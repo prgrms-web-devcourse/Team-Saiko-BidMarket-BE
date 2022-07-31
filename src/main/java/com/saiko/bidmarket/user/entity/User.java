@@ -61,6 +61,14 @@ public class User extends BaseTime {
     this.group = group;
   }
 
+  public void update(String username, String profileImage) {
+    Assert.notNull(username, "username must be provide");
+    Assert.notNull(profileImage, "profileImage must be provide");
+
+    this.username = username;
+    this.profileImage = profileImage;
+  }
+
   public Long getId() {
     return id;
   }
