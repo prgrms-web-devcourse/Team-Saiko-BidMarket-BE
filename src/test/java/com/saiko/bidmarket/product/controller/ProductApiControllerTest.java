@@ -37,13 +37,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Image;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.product.service.ProductService;
+import com.saiko.bidmarket.product.service.ProductApiService;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.util.ControllerSetUp;
@@ -55,7 +56,7 @@ class ProductApiControllerTest extends ControllerSetUp {
   private ObjectMapper objectMapper;
 
   @MockBean
-  private ProductService productService;
+  private ProductApiService productApiService;
 
   public static final String BASE_URL = "/api/v1/products";
 
@@ -107,8 +108,8 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
-        given(productService.create(any(ProductCreateRequest.class), any(Long.class)))
-            .willReturn(1L);
+        given(productApiService.create(any(ProductCreateRequest.class), any(Long.class)))
+            .willReturn(ProductCreateResponse.from(1L));
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
@@ -119,7 +120,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(productService).create(any(ProductCreateRequest.class), any(Long.class));
+        verify(productApiService).create(any(ProductCreateRequest.class), any(Long.class));
         response.andExpect(status().isCreated())
                 .andDo(document("Create product",
                                 preprocessRequest(prettyPrint()),
@@ -371,7 +372,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         // given
         long inputId = -1;
 
-        given(productService.findById(anyLong())).willThrow(IllegalArgumentException.class);
+        given(productApiService.findById(anyLong())).willThrow(IllegalArgumentException.class);
 
         // when
         ResultActions response = mockMvc.perform(
@@ -379,27 +380,6 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         // then
         response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("id에 해당하는 상품이 없을 경우 ")
-    class ContextNotFoundProductById {
-
-      @Test
-      @DisplayName("NotFound로 응답한다.")
-      void itResponseNotFound() throws Exception {
-        // given
-        long inputId = 1;
-
-        given(productService.findById(anyLong())).willThrow(NotFoundException.class);
-
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL + "/{id}", inputId));
-
-        // then
-        response.andExpect(status().isNotFound());
       }
     }
 
@@ -442,14 +422,15 @@ class ProductApiControllerTest extends ControllerSetUp {
         List<Image> images = List.of(image1, image2);
         ReflectionTestUtils.setField(foundProduct, "images", images);
 
-        given(productService.findById(anyLong())).willReturn(foundProduct);
+        ProductDetailResponse productDetailResponse = ProductDetailResponse.from(foundProduct);
+        given(productApiService.findById(anyLong())).willReturn(productDetailResponse);
 
         // when
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders.get(BASE_URL + "/{id}", inputId));
 
         // then
-        verify(productService, atLeastOnce()).findById(anyLong());
+        verify(productApiService, atLeastOnce()).findById(anyLong());
         response.andExpect(status().isOk())
                 .andDo(document("Find Product by id",
                                 preprocessResponse(prettyPrint()),
@@ -511,24 +492,21 @@ class ProductApiControllerTest extends ControllerSetUp {
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(product, "updatedAt", LocalDateTime.now());
 
-        given(productService.findAll(any(ProductSelectRequest.class)))
-            .willReturn(List.of(product));
+        List<ProductSelectResponse> responses = List.of(ProductSelectResponse.from(product));
+        given(productApiService.findAll(any(ProductSelectRequest.class))).willReturn(responses);
 
         //when
-        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(BASE_URL)
-                                                                                .contentType(
-                                                                                    MediaType.APPLICATION_FORM_URLENCODED)
-                                                                                .queryParam(
-                                                                                    "offset", "1")
-                                                                                .queryParam("limit",
-                                                                                            "1")
-                                                                                .queryParam("sort",
-                                                                                            Sort.END_DATE_ASC.name());
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .queryParam("offset", "1")
+            .queryParam("limit", "1")
+            .queryParam("sort", Sort.END_DATE_ASC.name());
 
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(productService).findAll(any(ProductSelectRequest.class));
+        verify(productApiService).findAll(any(ProductSelectRequest.class));
         response.andExpect(status().isOk())
                 .andDo(document("Select product", preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()), requestParameters(
