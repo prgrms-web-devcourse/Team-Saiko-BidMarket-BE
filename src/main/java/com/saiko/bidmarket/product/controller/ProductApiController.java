@@ -1,7 +1,6 @@
 package com.saiko.bidmarket.product.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -21,15 +20,16 @@ import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
-import com.saiko.bidmarket.product.service.ProductService;
+import com.saiko.bidmarket.product.service.ProductApiService;
 
 @RestController
 @RequestMapping("api/v1/products")
 public class ProductApiController {
-  private final ProductService productService;
 
-  public ProductApiController(ProductService productService) {
-    this.productService = productService;
+  private final ProductApiService productApiService;
+
+  public ProductApiController(ProductApiService productApiService) {
+    this.productApiService = productApiService;
   }
 
   @PostMapping
@@ -38,24 +38,19 @@ public class ProductApiController {
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody @Valid ProductCreateRequest productCreateRequest
   ) {
-    long productId = productService.create(productCreateRequest, authentication.getUserId());
-    return ProductCreateResponse.from(productId);
+    return productApiService.create(productCreateRequest, authentication.getUserId());
   }
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<ProductSelectResponse> findAll(
       @ModelAttribute @Valid ProductSelectRequest productSelectRequest) {
-    return productService.findAll(productSelectRequest)
-                         .stream()
-                         .map((product) -> ProductSelectResponse.from(product))
-                         .collect(Collectors.toList());
-
+    return productApiService.findAll(productSelectRequest);
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("{id}")
   @ResponseStatus(HttpStatus.OK)
   public ProductDetailResponse findById(@PathVariable long id) {
-    return ProductDetailResponse.from(productService.findById(id));
+    return productApiService.findById(id);
   }
 }
