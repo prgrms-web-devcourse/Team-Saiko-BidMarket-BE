@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
@@ -228,7 +229,7 @@ class DefaultUserServiceTest {
             "test",
             "test",
             new Group()
-            );
+        );
 
         //when
         when(userRepository.findById(existUserId)).thenReturn(Optional.of(existUser));
@@ -237,6 +238,81 @@ class DefaultUserServiceTest {
 
         //then
         Assertions.assertThat(actualUser).isEqualTo(existUser);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("updateUser 메서드는")
+  class DescribeUpdateUser {
+
+    @Nested
+    @DisplayName("null 값인 userUpdateRequest가 인자로 들어오면")
+    class ContextReceiveNullUserUpdateRequest {
+
+      @Test
+      @DisplayName("IllegalArgumentException을 반환한다.")
+      void itThrowIllegalArgumentException() {
+        //given
+        final long userId = 1;
+        final UserUpdateRequest request = null;
+
+        //then
+        Assertions.assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
+                  .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않는 유저의 id값이 들어오면")
+    class ContextReceiveNotExistUserId {
+
+      @Test
+      @DisplayName("NotFoundException을 반환한다.")
+      void itThrowNotFoundException() {
+        //given
+        final long userId = 1;
+        final UserUpdateRequest request = new UserUpdateRequest("test", "test");
+
+        //when
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        //then
+        Assertions.assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
+                  .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하는 유저와 유효한 userUpdateRequest를 인자로 받으면")
+    class ContextReceiveValidUserAndUpdateRequest {
+
+      @Test
+      @DisplayName("해당 유저 정보를 update한다.")
+      void itUpdateUser() {
+        //given
+        final long userId = 1;
+        final UserUpdateRequest request = new UserUpdateRequest("update", "update");
+        final User targetUser = new User("before",
+                                         "before",
+                                         "provider",
+                                         "providerId",
+                                         new Group());
+
+        ReflectionTestUtils.setField(targetUser, "id", 1L);
+
+        //when
+        when(userRepository.findById(userId)).thenReturn(Optional.of(targetUser));
+
+        defaultUserService.updateUser(userId, request);
+
+        final String expected = "update";
+        final String actualUsername = targetUser.getUsername();
+        final String actualProfileImage = targetUser.getProfileImage();
+
+        //then
+        Assertions.assertThat(actualUsername).isEqualTo(expected);
+        Assertions.assertThat(actualProfileImage).isEqualTo(expected);
       }
     }
   }
