@@ -40,7 +40,6 @@ public class DefaultUserService implements UserService {
   }
 
   @Override
-  @Transactional
   public User join(OAuth2User oAuth2User, String authorizedClientRegistrationId) {
     Assert.notNull(oAuth2User, "OAuth2User must be provided");
     Assert.hasText(authorizedClientRegistrationId,
@@ -77,6 +76,9 @@ public class DefaultUserService implements UserService {
 
   @Override
   public void updateUser(long id, UserUpdateRequest request) {
+    Assert.notNull(request, "request must be provide");
 
+    final User user = findById(id);
+    user.update(request.getUsername(), request.getProfileImageUrl());
   }
 }
