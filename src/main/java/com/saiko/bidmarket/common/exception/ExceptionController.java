@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -21,27 +22,34 @@ public class ExceptionController {
   }
 
   @Order(2)
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleMethodArgumentNotValidException(MethodArgumentTypeMismatchException e) {
+    logger.warn("MethodArgumentTypeMismatchException : ", e);
+  }
+
+  @Order(3)
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleIllegalArgumentException(IllegalArgumentException e) {
     logger.warn("IllegalArgumentException : ", e);
   }
 
-  @Order(3)
+  @Order(4)
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public void handleNotFoundException(NotFoundException e) {
     logger.warn("NotFoundException : ", e);
   }
 
-  @Order(4)
+  @Order(5)
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public void handleRuntimeException(RuntimeException e) {
     logger.error("RuntimeException : ", e);
   }
 
-  @Order(5)
+  @Order(6)
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public void handleException(Exception e) {
