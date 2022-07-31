@@ -3,6 +3,7 @@ package com.saiko.bidmarket.product.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
@@ -14,6 +15,7 @@ import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.service.UserService;
 
 @Service
+@Transactional
 public class DefaultProductService implements ProductService {
 
   private final ProductRepository productRepository;
