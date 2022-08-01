@@ -3,7 +3,6 @@ package com.saiko.bidmarket.common.oauth2;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,7 +50,7 @@ public class OAuth2AuthenticationSuccessHandler extends
       String loginSuccessJson = generateLoginSuccessJson(user);
       response.setContentType("application/json;charset=UTF-8");
       response.setContentLength(loginSuccessJson.getBytes(StandardCharsets.UTF_8).length);
-      response.getWriter().write(loginSuccessJson);
+      response.sendRedirect("http://localhost:3000/oauth?" + loginSuccessJson);
     }
   }
 
@@ -62,7 +61,7 @@ public class OAuth2AuthenticationSuccessHandler extends
   private String generateLoginSuccessJson(User user) {
     String token = generateToken(user);
     log.debug("Jwt({}) created for oauth2 login user {}", token, user.getId());
-    return "{\"token\":\"" + token + "\"}";
+    return "token=" + token;
   }
 
   private String generateToken(User user) {
