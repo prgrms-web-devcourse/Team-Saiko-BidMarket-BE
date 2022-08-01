@@ -10,10 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.user.entity.User;
 
 @Entity
-public class ChatRoom {
+public class ChatRoom extends BaseTime {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
