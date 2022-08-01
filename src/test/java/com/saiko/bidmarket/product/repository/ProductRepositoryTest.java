@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.saiko.bidmarket.common.config.QueryDslConfig;
@@ -25,9 +26,7 @@ import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.GroupRepository;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
-@Sql(scripts = {"/sql/product/product_schema.sql", "/sql/user/user_schema.sql",
-    "/sql/constraint.sql", "/sql/user/user_data.sql"})
-@DataJpaTest
+@DataJpaTest()
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(value = QueryDslConfig.class)
