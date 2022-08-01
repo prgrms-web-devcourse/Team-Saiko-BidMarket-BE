@@ -13,9 +13,9 @@ create table `chat_message`
 
 create table `chat_room`
 (
-    id          bigint not null,
-    seller_id   bigint not null,
-    customer_id bigint not null,
-    created_at  timestamp,
-    updated_at  timestamp
+    id         bigint not null,
+    seller_id  bigint not null,
+    buyer_id   bigint not null,
+    created_at timestamp,
+    updated_at timestamp
 );

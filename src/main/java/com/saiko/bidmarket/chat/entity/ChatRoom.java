@@ -24,7 +24,7 @@ public class ChatRoom extends BaseTime {
   private User seller;
 
   @ManyToOne
-  private User customer;
+  private User buyer;
 
   @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ChatMessage> chatMessage;
