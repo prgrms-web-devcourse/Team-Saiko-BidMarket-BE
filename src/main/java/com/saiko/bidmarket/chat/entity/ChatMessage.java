@@ -10,10 +10,11 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.user.entity.User;
 
 @Entity
-public class ChatMessage {
+public class ChatMessage extends BaseTime {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
