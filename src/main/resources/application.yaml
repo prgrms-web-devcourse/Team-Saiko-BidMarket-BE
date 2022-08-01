@@ -8,6 +8,7 @@ spring:
   sql:
     init:
       schema-locations:
+        - classpath:sql/chat/chat_schema.sql
         - classpath:sql/bidding/bidding_schema.sql
         - classpath:sql/product/product_schema.sql
         - classpath:sql/user/user_schema.sql
