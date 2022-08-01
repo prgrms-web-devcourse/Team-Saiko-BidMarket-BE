@@ -67,4 +67,3 @@ public class DefaultProductApiService implements ProductApiService {
     return ProductDetailResponse.from(foundProduct);
   }
 }
-
