@@ -17,7 +17,7 @@ import com.saiko.bidmarket.user.entity.User;
 @Entity
 public class Bidding extends BaseTime {
 
-  private static final long BASE_PRICE = 1000;
+  private static final long UNIT_AMOUNT = 1000;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class Bidding extends BaseTime {
   }
 
   private boolean isValidBiddingPrice(long biddingPrice) {
-    return 0 < biddingPrice && biddingPrice % BASE_PRICE == 0;
+    return 0 < biddingPrice && biddingPrice % UNIT_AMOUNT == 0;
   }
 
   public Long getId() {
