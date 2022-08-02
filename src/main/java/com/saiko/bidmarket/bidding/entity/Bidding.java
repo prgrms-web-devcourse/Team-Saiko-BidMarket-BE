@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.bidding.entity;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,13 +36,12 @@ public class Bidding extends BaseTime {
   protected Bidding() {
   }
 
-  public Bidding(long biddingPrice, User bidder, Product product) {
-    Assert.isTrue(isValidBiddingPrice(biddingPrice),
-                  "Bidding price must be positive number and a multiple of the unit amount");
+  public Bidding(BiddingPrice biddingPrice, User bidder, Product product) {
+    Assert.notNull(biddingPrice, "Bidding price must be provided");
     Assert.notNull(bidder, "Bidder must be provided");
     Assert.notNull(product, "Product must be provided");
 
-    this.biddingPrice = biddingPrice;
+    this.biddingPrice = biddingPrice.getValue();
     this.bidder = bidder;
     this.product = product;
   }
