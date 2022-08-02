@@ -74,7 +74,7 @@ public class Product extends BaseTime {
 
   @Builder
   private Product(String title, String description, int minimumPrice, Category category,
-                  String location, String thumbnailImage, List<String> images, User writer) {
+                  String location, List<String> images, User writer) {
     Assert.hasText(title, "Title must be provided");
     Assert.hasText(description, "Description must be provided");
     Assert.notNull(writer, "Writer must be provided");
