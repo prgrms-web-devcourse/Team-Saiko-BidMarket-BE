@@ -20,16 +20,16 @@ import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
-import com.saiko.bidmarket.product.service.ProductApiService;
+import com.saiko.bidmarket.product.service.ProductService;
 
 @RestController
 @RequestMapping("api/v1/products")
 public class ProductApiController {
 
-  private final ProductApiService productApiService;
+  private final ProductService productService;
 
-  public ProductApiController(ProductApiService productApiService) {
-    this.productApiService = productApiService;
+  public ProductApiController(ProductService productService) {
+    this.productService = productService;
   }
 
   @PostMapping
@@ -38,19 +38,19 @@ public class ProductApiController {
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody @Valid ProductCreateRequest productCreateRequest
   ) {
-    return productApiService.create(productCreateRequest, authentication.getUserId());
+    return productService.create(productCreateRequest, authentication.getUserId());
   }
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<ProductSelectResponse> findAll(
       @ModelAttribute @Valid ProductSelectRequest productSelectRequest) {
-    return productApiService.findAll(productSelectRequest);
+    return productService.findAll(productSelectRequest);
   }
 
   @GetMapping("{id}")
   @ResponseStatus(HttpStatus.OK)
   public ProductDetailResponse findById(@PathVariable long id) {
-    return productApiService.findById(id);
+    return productService.findById(id);
   }
 }
