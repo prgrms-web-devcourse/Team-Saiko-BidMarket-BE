@@ -18,11 +18,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
+import com.saiko.bidmarket.user.entity.Group;
+import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.service.UserService;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
@@ -184,6 +188,51 @@ class UserApiControllerTest extends ControllerSetUp {
         //then
         response
             .andExpect(status().isBadRequest());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("getUser메서드는 ")
+  class DescribeGetUser {
+
+    @Nested
+    @DisplayName("유저 상세 정보 조회 요청을 받으면")
+    class ContextReturnUserDetails {
+
+      @Test
+      @DisplayName("해당 유저의 Id와 이름과 사진URL을 반환한다.")
+      void itReturnUsernameAndProfileImageUrl() throws Exception {
+        //given
+        final UserSelectResponse expected;
+        final User user = new User("test",
+                                   "test",
+                                   "test",
+                                   "test",
+                                   new Group());
+
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        //when
+        when(userService.findById(anyLong())).thenReturn(UserSelectResponse.from(user));
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL + "/1");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).findById(anyLong());
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Get User",
+                            preprocessRequest(prettyPrint()),
+                            responseFields(
+                                fieldWithPath("username").type(JsonFieldType.STRING)
+                                                         .description("현재 유저 이름"),
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+                                                                .description("현재 유저 프로필 이미지")
+                            )
+            ));
       }
     }
   }
