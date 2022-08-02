@@ -10,6 +10,7 @@ CREATE TABLE `product`
     category        varchar(100) not null,
     location        varchar(100),
     thumbnail_image varchar(512),
+    progressed      tinyint(1)   not null,
     expire_at       timestamp    not null,
     created_at      timestamp,
     updated_at      timestamp,
