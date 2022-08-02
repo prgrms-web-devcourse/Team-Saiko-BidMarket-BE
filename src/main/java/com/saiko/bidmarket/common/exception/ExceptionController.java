@@ -17,6 +17,12 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class ExceptionController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    logger.warn("HttpMessageNotReadableException : ", e);
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
