@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.user.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
@@ -84,5 +87,11 @@ public class DefaultUserService implements UserService {
                                     .orElseThrow(
                                         () -> new NotFoundException("User does not exist"));
     user.update(request.getUsername(), request.getProfileImageUrl());
+  }
+
+  @Override
+  public List<UserProductSelectResponse> findAllUserProducts(long userId,
+                                                             UserProductSelectRequest request) {
+    return null;
   }
 }
