@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.saiko.bidmarket.common.config.QueryDslConfig;
@@ -39,6 +40,19 @@ public class ProductRepositoryTest {
   @Nested
   @DisplayName("findAllProduct 메소드는")
   class DescribeFindAllProduct {
+
+    @Nested
+    @DisplayName("ProductSelectRequest 가 null 이라면")
+    class ContextWithProductSelectRequestNull {
+
+      @Test
+      @DisplayName("InvalidDataAccessApiUsageException 에러를 발생시킨다")
+      void ItThrowsInvalidDataAccessApiUsageException() {
+        //when, then
+        assertThatThrownBy(() -> productRepository.findAllProduct(null))
+            .isInstanceOf(InvalidDataAccessApiUsageException.class);
+      }
+    }
 
     @Nested
     @DisplayName("카테고리 정보가 안넘어온다면")

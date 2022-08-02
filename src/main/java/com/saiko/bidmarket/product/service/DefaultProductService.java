@@ -1,12 +1,14 @@
 package com.saiko.bidmarket.product.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.controller.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
@@ -54,9 +56,8 @@ public class DefaultProductService implements ProductService {
   }
 
   @Override
-  public List<Product> findAll(ProductSelectRequest productSelectRequest) {
+  public List<ProductSelectResponse> findAll(ProductSelectRequest productSelectRequest) {
     Assert.notNull(productSelectRequest, "ProductSelectRequest must be provided");
-    return productRepository.findAllProduct(productSelectRequest);
     return productRepository.findAllProduct(productSelectRequest).stream()
                             .map(ProductSelectResponse::from)
                             .collect(Collectors.toList());

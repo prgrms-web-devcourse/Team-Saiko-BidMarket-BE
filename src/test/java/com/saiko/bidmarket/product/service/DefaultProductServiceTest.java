@@ -156,7 +156,7 @@ class DefaultProductServiceTest {
       @DisplayName("요청에 해당하는 상품 리스트를 반환한다")
       void ItResponseProductList() {
         //given
-        ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, 0, 2, null);
         User writer = new User("제로", "image", "google", "1234", new Group());
         Product product = Product.builder()
                                  .title("세탁기 팔아요")
@@ -178,7 +178,7 @@ class DefaultProductServiceTest {
         //then
         verify(productRepository).findAllProduct(any(ProductSelectRequest.class));
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(product);
+        assertThat(result.get(0).getId()).isEqualTo(product.getId());
       }
     }
   }
