@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.common.entity.LongId;
 
+import lombok.Getter;
+
+@Getter
 public class BiddingCreateRequest {
 
   @NotNull
@@ -18,11 +21,4 @@ public class BiddingCreateRequest {
     this.biddingPrice = new BiddingPrice(biddingPrice);
   }
 
-  public LongId getProductId() {
-    return productId;
-  }
-
-  public BiddingPrice getBiddingPrice() {
-    return biddingPrice;
-  }
 }
