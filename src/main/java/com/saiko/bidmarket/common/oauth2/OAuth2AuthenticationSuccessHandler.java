@@ -51,7 +51,7 @@ public class OAuth2AuthenticationSuccessHandler extends
       String loginSuccessJson = generateLoginSuccessJson(user);
       response.setContentType("application/json;charset=UTF-8");
       response.setContentLength(loginSuccessJson.getBytes(StandardCharsets.UTF_8).length);
-      response.getWriter().write(loginSuccessJson);
+      response.sendRedirect("https://bidmarket.vercel.app/auth?" + loginSuccessJson);
     }
   }
 
@@ -62,7 +62,7 @@ public class OAuth2AuthenticationSuccessHandler extends
   private String generateLoginSuccessJson(User user) {
     String token = generateToken(user);
     log.debug("Jwt({}) created for oauth2 login user {}", token, user.getId());
-    return "{\"token\":\"" + token + "\"}";
+    return "token=" + token;
   }
 
   private String generateToken(User user) {
