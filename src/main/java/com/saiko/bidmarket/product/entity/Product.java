@@ -57,6 +57,8 @@ public class Product extends BaseTime {
 
   private String thumbnailImage;
 
+  private boolean progressed;
+
   @NotNull
   private LocalDateTime expireAt;
 
@@ -86,6 +88,7 @@ public class Product extends BaseTime {
     this.images = createImages(images);
     this.thumbnailImage = createThumbnailImage(images);
     this.writer = writer;
+    this.progressed = false;
   }
 
   private List<Image> createImages(List<String> imageUrls) {
