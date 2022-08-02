@@ -19,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
@@ -163,7 +162,7 @@ class DefaultProductServiceTest {
     @DisplayName("전체 상품을 반환한다")
     void ItReturnProductList() {
       //given
-      ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
+      ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, 0, 2, null);
       User writer = new User("제로", "image", "google", "1234", new Group());
       Product product = Product.builder()
                                .title("세탁기 팔아요")
@@ -176,14 +175,14 @@ class DefaultProductServiceTest {
                                .build();
       ReflectionTestUtils.setField(product, "id", 1L);
 
-      given(productRepository.findAllProduct(any(PageRequest.class)))
+      given(productRepository.findAllProduct(any(ProductSelectRequest.class)))
           .willReturn(List.of(product));
 
       //when
       List<Product> result = productService.findAll(productSelectRequest);
 
       //then
-      verify(productRepository).findAllProduct(any(PageRequest.class));
+      verify(productRepository).findAllProduct(any(ProductSelectRequest.class));
       assertThat(result.size()).isEqualTo(1);
       assertThat(result.get(0)).isEqualTo(product);
     }
@@ -210,9 +209,9 @@ class DefaultProductServiceTest {
       @DisplayName("빈 리스트를 반환한다")
       void ItReturnEmptyList() {
         //given
-        ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, 0, 2, null);
 
-        given(productRepository.findAllProduct(any(PageRequest.class)))
+        given(productRepository.findAllProduct(any(ProductSelectRequest.class)))
             .willReturn(Collections.emptyList());
 
         //when

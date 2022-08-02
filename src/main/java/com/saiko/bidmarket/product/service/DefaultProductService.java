@@ -2,8 +2,6 @@ package com.saiko.bidmarket.product.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -41,13 +39,6 @@ public class DefaultProductService implements ProductService {
   @Override
   public List<Product> findAll(ProductSelectRequest productSelectRequest) {
     Assert.notNull(productSelectRequest, "ProductSelectRequest must be provided");
-    PageRequest pageRequest = PageRequest.of(productSelectRequest.getOffset(),
-                                             productSelectRequest.getLimit(),
-                                             Sort.Direction.valueOf(
-                                                 productSelectRequest.getSort()
-                                                                     .getOrder()
-                                                                     .toString()),
-                                             productSelectRequest.getSort().getProperty());
-    return productRepository.findAllProduct(pageRequest);
+    return productRepository.findAllProduct(productSelectRequest);
   }
 }
