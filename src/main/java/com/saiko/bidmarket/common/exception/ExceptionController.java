@@ -1,11 +1,11 @@
 package com.saiko.bidmarket.common.exception;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,6 +33,12 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleConversionFailedException(ConversionFailedException e) {
     logger.warn("ConversionFailedException : ", e);
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    logger.warn("HttpMessageNotReadableException : ", e);
   }
 
   @ExceptionHandler(NumberFormatException.class)

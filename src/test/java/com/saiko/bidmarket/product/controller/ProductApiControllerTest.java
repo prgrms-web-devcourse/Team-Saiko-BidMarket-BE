@@ -101,7 +101,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
@@ -158,7 +158,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", title);
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
@@ -190,7 +190,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", description);
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
@@ -221,7 +221,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", Arrays.asList("imageUrl1",
@@ -257,7 +257,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 100);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});

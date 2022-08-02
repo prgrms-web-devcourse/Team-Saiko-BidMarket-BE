@@ -17,7 +17,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
@@ -130,7 +129,6 @@ class DefaultProductServiceTest {
         assertThat(response.getId()).isEqualTo(product.getId());
       }
     }
-
   }
 
   @Nested
@@ -171,15 +169,16 @@ class DefaultProductServiceTest {
                                  .build();
         ReflectionTestUtils.setField(product, "id", 1L);
 
-        given(productRepository.findAllProduct(any(PageRequest.class)))
+        given(productRepository.findAllProduct(any(ProductSelectRequest.class)))
             .willReturn(List.of(product));
 
         //when
         List<ProductSelectResponse> result = productService.findAll(productSelectRequest);
 
         //then
-        verify(productRepository).findAllProduct(any(PageRequest.class));
+        verify(productRepository).findAllProduct(any(ProductSelectRequest.class));
         assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(product);
       }
     }
   }
@@ -250,6 +249,5 @@ class DefaultProductServiceTest {
         assertThat(response.getId()).isEqualTo(product.getId());
       }
     }
-
   }
 }
