@@ -2,6 +2,7 @@ package com.saiko.bidmarket.product.repository;
 
 import static com.saiko.bidmarket.product.Sort.*;
 import static com.saiko.bidmarket.product.entity.QProduct.*;
+import static com.saiko.bidmarket.user.entity.QUser.*;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 
 @Repository
 public class ProductCustomRepositoryImpl
@@ -36,6 +38,19 @@ public class ProductCustomRepositoryImpl
         .limit(productSelectRequest.getLimit())
         .orderBy(getOrderSpecifier(productSelectRequest.getSort()))
         .fetch();
+  }
+
+  @Override
+  public List<Product> findAllUserProduct(long userId, UserProductSelectRequest request) {
+    Assert.isTrue(userId > 0, "User id must be positive");
+    Assert.notNull(request, "Request must be provided");
+    return jpaQueryFactory.selectFrom(product)
+                          .join(product.writer, user)
+                          .where(user.id.eq(userId))
+                          .offset(request.getOffset())
+                          .limit(request.getLimit())
+                          .orderBy(getOrderSpecifier(request.getSort()))
+                          .fetch();
   }
 
   private Predicate eqCategory(Category category) {
