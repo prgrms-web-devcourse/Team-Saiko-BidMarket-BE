@@ -110,6 +110,7 @@ public class WebSecurityConfig {
 
     http.authorizeRequests()
         .antMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.GET, "/api/v1/users/products").hasAnyRole("USER", "ADMIN")
         .anyRequest().permitAll()
         .and()
         /**
