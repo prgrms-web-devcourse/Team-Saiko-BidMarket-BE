@@ -2,13 +2,9 @@ package com.saiko.bidmarket.product.service;
 
 import static com.saiko.bidmarket.product.Category.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
-import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,23 +21,171 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.controller.ProductDetailResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultProductServiceTest {
 
-  @InjectMocks
-  private DefaultProductService productService;
+  @Mock
+  ProductRepository productRepository;
 
   @Mock
-  private ProductRepository productRepository;
+  UserRepository userRepository;
+
+  @InjectMocks
+  DefaultProductService productService;
 
   @Nested
-  @DisplayName("findById 메소드는")
+  @DisplayName("create 메서드는")
+  class DescribeCreate {
+
+    @Nested
+    @DisplayName("Request 값이 null이면")
+    class ContextWithNullRequest {
+
+      @Test
+      @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> productService.create(null, 1L))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("user id 값이 양수가 아니면")
+    class ContextWithNotPositiveUserId {
+
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
+      @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
+      void ItThrowsIllegalArgumentException(long userId) {
+        //given
+        ProductCreateRequest productCreateRequest = new ProductCreateRequest(
+            "텀블러 팝니다",
+            "깨끗해요",
+            Arrays.asList("image1",
+                          "image2"),
+            ETC,
+            15000,
+            "강남"
+        );
+
+        //when, then
+        assertThatThrownBy(() -> productService.create(productCreateRequest, userId))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidArg {
+
+      @Test
+      @DisplayName("저장한 객체에 대한 정보를 담은 응답을 반환한다")
+      void ItResponseProduct() {
+        //given
+        long userId = 1L;
+        long productId = 1L;
+
+        ProductCreateRequest productCreateRequest = new ProductCreateRequest(
+            "텀블러 팝니다",
+            "깨끗해요",
+            Arrays.asList("image1",
+                          "image2"),
+            ETC,
+            15000,
+            "강남"
+        );
+        User writer = new User("제로", "image", "google", "1234", new Group());
+        ReflectionTestUtils.setField(writer, "id", 1L);
+        Product product = Product.builder()
+                                 .title(productCreateRequest.getTitle())
+                                 .description(productCreateRequest.getDescription())
+                                 .location(productCreateRequest.getLocation())
+                                 .category(productCreateRequest.getCategory())
+                                 .minimumPrice(productCreateRequest.getMinimumPrice())
+                                 .images(productCreateRequest.getImages())
+                                 .writer(writer)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+
+        given(userRepository.findById(userId)).willReturn(Optional.of(writer));
+        given(productRepository.save(any())).willReturn(product);
+
+        //when
+        ProductCreateResponse response = productService.create(productCreateRequest, userId);
+
+        //then
+        verify(productRepository).save(any(Product.class));
+        assertThat(response.getId()).isEqualTo(product.getId());
+      }
+    }
+
+  }
+
+  @Nested
+  @DisplayName("findAll 메서드는")
+  class DescribeFindAll {
+
+    @Nested
+    @DisplayName("Request 가 null 이면")
+    class ContextWithNullRequest {
+
+      @Test
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> productService.findAll(null))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidArgument {
+
+      @Test
+      @DisplayName("요청에 해당하는 상품 리스트를 반환한다")
+      void ItResponseProductList() {
+        //given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
+        User writer = new User("제로", "image", "google", "1234", new Group());
+        Product product = Product.builder()
+                                 .title("세탁기 팔아요")
+                                 .description("좋아요")
+                                 .minimumPrice(100000)
+                                 .category(HOUSEHOLD_APPLIANCE)
+                                 .location("수원")
+                                 .writer(writer)
+                                 .images(null)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+
+        given(productRepository.findAllProduct(any(PageRequest.class)))
+            .willReturn(List.of(product));
+
+        //when
+        List<ProductSelectResponse> result = productService.findAll(productSelectRequest);
+
+        //then
+        verify(productRepository).findAllProduct(any(PageRequest.class));
+        assertThat(result.size()).isEqualTo(1);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findById 메서드는")
   class DescribeFindById {
 
     @Nested
@@ -63,164 +209,47 @@ class DefaultProductServiceTest {
     }
 
     @Nested
-    @DisplayName("id에 음수가 들어온다면")
-    class ContextNegativeNumberId {
+    @DisplayName("id 값이 양수가 아니면")
+    class ContextWith {
 
-      @Test
-      @DisplayName("IllegalArgumentException을 발생시킨다.")
-      void itThrowsIllegalArgumentsException() {
-        // given
-        long negativeNumberId = -1;
-
-        // when
-        // then
-        assertThatThrownBy(() -> productService.findById(negativeNumberId))
-            .isInstanceOf(IllegalArgumentException.class);
-        verify(productRepository, never()).findById(anyLong());
-      }
-    }
-
-    @Nested
-    @DisplayName("정상적인 id가 들어온다면")
-    class ContextValidId {
-
-      @Test
-      @DisplayName("해당 id를 가진 상품의 도메인 객체를 반환한다.")
-      void itReturnProductDomainObjectHasInputId() throws Exception {
-        // given
-        long validId = 1;
-        Class<Product> productClass = Product.class;
-        Constructor<Product> productConstructor = productClass.getDeclaredConstructor();
-        productConstructor.setAccessible(true);
-        Product expectProduct = productConstructor.newInstance();
-
-        ReflectionTestUtils.setField(expectProduct, "id", validId);
-
-        given(productRepository.findById(anyLong())).willReturn(Optional.of(expectProduct));
-
-        // when
-        Product actualProduct = productService.findById(validId);
-
-        // then
-        assertThat(actualProduct).isEqualTo(expectProduct);
-        verify(productRepository, atLeastOnce()).findById(anyLong());
-      }
-    }
-  }
-
-  @Nested
-  @DisplayName("create 메서드는")
-  class DescribeCreate {
-
-    @Test
-    @DisplayName("상품을 저장하고 저장된 상품 객체를 반환한다")
-    void ItSaveProductThenReturnProductId() {
-      //given
-      Long userId = 1L;
-      User writer = new User("제로", "image", "google", "1234", new Group());
-      ReflectionTestUtils.setField(writer, "id", userId);
-
-      Product product = Product.builder()
-                               .title("텀블러 팝니다")
-                               .description("깨끗해요")
-                               .minimumPrice(15000)
-                               .category(ETC)
-                               .location("강남")
-                               .images(Arrays.asList("image1", "image2"))
-                               .writer(writer)
-                               .build();
-
-      ReflectionTestUtils.setField(product, "id", 1L);
-      given(productRepository.save(any(Product.class))).willReturn(product);
-
-      //when
-      Product savedProduct = productService.create(product);
-
-      //then
-      verify(productRepository).save(any(Product.class));
-      assertThat(savedProduct.getId()).isEqualTo(product.getId());
-    }
-
-    @Nested
-    @DisplayName("null 값이 전달되면")
-    class ContextWithNullProduct {
-
-      @Test
-      @DisplayName("IllegalArgumentException 에러를 발생시킨다")
-      void ItThrowsIllegalArgumentException() {
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1L, Long.MIN_VALUE})
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException(long src) {
         //when, then
-        assertThrows(IllegalArgumentException.class, () -> productService.create(null));
-      }
-    }
-
-  }
-
-  @Nested
-  @DisplayName("findAll 메서드는")
-  class DescribeFindAll {
-
-    @Test
-    @DisplayName("전체 상품을 반환한다")
-    void ItReturnProductList() {
-      //given
-      ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
-      User writer = new User("제로", "image", "google", "1234", new Group());
-      Product product = Product.builder()
-                               .title("세탁기 팔아요")
-                               .description("좋아요")
-                               .minimumPrice(100000)
-                               .category(HOUSEHOLD_APPLIANCE)
-                               .location("수원")
-                               .writer(writer)
-                               .images(null)
-                               .build();
-      ReflectionTestUtils.setField(product, "id", 1L);
-
-      given(productRepository.findAllProduct(any(PageRequest.class)))
-          .willReturn(List.of(product));
-
-      //when
-      List<Product> result = productService.findAll(productSelectRequest);
-
-      //then
-      verify(productRepository).findAllProduct(any(PageRequest.class));
-      assertThat(result.size()).isEqualTo(1);
-      assertThat(result.get(0)).isEqualTo(product);
-    }
-
-    @Nested
-    @DisplayName("productSelectRequest 파라미터에 null 값이 전달되면")
-    class ContextWithProductSelectRequestNull {
-
-      @Test
-      @DisplayName("IllegalArgumentException 에러를 발생시킨다")
-      void ItThrowsIllegalArgumentException() {
-        //given
-        //when,then
-        assertThrows(IllegalArgumentException.class,
-                     () -> productService.findAll(null));
+        assertThatThrownBy(() -> productService.findById(src))
+            .isInstanceOf(IllegalArgumentException.class);
       }
     }
 
     @Nested
-    @DisplayName("조회된 상품이 없다면")
-    class ContextWithProductListZero {
+    @DisplayName("양수값이 전달되면")
+    class ContextWithPositiveId {
 
       @Test
-      @DisplayName("빈 리스트를 반환한다")
-      void ItReturnEmptyList() {
+      @DisplayName("찾은 객체에 대한 응답을 반환한다")
+      void ItProduct() {
         //given
-        ProductSelectRequest productSelectRequest = new ProductSelectRequest(0, 2, null);
-
-        given(productRepository.findAllProduct(any(PageRequest.class)))
-            .willReturn(Collections.emptyList());
+        User writer = new User("제로", "image", "google", "1234", new Group());
+        Product product = Product.builder()
+                                 .title("세탁기 팔아요")
+                                 .description("좋아요")
+                                 .minimumPrice(100000)
+                                 .category(HOUSEHOLD_APPLIANCE)
+                                 .location("수원")
+                                 .writer(writer)
+                                 .images(null)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
 
         //when
-        List<Product> result = productService.findAll(productSelectRequest);
+        ProductDetailResponse response = productService.findById(1L);
 
         //then
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(response.getId()).isEqualTo(product.getId());
       }
     }
+
   }
 }
