@@ -2,12 +2,14 @@ package com.saiko.bidmarket.product.repository;
 
 import static com.saiko.bidmarket.product.Sort.*;
 import static com.saiko.bidmarket.product.entity.QProduct.*;
+import static com.saiko.bidmarket.user.entity.QUser.*;
 
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -32,6 +34,19 @@ public class ProductCustomRepositoryImpl
         .limit(pageable.getPageSize())
         .orderBy(getOrderSpecifier(pageable.getSort()))
         .fetch();
+  }
+
+  @Override
+  public List<Product> findAllUserProduct(long userId, Pageable pageable) {
+    Assert.isTrue(userId > 0, "User id must be positive");
+    Assert.notNull(pageable, "Page must be provided");
+    return jpaQueryFactory.selectFrom(product)
+                          .join(product.writer, user)
+                          .where(user.id.eq(userId))
+                          .offset(pageable.getOffset())
+                          .limit(pageable.getPageSize())
+                          .orderBy(getOrderSpecifier(pageable.getSort()))
+                          .fetch();
   }
 
   private OrderSpecifier getOrderSpecifier(Sort sort) {

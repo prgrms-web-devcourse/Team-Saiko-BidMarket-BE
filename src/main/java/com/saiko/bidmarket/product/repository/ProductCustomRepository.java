@@ -8,4 +8,6 @@ import com.saiko.bidmarket.product.entity.Product;
 
 public interface ProductCustomRepository {
   List<Product> findAllProduct(Pageable pageable);
+
+  List<Product> findAllUserProduct(long userId, Pageable pageable);
 }
