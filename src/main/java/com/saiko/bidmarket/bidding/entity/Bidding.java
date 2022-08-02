@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.bidding.entity;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,7 +14,13 @@ import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bidding extends BaseTime {
 
   private static final long UNIT_AMOUNT = 100;
@@ -33,9 +38,6 @@ public class Bidding extends BaseTime {
   @ManyToOne(fetch = FetchType.LAZY)
   private Product product;
 
-  protected Bidding() {
-  }
-
   public Bidding(BiddingPrice biddingPrice, User bidder, Product product) {
     Assert.notNull(biddingPrice, "Bidding price must be provided");
     Assert.notNull(bidder, "Bidder must be provided");
@@ -46,23 +48,4 @@ public class Bidding extends BaseTime {
     this.product = product;
   }
 
-  private boolean isValidBiddingPrice(long biddingPrice) {
-    return 0 < biddingPrice && biddingPrice % UNIT_AMOUNT == 0;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public long getBiddingPrice() {
-    return biddingPrice;
-  }
-
-  public User getBidder() {
-    return bidder;
-  }
-
-  public Product getProduct() {
-    return product;
-  }
 }

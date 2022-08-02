@@ -33,9 +33,11 @@ public class BiddingController {
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody @Valid BiddingCreateRequest biddingCreateRequest
   ) {
-    BiddingCreateDto createDto = new BiddingCreateDto(biddingCreateRequest.getBiddingPrice(),
-                                                      biddingCreateRequest.getProductId(),
-                                                      new LongId(authentication.getUserId()));
+    var createDto = BiddingCreateDto.builder()
+                                    .biddingPrice(biddingCreateRequest.getBiddingPrice())
+                                    .productId(biddingCreateRequest.getProductId())
+                                    .bidderId(new LongId(authentication.getUserId()))
+                                    .build();
 
     long createdBiddingId = biddingService.create(createDto);
 
