@@ -20,6 +20,7 @@ import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
+import com.saiko.bidmarket.common.util.IdEncoder;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.service.UserService;
@@ -43,10 +44,17 @@ public class UserApiController {
     userService.updateUser(authentication.getUserId(), request);
   }
 
-  @GetMapping("{id}")
+  @GetMapping("{encodedId}")
   @ResponseStatus(HttpStatus.OK)
-  public UserSelectResponse getUser(@PathVariable long id) {
-    return userService.findById(id);
+  public UserSelectResponse getUser(@PathVariable String encodedId) {
+    return userService.findById(IdEncoder.decode(encodedId));
+  }
+
+  @GetMapping("auth")
+  @ResponseStatus(HttpStatus.OK)
+  public String getUserIdInfo(@AuthenticationPrincipal JwtAuthentication authentication) {
+    final UserSelectResponse userResponse = userService.findById(authentication.getUserId());
+    return userResponse.getEncodedUserId();
   }
 
   @GetMapping("products")
