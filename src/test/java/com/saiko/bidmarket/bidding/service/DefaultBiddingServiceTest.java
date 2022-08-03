@@ -137,6 +137,37 @@ class DefaultBiddingServiceTest {
             .isInstanceOf(IllegalArgumentException.class);
       }
     }
+    
+    @Nested
+    @DisplayName("해당 상품의 최소 금액보다 적게 비딩 금액을 입력하면")
+    class ContextAmountSmallerThanMinPrice {
+
+      @Test
+      @DisplayName("IllegalArgumentException을 발생시킨다.")
+      void ItThrowsIllegalArgumentException() {
+        // given
+        long priceValue = 1000L;
+        BiddingPrice biddingPrice = BiddingPrice.valueOf(priceValue);
+        UnsignedLong productId = UnsignedLong.valueOf(1);
+        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        BiddingCreateDto createDto = BiddingCreateDto.builder()
+                                                     .biddingPrice(biddingPrice)
+                                                     .bidderId(bidderId)
+                                                     .productId(productId)
+                                                     .build();
+
+        ReflectionTestUtils.setField(product, "progressed", false);
+        ReflectionTestUtils.setField(product, "minimumPrice", (int) priceValue * 2);
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(bidder));
+        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+
+        // when
+        // then
+        assertThatThrownBy(() -> biddingService.create(createDto))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
 
     @Nested
     @DisplayName("BiddingCreateDto의 bidder Id에 해당하는 사용자가 없으면")
