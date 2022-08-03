@@ -42,6 +42,10 @@ public class DefaultBiddingService implements BiddingService {
       throw new IllegalArgumentException("비딩이 종료된 상품에 비딩할 수 없습니다.");
     }
 
+    if (createDto.getBiddingPrice().getValue() < product.getMinimumPrice()) {
+      throw new IllegalArgumentException("상품의 비딩 최소 금액 이하로는 비딩할 수 없습니다. ");
+    }
+
     Bidding bidding = new Bidding(createDto.getBiddingPrice(), bidder, product);
 
     Bidding createdBidding = biddingRepository.save(bidding);
