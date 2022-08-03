@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +25,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.product.Category;
-import com.saiko.bidmarket.product.Sort;
-import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
@@ -44,7 +39,7 @@ import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
-import com.saiko.bidmarket.user.service.dto.UserProductSelectQueryParameter;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 
 @ExtendWith(MockitoExtension.class)
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)

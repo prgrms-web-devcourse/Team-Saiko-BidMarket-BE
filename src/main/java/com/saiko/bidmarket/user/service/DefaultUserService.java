@@ -20,7 +20,7 @@ import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
-import com.saiko.bidmarket.user.service.dto.UserProductSelectQueryParameter;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
