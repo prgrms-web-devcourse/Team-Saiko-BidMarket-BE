@@ -45,9 +45,24 @@ public class Bidding extends BaseTime {
     Assert.notNull(bidder, "Bidder must be provided");
     Assert.notNull(product, "Product must be provided");
 
+    validateProductProgress(product);
+    validateBiddingPrice(biddingPrice, product);
+
     this.biddingPrice = biddingPrice.getValue();
     this.bidder = bidder;
     this.product = product;
+  }
+
+  private void validateProductProgress(Product product) {
+    if (!product.isProgressed()) {
+      throw new IllegalArgumentException("비딩이 종료된 상품에 비딩할 수 없습니다.");
+    }
+  }
+
+  private void validateBiddingPrice(BiddingPrice biddingPrice, Product product) {
+    if (biddingPrice.getValue() < product.getMinimumPrice()) {
+      throw new IllegalArgumentException("상품의 최소 금액 이하로는 비딩할 수 없습니다.");
+    }
   }
 
 }
