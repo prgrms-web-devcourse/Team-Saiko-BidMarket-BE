@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
@@ -27,11 +28,15 @@ public class DefaultProductService implements ProductService {
 
   private final UserRepository userRepository;
 
+  private final BiddingService biddingService;
+
   public DefaultProductService(
       ProductRepository productRepository,
-      UserRepository userRepository) {
+      UserRepository userRepository,
+      BiddingService biddingService) {
     this.userRepository = userRepository;
     this.productRepository = productRepository;
+    this.biddingService = biddingService;
   }
 
   @Override
@@ -82,6 +87,13 @@ public class DefaultProductService implements ProductService {
 
   @Override
   public void executeClosingProduct(List<Product> products) {
-    // TODO: 경매 종료시 수행되는 비즈니스 로직 구현
+    if (products.isEmpty()) {
+      throw new IllegalArgumentException("products must be provided");
+    }
+
+    for (Product product : products) {
+      long winningPrice = biddingService.selectWinner(product);
+      product.finish(winningPrice);
+    }
   }
 }
