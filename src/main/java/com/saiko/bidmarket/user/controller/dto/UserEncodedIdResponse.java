@@ -2,13 +2,13 @@ package com.saiko.bidmarket.user.controller.dto;
 
 public class UserEncodedIdResponse {
 
-  private final String encodedUserId;
+  private final String encodedId;
 
   public UserEncodedIdResponse(String encodedUserId) {
-    this.encodedUserId = encodedUserId;
+    this.encodedId = encodedUserId;
   }
 
-  public String getEncodedUserId() {
-    return encodedUserId;
+  public String getEncodedId() {
+    return encodedId;
   }
 }

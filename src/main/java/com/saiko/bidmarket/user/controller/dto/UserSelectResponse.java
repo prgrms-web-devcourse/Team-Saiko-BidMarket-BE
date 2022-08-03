@@ -5,29 +5,29 @@ import com.saiko.bidmarket.user.entity.User;
 
 public class UserSelectResponse {
 
-  private final String encodedUserId;
+  private final String encodedId;
 
   private final String username;
 
-  private final String profileImageUrl;
+  private final String thumbnailImg;
 
-  public UserSelectResponse(String encodedUserId, String username, String profileImageUrl) {
+  public UserSelectResponse(String encodedUserId, String username, String thumbnailImg) {
 
-    this.encodedUserId = encodedUserId;
+    this.encodedId = encodedUserId;
     this.username = username;
-    this.profileImageUrl = profileImageUrl;
+    this.thumbnailImg = thumbnailImg;
   }
 
-  public String getEncodedUserId() {
-    return encodedUserId;
+  public String getEncodedId() {
+    return encodedId;
   }
 
   public String getUsername() {
     return username;
   }
 
-  public String getProfileImageUrl() {
-    return profileImageUrl;
+  public String getThumbnailImg() {
+    return thumbnailImg;
   }
 
   public static UserSelectResponse from(User user) {
