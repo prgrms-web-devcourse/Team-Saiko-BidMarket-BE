@@ -85,6 +85,13 @@ sourceSets {
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
+
+/*** comileQuerydsl.doFirst 추가*/
+compileQuerydsl.doFirst {
+    if(file(querydslDir).exists() )
+        delete(file(querydslDir))
+}
+
 // querydsl 이 compileClassPath 를 상속하도록 설정
 configurations {
     compileOnly {
