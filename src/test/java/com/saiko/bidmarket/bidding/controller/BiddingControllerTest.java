@@ -47,7 +47,7 @@ class BiddingControllerTest extends ControllerSetUp {
   @MockBean
   private BiddingService biddingService;
 
-  public static final String BASE_URL = "/api/v1/bidding";
+  public static final String BASE_URL = "/api/v1/biddings";
 
   static class BiddingPriceSourceOutOfRange implements ArgumentsProvider {
 
