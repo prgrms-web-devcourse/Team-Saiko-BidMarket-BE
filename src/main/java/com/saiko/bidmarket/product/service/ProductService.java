@@ -17,7 +17,7 @@ public interface ProductService {
 
   ProductDetailResponse findById(long id);
 
-  List<Product> findAllThatNeedToClose(LocalDateTime start, LocalDateTime end);
+  List<Product> findAllThatNeedToClose(LocalDateTime nowTime);
 
   void executeClosingProduct(List<Product> productsInProgress);
 }

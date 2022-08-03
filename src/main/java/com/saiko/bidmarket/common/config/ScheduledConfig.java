@@ -27,19 +27,10 @@ public class ScheduledConfig {
     @Scheduled(cron = "0 * * * * *")
     public void closeProduct() {
       LocalDateTime now = LocalDateTime.now();
-      LocalDateTime start = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
+      LocalDateTime nowTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
                                              now.getHour(), now.getMinute());
 
-      LocalDateTime end;
-      if (now.getMinute() != 59) {
-        end = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                               now.getHour(), now.getMinute() + 1);
-      } else {
-        end = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                               now.getHour() + 1, 0);
-      }
-
-      List<Product> productsInProgress = productService.findAllThatNeedToClose(start, end);
+      List<Product> productsInProgress = productService.findAllThatNeedToClose(nowTime);
       if (productsInProgress.size() != 0) {
         productService.executeClosingProduct(productsInProgress);
       }

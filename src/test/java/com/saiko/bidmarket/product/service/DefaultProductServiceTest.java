@@ -257,27 +257,14 @@ class DefaultProductServiceTest {
   class DescribeFindAllThatNeedToClose {
 
     @Nested
-    @DisplayName("start가 null 이면")
+    @DisplayName("nowTime이 null 이면")
     class ContextWithNullStart {
 
       @Test
       @DisplayName("IllegalArgumentException 예외를 던진다")
       void ItThrowsIllegalArgumentException() {
         //when, then
-        assertThatThrownBy(() -> productService.findAllThatNeedToClose(null, LocalDateTime.now()))
-            .isInstanceOf(IllegalArgumentException.class);
-      }
-    }
-
-    @Nested
-    @DisplayName("end가 null 이면")
-    class ContextWithNullEnd {
-
-      @Test
-      @DisplayName("IllegalArgumentException 예외를 던진다")
-      void ItThrowsIllegalArgumentException() {
-        //when, then
-        assertThatThrownBy(() -> productService.findAllThatNeedToClose(LocalDateTime.now(), null))
+        assertThatThrownBy(() -> productService.findAllThatNeedToClose(null))
             .isInstanceOf(IllegalArgumentException.class);
       }
     }
@@ -301,17 +288,14 @@ class DefaultProductServiceTest {
                                  .images(null)
                                  .build();
         ReflectionTestUtils.setField(product, "id", 1L);
-        given(productRepository.findAllByProgressedAndExpireAtGreaterThanEqualAndExpireAtLessThan(
-            anyBoolean(), any(LocalDateTime.class), any(LocalDateTime.class))).willReturn(
-            List.of(product));
+        given(productRepository.findAllByProgressedAndExpireAtLessThan(
+            anyBoolean(), any(LocalDateTime.class))).willReturn(List.of(product));
 
         //when
-        List<Product> result = productService.findAllThatNeedToClose(
-            LocalDateTime.now(), LocalDateTime.now().plusMinutes(1));
+        List<Product> result = productService.findAllThatNeedToClose(LocalDateTime.now());
 
         //then
-        verify(productRepository).findAllByProgressedAndExpireAtGreaterThanEqualAndExpireAtLessThan(
-            anyBoolean(), any(), any());
+        verify(productRepository).findAllByProgressedAndExpireAtLessThan(anyBoolean(), any());
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getId()).isEqualTo(product.getId());
       }
