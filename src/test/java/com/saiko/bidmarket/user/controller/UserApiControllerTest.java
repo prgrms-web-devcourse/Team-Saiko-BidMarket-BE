@@ -336,7 +336,6 @@ class UserApiControllerTest extends ControllerSetUp {
       }
     }
   }
-}
   @WithMockCustomLoginUser
   @Nested
   @DisplayName("getAllUserProduct 메서드는")
