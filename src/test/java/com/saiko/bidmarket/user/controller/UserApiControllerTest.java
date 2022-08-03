@@ -309,7 +309,11 @@ class UserApiControllerTest extends ControllerSetUp {
                             preprocessRequest(prettyPrint()),
                             responseFields(
                                 fieldWithPath("encodedId").type(JsonFieldType.STRING)
-                                                              .description("인코딩된 유저 ID")
+                                                          .description("인코딩된 유저 ID"),
+                                fieldWithPath("username").type(JsonFieldType.STRING)
+                                                         .description("현재 유저 이름"),
+                                fieldWithPath("thumbnailImg").type(JsonFieldType.STRING)
+                                                             .description("현재 유저 프로필 이미지")
                             )
             ));
       }

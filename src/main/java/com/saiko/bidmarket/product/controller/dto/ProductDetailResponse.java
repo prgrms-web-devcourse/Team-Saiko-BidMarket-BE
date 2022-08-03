@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.user.entity.dto.UserBasicResponse;
+import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 
 import lombok.Getter;
 
@@ -31,7 +31,7 @@ public class ProductDetailResponse {
 
   private final LocalDateTime updatedAt;
 
-  private final UserBasicResponse writer;
+  private final UserSelectResponse writer;
 
   private final List<ImagBasicResponse> images;
 
@@ -46,7 +46,7 @@ public class ProductDetailResponse {
     this.expireAt = product.getExpireAt();
     this.createdAt = product.getCreatedAt();
     this.updatedAt = product.getUpdatedAt();
-    this.writer = UserBasicResponse.from(product.getWriter());
+    this.writer = UserSelectResponse.from(product.getWriter());
     this.images = product.getImages()
                          .stream()
                          .map(ImagBasicResponse::from)
