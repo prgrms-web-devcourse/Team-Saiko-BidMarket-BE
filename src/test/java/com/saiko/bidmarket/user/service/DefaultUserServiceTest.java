@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
@@ -230,14 +231,17 @@ class DefaultUserServiceTest {
             "test",
             new Group()
         );
+        final UserSelectResponse expected = UserSelectResponse.from(existUser);
 
         //when
         when(userRepository.findById(existUserId)).thenReturn(Optional.of(existUser));
 
-        final User actualUser = defaultUserService.findById(existUserId);
+        final UserSelectResponse actualUser = defaultUserService.findById(existUserId);
 
         //then
-        Assertions.assertThat(actualUser).isEqualTo(existUser);
+        Assertions.assertThat(actualUser.getUsername()).isEqualTo(expected.getUsername());
+        Assertions.assertThat(actualUser.getProfileImageUrl())
+                  .isEqualTo(expected.getProfileImageUrl());
       }
     }
   }

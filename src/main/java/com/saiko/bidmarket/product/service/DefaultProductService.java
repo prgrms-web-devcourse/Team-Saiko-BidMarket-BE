@@ -1,17 +1,22 @@
 package com.saiko.bidmarket.product.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.controller.ProductDetailResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
+import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.repository.UserRepository;
 
 @Service
 @Transactional
@@ -19,35 +24,51 @@ public class DefaultProductService implements ProductService {
 
   private final ProductRepository productRepository;
 
-  public DefaultProductService(ProductRepository productRepository) {
+  private final UserRepository userRepository;
+
+  public DefaultProductService(
+      ProductRepository productRepository,
+      UserRepository userRepository) {
+    this.userRepository = userRepository;
     this.productRepository = productRepository;
   }
 
   @Override
-  public Product findById(long id) {
-    Assert.isTrue(0 < id, "id must be positive number!");
+  public ProductCreateResponse create(ProductCreateRequest productCreateRequest, Long userId) {
+    Assert.notNull(productCreateRequest, "Request must be provided");
+    Assert.isTrue(userId > 0, "User id must be positive");
 
-    return productRepository.findById(id)
-                            .orElseThrow(() -> new NotFoundException("Product not exist"));
+    final User writer = userRepository.findById(userId)
+                                      .orElseThrow(
+                                          () -> new NotFoundException("Product not exist"));
+
+    final Product product = Product.builder()
+                                   .title(productCreateRequest.getTitle())
+                                   .description(productCreateRequest.getDescription())
+                                   .location(productCreateRequest.getLocation())
+                                   .category(productCreateRequest.getCategory())
+                                   .minimumPrice(productCreateRequest.getMinimumPrice())
+                                   .images(productCreateRequest.getImages())
+                                   .writer(writer)
+                                   .build();
+
+    return ProductCreateResponse.from(productRepository.save(product).getId());
   }
 
   @Override
-  public Product create(Product product) {
-    Assert.notNull(product, "Product must be provided");
-
-    return productRepository.save(product);
-  }
-
-  @Override
-  public List<Product> findAll(ProductSelectRequest productSelectRequest) {
+  public List<ProductSelectResponse> findAll(ProductSelectRequest productSelectRequest) {
     Assert.notNull(productSelectRequest, "ProductSelectRequest must be provided");
-    PageRequest pageRequest = PageRequest.of(productSelectRequest.getOffset(),
-                                             productSelectRequest.getLimit(),
-                                             Sort.Direction.valueOf(
-                                                 productSelectRequest.getSort()
-                                                                     .getOrder()
-                                                                     .toString()),
-                                             productSelectRequest.getSort().getProperty());
-    return productRepository.findAllProduct(pageRequest);
+    return productRepository.findAllProduct(productSelectRequest).stream()
+                            .map(ProductSelectResponse::from)
+                            .collect(Collectors.toList());
+  }
+
+  @Override
+  public ProductDetailResponse findById(long id) {
+    Assert.isTrue(id > 0, "Id must be positive");
+
+    return ProductDetailResponse.from(productRepository.findById(id)
+                                                       .orElseThrow(() -> new NotFoundException(
+                                                           "Product not exist")));
   }
 }

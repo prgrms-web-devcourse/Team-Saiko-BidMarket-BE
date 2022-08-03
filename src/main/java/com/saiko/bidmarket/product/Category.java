@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.product;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Category {
@@ -29,16 +28,6 @@ public enum Category {
   @JsonValue
   public String getDisplayName() {
     return displayName;
-  }
-
-  @JsonCreator
-  public static Category from(String name) {
-    for (Category category : Category.values()) {
-      if (category.getDisplayName().equals(name)) {
-        return category;
-      }
-    }
-    return null;
   }
 }
 

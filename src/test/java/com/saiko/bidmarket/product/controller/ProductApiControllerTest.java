@@ -44,7 +44,7 @@ import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Image;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.product.service.ProductApiService;
+import com.saiko.bidmarket.product.service.ProductService;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.util.ControllerSetUp;
@@ -56,7 +56,7 @@ class ProductApiControllerTest extends ControllerSetUp {
   private ObjectMapper objectMapper;
 
   @MockBean
-  private ProductApiService productApiService;
+  private ProductService productService;
 
   public static final String BASE_URL = "/api/v1/products";
 
@@ -101,14 +101,14 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
-        given(productApiService.create(any(ProductCreateRequest.class), any(Long.class)))
+        given(productService.create(any(ProductCreateRequest.class), any(Long.class)))
             .willReturn(ProductCreateResponse.from(1L));
 
         //when
@@ -120,7 +120,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(productApiService).create(any(ProductCreateRequest.class), any(Long.class));
+        verify(productService).create(any(ProductCreateRequest.class), any(Long.class));
         response.andExpect(status().isCreated())
                 .andDo(document("Create product",
                                 preprocessRequest(prettyPrint()),
@@ -158,7 +158,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", title);
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", new String[]{"imageUrl1, imageUrl2"});
@@ -190,7 +190,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", description);
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
@@ -221,7 +221,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("images", Arrays.asList("imageUrl1",
@@ -257,7 +257,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         HashMap<String, Object> requestMap = new HashMap<>();
         requestMap.put("title", "키보드팝니다");
         requestMap.put("description", "깨끗합니다");
-        requestMap.put("category", DIGITAL_DEVICE.getDisplayName());
+        requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 100);
         requestMap.put("location", "관악구 신림동");
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
@@ -372,7 +372,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         // given
         long inputId = -1;
 
-        given(productApiService.findById(anyLong())).willThrow(IllegalArgumentException.class);
+        given(productService.findById(anyLong())).willThrow(IllegalArgumentException.class);
 
         // when
         ResultActions response = mockMvc.perform(
@@ -423,14 +423,14 @@ class ProductApiControllerTest extends ControllerSetUp {
         ReflectionTestUtils.setField(foundProduct, "images", images);
 
         ProductDetailResponse productDetailResponse = ProductDetailResponse.from(foundProduct);
-        given(productApiService.findById(anyLong())).willReturn(productDetailResponse);
+        given(productService.findById(anyLong())).willReturn(productDetailResponse);
 
         // when
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders.get(BASE_URL + "/{id}", inputId));
 
         // then
-        verify(productApiService, atLeastOnce()).findById(anyLong());
+        verify(productService, atLeastOnce()).findById(anyLong());
         response.andExpect(status().isOk())
                 .andDo(document("Find Product by id",
                                 preprocessResponse(prettyPrint()),
@@ -493,7 +493,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ReflectionTestUtils.setField(product, "updatedAt", LocalDateTime.now());
 
         List<ProductSelectResponse> responses = List.of(ProductSelectResponse.from(product));
-        given(productApiService.findAll(any(ProductSelectRequest.class))).willReturn(responses);
+        given(productService.findAll(any(ProductSelectRequest.class))).willReturn(responses);
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
@@ -506,7 +506,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(productApiService).findAll(any(ProductSelectRequest.class));
+        verify(productService).findAll(any(ProductSelectRequest.class));
         response.andExpect(status().isOk())
                 .andDo(document("Select product", preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()), requestParameters(

@@ -48,6 +48,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
+    implementation 'org.awaitility:awaitility:4.2.0'
     runtimeOnly 'mysql:mysql-connector-java'
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

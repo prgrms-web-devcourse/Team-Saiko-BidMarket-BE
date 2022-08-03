@@ -1,9 +1,9 @@
 package com.saiko.bidmarket.common.exception;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -41,6 +41,12 @@ public class ExceptionController {
     logger.warn("ConversionFailedException : ", e);
   }
 
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    logger.warn("HttpMessageNotReadableException : ", e);
+  }
+
   @ExceptionHandler(NumberFormatException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleNumberFormatException(NumberFormatException e) {
@@ -57,6 +63,12 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleIllegalArgumentException(IllegalArgumentException e) {
     logger.warn("IllegalArgumentException : ", e);
+  }
+
+  @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException e) {
+    logger.warn("InvalidDataAccessApiUsageException : ", e);
   }
 
   @ExceptionHandler(NotFoundException.class)

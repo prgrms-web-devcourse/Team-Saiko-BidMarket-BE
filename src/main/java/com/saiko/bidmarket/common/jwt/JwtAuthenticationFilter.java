@@ -2,7 +2,6 @@ package com.saiko.bidmarket.common.jwt;
 
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
-import static jdk.dynalink.linker.support.Guards.*;
 import static org.apache.logging.log4j.util.Strings.*;
 
 import java.io.IOException;
