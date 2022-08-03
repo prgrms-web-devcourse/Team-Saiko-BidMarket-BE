@@ -45,4 +45,4 @@ jwt:
   expiry-seconds: 604800000
 
 server:
-  port: 80
+  port: 8080
