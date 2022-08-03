@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saiko.bidmarket.common.util.IdEncoder;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
@@ -340,7 +341,7 @@ class UserApiControllerTest extends ControllerSetUp {
       }
     }
   }
-  @WithMockCustomLoginUser
+
   @Nested
   @DisplayName("getAllUserProduct 메서드는")
   class DescribeGetAllUserProduct {
@@ -353,6 +354,7 @@ class UserApiControllerTest extends ControllerSetUp {
       @DisplayName("상품을 조회하고 결과를 반환한다")
       void ItReturnProductList() throws Exception {
         //given
+        String encodedId = IdEncoder.encode(1);
         Product product = Product.builder()
                                  .title("감자팜")
                                  .description("가격 선제")
@@ -376,7 +378,7 @@ class UserApiControllerTest extends ControllerSetUp {
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/products")
+            .get(BASE_URL +  "/" + encodedId + "/products")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .queryParam("offset", "1")
             .queryParam("limit", "1")
