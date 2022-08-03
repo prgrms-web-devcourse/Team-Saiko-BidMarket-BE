@@ -58,7 +58,7 @@ public class UserApiController {
       @AuthenticationPrincipal JwtAuthentication authentication
   ) {
     final UserSelectResponse userResponse = userService.findById(authentication.getUserId());
-    final String encodedUserId = userResponse.getEncodedUserId();
+    final String encodedUserId = userResponse.getEncodedId();
     return new UserEncodedIdResponse(encodedUserId);
   }
 

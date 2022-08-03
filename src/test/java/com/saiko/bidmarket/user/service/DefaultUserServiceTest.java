@@ -253,8 +253,8 @@ class DefaultUserServiceTest {
 
         //then
         Assertions.assertThat(actualUser.getUsername()).isEqualTo(expected.getUsername());
-        Assertions.assertThat(actualUser.getProfileImageUrl())
-                  .isEqualTo(expected.getProfileImageUrl());
+        Assertions.assertThat(actualUser.getThumbnailImg())
+                  .isEqualTo(expected.getThumbnailImg());
       }
     }
   }
