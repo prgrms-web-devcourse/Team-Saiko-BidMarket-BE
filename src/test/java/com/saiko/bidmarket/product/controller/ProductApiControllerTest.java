@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Image;
@@ -443,8 +444,8 @@ class ProductApiControllerTest extends ControllerSetUp {
                                                                 .description("상품 소개"),
                                     fieldWithPath("minimumPrice").type(JsonFieldType.NUMBER)
                                                                  .description("최소주문금액"),
-                                    fieldWithPath("categoryName").type(JsonFieldType.STRING)
-                                                                 .description("카테고리 이름"),
+                                    fieldWithPath("category").type(JsonFieldType.STRING)
+                                                             .description("카테고리 이름"),
                                     fieldWithPath("location").type(JsonFieldType.STRING)
                                                              .description("거래 위치"),
                                     fieldWithPath("expireAt").type(JsonFieldType.STRING)
@@ -458,10 +459,10 @@ class ProductApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("writer.profileImageUrl")
                                         .type(JsonFieldType.STRING)
                                         .description("작성자 이미지 주소"),
-                                    fieldWithPath("imageUrls[].url").type(JsonFieldType.STRING)
-                                                                    .description("이미지 주소"),
-                                    fieldWithPath("imageUrls[].order").type(JsonFieldType.NUMBER)
-                                                                      .description("이미지 순서")
+                                    fieldWithPath("images[].url").type(JsonFieldType.STRING)
+                                                                 .description("이미지 주소"),
+                                    fieldWithPath("images[].order").type(JsonFieldType.NUMBER)
+                                                                   .description("이미지 순서")
                                 )
                 ));
       }

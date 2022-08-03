@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.product.controller.ProductDetailResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
