@@ -243,6 +243,7 @@ class DefaultUserServiceTest {
             "test",
             new Group()
         );
+        ReflectionTestUtils.setField(existUser, "id", 1L);
         final UserSelectResponse expected = UserSelectResponse.from(existUser);
 
         //when
