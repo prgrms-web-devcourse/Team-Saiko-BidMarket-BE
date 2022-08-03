@@ -50,6 +50,21 @@ public class Bidding extends BaseTime {
     this.bidder = bidder;
     this.product = product;
     this.won = false;
+
+    validateProductProgress();
+    validateBiddingPrice();
+  }
+
+  private void validateProductProgress() {
+    if (!product.isProgressed()) {
+      throw new IllegalArgumentException("비딩이 종료된 상품에 비딩할 수 없습니다.");
+    }
+  }
+
+  private void validateBiddingPrice() {
+    if (biddingPrice < product.getMinimumPrice()) {
+      throw new IllegalArgumentException("상품의 최소 금액 이하로는 비딩할 수 없습니다.");
+    }
   }
 
   public void win() {
