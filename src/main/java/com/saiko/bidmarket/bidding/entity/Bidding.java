@@ -24,8 +24,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bidding extends BaseTime {
 
-  private static final long UNIT_AMOUNT = 100;
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -33,13 +31,14 @@ public class Bidding extends BaseTime {
   @NotNull
   private long biddingPrice;
 
+  private boolean won;
+
   @ManyToOne(fetch = FetchType.EAGER)
   private User bidder;
 
   @ManyToOne(fetch = FetchType.EAGER)
   private Product product;
 
-  private boolean won;
 
   @Builder
   public Bidding(BiddingPrice biddingPrice, User bidder, Product product) {
