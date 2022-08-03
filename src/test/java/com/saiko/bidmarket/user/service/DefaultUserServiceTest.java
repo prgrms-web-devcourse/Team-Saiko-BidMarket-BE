@@ -29,9 +29,15 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.bidding.entity.BiddingPrice;
+import com.saiko.bidmarket.bidding.respository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
+import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -39,7 +45,6 @@ import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
-import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 
 @ExtendWith(MockitoExtension.class)
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
@@ -50,6 +55,9 @@ class DefaultUserServiceTest {
 
   @Mock
   ProductRepository productRepository;
+
+  @Mock
+  BiddingRepository biddingRepository;
 
   @Mock
   GroupService groupService;
@@ -207,7 +215,7 @@ class DefaultUserServiceTest {
       void itThrowIllegalArgumentException(long id) {
         //then
         assertThatThrownBy(() -> defaultUserService.findById(id))
-                  .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
       }
     }
 
@@ -223,7 +231,7 @@ class DefaultUserServiceTest {
 
         //then
         assertThatThrownBy(() -> defaultUserService.findById(notExistUserId))
-                  .isInstanceOf(NotFoundException.class);
+            .isInstanceOf(NotFoundException.class);
       }
     }
 
@@ -276,7 +284,7 @@ class DefaultUserServiceTest {
 
         //then
         assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
-                  .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
       }
     }
 
@@ -296,7 +304,7 @@ class DefaultUserServiceTest {
 
         //then
         assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
-                  .isInstanceOf(NotFoundException.class);
+            .isInstanceOf(NotFoundException.class);
       }
     }
 
@@ -391,7 +399,7 @@ class DefaultUserServiceTest {
         ReflectionTestUtils.setField(product, "id", productId);
 
         given(productRepository.findAllUserProduct(any(UserProductSelectQueryParameter.class)))
-                               .willReturn(List.of(product));
+            .willReturn(List.of(product));
 
         //when
         final List<UserProductSelectResponse> allUserProducts = defaultUserService.findAllUserProducts(
@@ -400,6 +408,86 @@ class DefaultUserServiceTest {
         //then
         assertThat(allUserProducts.size()).isEqualTo(1);
         assertThat(allUserProducts.get(0).getId()).isEqualTo(productId);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findAllUserBiddings 메서드는")
+  class DescribeFindAllUserBiddings {
+
+    @Nested
+    @DisplayName("userId 가 양수가 아니면")
+    class ContextWithNotPositive {
+
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1L, Long.MIN_VALUE})
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException(long src) {
+        UserBiddingSelectRequest request = new UserBiddingSelectRequest(0, 1, END_DATE_ASC);
+
+        assertThatThrownBy(() -> defaultUserService.findAllUserBiddings(src, request))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("request 가 null이면")
+    class ContextWithNullRequest {
+
+      @ParameterizedTest
+      @ValueSource(longs = {1, Long.MAX_VALUE})
+      @DisplayName("IllegalArgumentException 에러를 발생시킨다")
+      void ItIllegalArgumentException(long src) {
+        assertThatThrownBy(() -> defaultUserService.findAllUserBiddings(src, null))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidParameters {
+
+      @Test
+      @DisplayName("UserBiddingSelectResponse 를 반환한다")
+      void ItResponseUserBiddingSelectResponse() {
+        //given
+        User writer = new User("아루루", "image", "google", "1234", new Group());
+
+        UserBiddingSelectRequest request = new UserBiddingSelectRequest(0, 1, END_DATE_ASC);
+
+        Product product = Product.builder()
+                                 .title("감자 팜")
+                                 .description("zz")
+                                 .location("강원도")
+                                 .category(ETC)
+                                 .minimumPrice(15000)
+                                 .images(List.of("testUrl"))
+                                 .writer(writer)
+                                 .build();
+        long productId = 1L;
+        ReflectionTestUtils.setField(product, "id", productId);
+
+        User bidder = new User("제로", "image", "google", "1234", new Group());
+        long userId = 1L;
+        ReflectionTestUtils.setField(bidder, "id", userId);
+
+        Bidding bidding = Bidding.builder()
+                                 .product(product)
+                                 .bidder(bidder)
+                                 .biddingPrice(BiddingPrice.valueOf(10000))
+                                 .build();
+
+        given(biddingRepository.findAllUserBidding(anyLong(), any(UserBiddingSelectRequest.class)))
+            .willReturn(List.of(bidding));
+
+        //when
+        List<UserBiddingSelectResponse> result = defaultUserService.findAllUserBiddings(1,
+                                                                                        request);
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getId()).isEqualTo(productId);
       }
     }
   }
