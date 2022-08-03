@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.user.service.dto;
+package com.saiko.bidmarket.product.repository.dto;
 
 import static com.saiko.bidmarket.product.Sort.*;
 

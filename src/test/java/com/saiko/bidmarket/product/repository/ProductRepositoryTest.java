@@ -20,12 +20,12 @@ import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.GroupRepository;
 import com.saiko.bidmarket.user.repository.UserRepository;
-import com.saiko.bidmarket.user.service.dto.UserProductSelectQueryParameter;
 
 @DataJpaTest()
 @ActiveProfiles("test")

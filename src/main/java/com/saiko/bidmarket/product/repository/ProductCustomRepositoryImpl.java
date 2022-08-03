@@ -17,7 +17,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.user.service.dto.UserProductSelectQueryParameter;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 
 @Repository
 public class ProductCustomRepositoryImpl
