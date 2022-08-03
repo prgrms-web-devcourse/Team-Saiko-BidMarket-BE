@@ -19,7 +19,7 @@ import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
 @RestController
-@RequestMapping("api/v1/bidding")
+@RequestMapping("api/v1/biddings")
 public class BiddingController {
 
   private final BiddingService biddingService;
