@@ -44,7 +44,7 @@ public class BiddingController {
                                                  .bidderId(bidderId)
                                                  .build();
 
-    long createdBiddingId = biddingService.create(createDto);
+    UnsignedLong createdBiddingId = biddingService.create(createDto);
 
     return new BiddingCreateResponse(createdBiddingId);
   }

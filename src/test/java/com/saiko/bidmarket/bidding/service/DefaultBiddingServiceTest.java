@@ -160,9 +160,11 @@ class DefaultBiddingServiceTest {
         given(biddingRepository.save(any())).willReturn(bidding);
 
         // when
-        long actualBiddingId = biddingService.create(createDto);
+        UnsignedLong actualBiddingId = biddingService.create(createDto);
+
         // then
-        assertThat(actualBiddingId).isEqualTo(expectBiddingId);
+        assertThat(actualBiddingId).isNotNull();
+        assertThat(actualBiddingId.getValue()).isEqualTo(expectBiddingId);
       }
     }
 

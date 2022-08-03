@@ -1,11 +1,14 @@
 package com.saiko.bidmarket.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import lombok.Getter;
 
 @Getter
 public class UnsignedLong {
   static private final long MIN_VALUE = 1;
 
+  @JsonValue
   private final long value;
 
   private UnsignedLong(long value) {
