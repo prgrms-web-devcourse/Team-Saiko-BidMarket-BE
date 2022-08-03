@@ -240,6 +240,7 @@ class DefaultProductServiceTest {
                                  .writer(writer)
                                  .images(null)
                                  .build();
+        ReflectionTestUtils.setField(writer, "id", 1L);
         ReflectionTestUtils.setField(product, "id", 1L);
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
 
