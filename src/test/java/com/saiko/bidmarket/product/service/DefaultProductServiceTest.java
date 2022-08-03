@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
@@ -40,6 +42,9 @@ class DefaultProductServiceTest {
 
   @Mock
   UserRepository userRepository;
+
+  @Mock
+  BiddingService biddingService;
 
   @InjectMocks
   DefaultProductService productService;
@@ -299,6 +304,55 @@ class DefaultProductServiceTest {
         verify(productRepository).findAllByProgressedAndExpireAtLessThan(anyBoolean(), any());
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getId()).isEqualTo(product.getId());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("executeClosingProduct 메서드는")
+  class DescribeExecuteClosingProduct {
+
+    @Nested
+    @DisplayName("products 리스트가 비어있으면")
+    class ContextWithEmptyProducts {
+
+      @Test
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> productService.executeClosingProduct(Collections.emptyList()))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidArgument {
+
+      @Test
+      @DisplayName("종료되는 경매의 로직을 처리한다")
+      void ItResponseProductList() {
+        //when, then
+        User writer = new User("제로", "image", "google", "1234", new Group());
+        Product product = Product.builder()
+                                 .title("세탁기 팔아요")
+                                 .description("좋아요")
+                                 .minimumPrice(100000)
+                                 .category(HOUSEHOLD_APPLIANCE)
+                                 .location("수원")
+                                 .writer(writer)
+                                 .images(null)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+        given(biddingService.selectWinner(any(Product.class))).willReturn(10000L);
+
+        //when
+        productService.executeClosingProduct(List.of(product));
+
+        //then
+        verify(biddingService).selectWinner(any(Product.class));
+        assertThat(product).extracting("progressed").isEqualTo(false);
+        assertThat(product).extracting("winningPrice").isEqualTo(10000L);
       }
     }
   }

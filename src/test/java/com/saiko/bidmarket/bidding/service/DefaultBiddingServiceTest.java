@@ -1,8 +1,10 @@
 package com.saiko.bidmarket.bidding.service;
 
+import static com.saiko.bidmarket.product.Category.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -202,4 +204,97 @@ class DefaultBiddingServiceTest {
 
   }
 
+  @Nested
+  @DisplayName("selectWinner 메소드는")
+  class DescribeSelectWinner {
+
+    @Nested
+    @DisplayName("product가 null이면")
+    class ContextNullProduct {
+
+      @Test
+      @DisplayName("IllegalArgumentException을 발생시킨다.")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> biddingService.selectWinner(null))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("입찰자가 1명이라면")
+    class ContextOneBidder {
+
+      @Test
+      @DisplayName("경매의 최소 금액을 반환한다.")
+      void ItThrowsMinimumPriceOfProduct() {
+        // given
+        User bidder = new User("제로", "image", "google", "1234", new Group());
+        Product product = Product.builder()
+                                 .title("세탁기 팔아요")
+                                 .description("좋아요")
+                                 .minimumPrice(1000)
+                                 .category(HOUSEHOLD_APPLIANCE)
+                                 .location("수원")
+                                 .writer(writer)
+                                 .images(null)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+        ReflectionTestUtils.setField(product, "progressed", true);
+
+        BiddingPrice biddingPrice = BiddingPrice.valueOf(10000L);
+        Bidding bidding = new Bidding(biddingPrice, bidder, product);
+
+        given(biddingRepository.findAllByProductOrderByBiddingPriceDesc(any(Product.class)))
+            .willReturn(List.of(bidding));
+
+        // when
+        long winningPrice = biddingService.selectWinner(product);
+
+        // then
+        assertThat(bidding).extracting("won").isEqualTo(true);
+        assertThat(winningPrice).isEqualTo(1000L);
+      }
+    }
+
+    @Nested
+    @DisplayName("입찰자가 여러명이라면")
+    class ContextManyBidders {
+
+      @Test
+      @DisplayName("2등의 입찰가 + 1000원을 반환한다.")
+      void ItThrowsMinimumPriceOfProduct() {
+        // given
+        User bidderOne = new User("제로", "image", "google", "1234", new Group());
+        User bidderTwo = new User("재이", "image", "google", "1234", new Group());
+        Product product = Product.builder()
+                                 .title("세탁기 팔아요")
+                                 .description("좋아요")
+                                 .minimumPrice(1000)
+                                 .category(HOUSEHOLD_APPLIANCE)
+                                 .location("수원")
+                                 .writer(writer)
+                                 .images(null)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+        ReflectionTestUtils.setField(product, "progressed", true);
+
+        BiddingPrice biddingPriceOne = BiddingPrice.valueOf(10000L);
+        BiddingPrice biddingPriceTwo = BiddingPrice.valueOf(50000L);
+        Bidding biddingOne = new Bidding(biddingPriceOne, bidderOne, product);
+        Bidding biddingTwo = new Bidding(biddingPriceTwo, bidderTwo, product);
+
+        given(biddingRepository.findAllByProductOrderByBiddingPriceDesc(any(Product.class)))
+            .willReturn(List.of(biddingTwo, biddingOne));
+
+        // when
+        long winningPrice = biddingService.selectWinner(product);
+
+        // then
+        assertThat(biddingTwo).extracting("won").isEqualTo(true);
+        assertThat(biddingOne).extracting("won").isEqualTo(false);
+        assertThat(winningPrice).isEqualTo(biddingOne.getBiddingPrice() + 1000L);
+      }
+    }
+  }
 }
