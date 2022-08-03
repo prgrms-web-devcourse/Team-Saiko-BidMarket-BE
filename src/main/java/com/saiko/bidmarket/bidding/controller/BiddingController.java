@@ -14,7 +14,7 @@ import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
-import com.saiko.bidmarket.common.entity.LongId;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
 @RestController
@@ -36,7 +36,7 @@ public class BiddingController {
     var createDto = BiddingCreateDto.builder()
                                     .biddingPrice(biddingCreateRequest.getBiddingPrice())
                                     .productId(biddingCreateRequest.getProductId())
-                                    .bidderId(new LongId(authentication.getUserId()))
+                                    .bidderId(UnsignedLong.valueOf(authentication.getUserId()))
                                     .build();
 
     long createdBiddingId = biddingService.create(createDto);
