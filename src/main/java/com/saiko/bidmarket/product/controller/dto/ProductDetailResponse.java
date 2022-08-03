@@ -20,7 +20,9 @@ public class ProductDetailResponse {
   private final String description;
 
   private final int minimumPrice;
-  private final String categoryName;
+
+  private final Category category;
+
   private final String location;
 
   private final LocalDateTime expireAt;
@@ -31,35 +33,7 @@ public class ProductDetailResponse {
 
   private final UserBasicResponse writer;
 
-  public String getCategoryName() {
-    return categoryName;
-  }
-
-  public String getLocation() {
-    return location;
-  }
-
-  public LocalDateTime getExpireAt() {
-    return expireAt;
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public LocalDateTime getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public UserBasicResponse getWriter() {
-    return writer;
-  }
-
-  public List<ImagBasicResponse> getImageUrls() {
-    return imageUrls;
-  }
-
-  private final LocalDateTime updatedAt;
+  private final List<ImagBasicResponse> images;
 
   private ProductDetailResponse(Product product) {
     // 생성을 from 함수로만 하도록 제한
@@ -67,16 +41,16 @@ public class ProductDetailResponse {
     this.title = product.getTitle();
     this.description = product.getDescription();
     this.minimumPrice = product.getMinimumPrice();
-    this.categoryName = product.getCategory().getDisplayName();
+    this.category = product.getCategory();
     this.location = product.getLocation();
     this.expireAt = product.getExpireAt();
     this.createdAt = product.getCreatedAt();
     this.updatedAt = product.getUpdatedAt();
     this.writer = UserBasicResponse.from(product.getWriter());
-    this.imageUrls = product.getImages()
-                            .stream()
-                            .map(ImagBasicResponse::from)
-                            .collect(Collectors.toList());
+    this.images = product.getImages()
+                         .stream()
+                         .map(ImagBasicResponse::from)
+                         .collect(Collectors.toList());
   }
 
   public static ProductDetailResponse from(Product product) {
