@@ -88,7 +88,7 @@ class DefaultBiddingServiceTest {
       @DisplayName("NotFoundException을 발생시킨다.")
       void ItThrowsNotFoundException() {
         // given
-        BiddingPrice biddingPrice = new BiddingPrice(1000L);
+        BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(1);
         UnsignedLong bidderId = UnsignedLong.valueOf(1);
         BiddingCreateDto createDto = BiddingCreateDto.builder()
@@ -115,7 +115,7 @@ class DefaultBiddingServiceTest {
       @DisplayName("NotFoundException을 발생시킨다.")
       void ItThrowsNotFoundException() {
         // given
-        BiddingPrice biddingPrice = new BiddingPrice(1000L);
+        BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(1);
         UnsignedLong bidderId = UnsignedLong.valueOf(1);
         BiddingCreateDto createDto = BiddingCreateDto.builder()
@@ -141,7 +141,7 @@ class DefaultBiddingServiceTest {
       @DisplayName("생성된 Bidding의 Id를 반환한다")
       void ItThrowsNotFoundException() {
         // given
-        BiddingPrice biddingPrice = new BiddingPrice(1000L);
+        BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(1);
         UnsignedLong bidderId = UnsignedLong.valueOf(1);
         BiddingCreateDto createDto = BiddingCreateDto.builder()
@@ -166,6 +166,7 @@ class DefaultBiddingServiceTest {
         assertThat(actualBiddingId).isNotNull();
         assertThat(actualBiddingId.getValue()).isEqualTo(expectBiddingId);
       }
+
     }
 
   }

@@ -13,21 +13,25 @@ public class BiddingPrice {
 
   private final long value;
 
-  public BiddingPrice(long value) {
-    validateMinAmount(value);
-    validateUnitAmount(value);
+  private BiddingPrice(long value) {
     this.value = value;
   }
 
-  private void validateMinAmount(long biddingPrice) {
+  private static void validateMinAmount(long biddingPrice) {
     if (biddingPrice < MIN_AMOUNT) {
       throw new IllegalArgumentException();
     }
   }
 
-  private void validateUnitAmount(long biddingPrice) {
+  private static void validateUnitAmount(long biddingPrice) {
     if (biddingPrice % UNIT_AMOUNT != 0) {
       throw new IllegalArgumentException();
     }
+  }
+
+  public static BiddingPrice valueOf(long value) {
+    validateMinAmount(value);
+    validateUnitAmount(value);
+    return new BiddingPrice(value);
   }
 }
