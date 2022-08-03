@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
+import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -55,5 +57,15 @@ public class UserApiController {
   ) {
     long userId = authentication.getUserId();
     return userService.findAllUserProducts(userId, request);
+  }
+
+  @GetMapping("biddings")
+  @ResponseStatus(HttpStatus.OK)
+  public List<UserBiddingSelectResponse> getAllUserBidding(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @ModelAttribute @Valid UserBiddingSelectRequest request
+  ) {
+    long userId = authentication.getUserId();
+    return userService.findAllUserBiddings(userId, request);
   }
 }

@@ -13,6 +13,9 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.repository.ProductRepository;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
+import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -20,7 +23,6 @@ import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
-import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -100,11 +102,18 @@ public class DefaultUserService implements UserService {
     Assert.isTrue(userId > 0, "User id must be positive");
     Assert.notNull(request, "Request must be provided");
 
-    final UserProductSelectQueryParameter queryParameter = UserProductSelectQueryParameter.of(userId, request);
+    final UserProductSelectQueryParameter queryParameter = UserProductSelectQueryParameter.of(
+        userId, request);
 
     return productRepository.findAllUserProduct(queryParameter)
                             .stream()
                             .map(UserProductSelectResponse::from)
                             .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<UserBiddingSelectResponse> findAllUserBiddings(long userId,
+                                                             UserBiddingSelectRequest request) {
+    return null;
   }
 }
