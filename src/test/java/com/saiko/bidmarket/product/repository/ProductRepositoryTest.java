@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
@@ -162,7 +161,6 @@ public class ProductRepositoryTest {
 
         User writer = new User("박동철", "image", "google", "1234", group);
         writer = userRepository.save(writer);
-        ReflectionTestUtils.setField(writer, "id", 1L);
 
         Product product = productRepository.save(
             Product.builder()
