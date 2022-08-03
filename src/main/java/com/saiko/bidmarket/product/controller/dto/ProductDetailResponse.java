@@ -1,40 +1,35 @@
-package com.saiko.bidmarket.product.controller;
+package com.saiko.bidmarket.product.controller.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.saiko.bidmarket.product.controller.dto.ImagBasicResponse;
+import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.dto.UserBasicResponse;
 
+import lombok.Getter;
+
+@Getter
 public class ProductDetailResponse {
+
   private final Long id;
+
   private final String title;
+
   private final String description;
+
   private final int minimumPrice;
   private final String categoryName;
   private final String location;
+
   private final LocalDateTime expireAt;
+
   private final LocalDateTime createdAt;
+
+  private final LocalDateTime updatedAt;
+
   private final UserBasicResponse writer;
-  private final List<ImagBasicResponse> imageUrls;
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public int getMinimumPrice() {
-    return minimumPrice;
-  }
 
   public String getCategoryName() {
     return categoryName;
