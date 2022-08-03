@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.product.entity.Product;
 
-public interface BiddingRepository extends JpaRepository<Bidding, Long> {
+public interface BiddingRepository extends BiddingCustomRepository, JpaRepository<Bidding, Long> {
   List<Bidding> findAllByProductOrderByBiddingPriceDesc(Product product);
 }

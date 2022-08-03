@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.respository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
@@ -35,6 +36,7 @@ public class DefaultUserService implements UserService {
   private final Logger log = LoggerFactory.getLogger(getClass());
 
   private final ProductRepository productRepository;
+  private final BiddingRepository biddingRepository;
   private final UserRepository userRepository;
   private final GroupService groupService;
 
@@ -114,6 +116,12 @@ public class DefaultUserService implements UserService {
   @Override
   public List<UserBiddingSelectResponse> findAllUserBiddings(long userId,
                                                              UserBiddingSelectRequest request) {
-    return null;
+    Assert.isTrue(userId > 0, "User id must be positive");
+    Assert.notNull(request, "Request must be provided");
+
+    return biddingRepository.findAllUserBidding(userId, request)
+                            .stream().map((bidding) -> bidding.getProduct())
+                            .map((product) -> UserBiddingSelectResponse.from(product))
+                            .collect(Collectors.toList());
   }
 }
