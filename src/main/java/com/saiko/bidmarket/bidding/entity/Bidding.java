@@ -33,10 +33,10 @@ public class Bidding extends BaseTime {
   @NotNull
   private long biddingPrice;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   private User bidder;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   private Product product;
 
   @Builder
