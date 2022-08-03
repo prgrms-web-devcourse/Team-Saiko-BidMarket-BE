@@ -60,13 +60,13 @@ public class UserApiController {
     return userService.findById(userId);
   }
 
-  @GetMapping("products")
+  @GetMapping("{encodedId}/products")
   @ResponseStatus(HttpStatus.OK)
   public List<UserProductSelectResponse> getAllUserProduct(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @ModelAttribute @Valid UserProductSelectRequest request
+      @ModelAttribute @Valid UserProductSelectRequest request,
+      @PathVariable String encodedId
   ) {
-    long userId = authentication.getUserId();
+    final long userId = IdEncoder.decode(encodedId);
     return userService.findAllUserProducts(userId, request);
   }
 
