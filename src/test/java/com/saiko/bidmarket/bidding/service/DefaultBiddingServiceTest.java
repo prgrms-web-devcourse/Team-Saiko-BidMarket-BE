@@ -18,7 +18,7 @@ import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.respository.BiddingRepository;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
-import com.saiko.bidmarket.common.entity.LongId;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -89,8 +89,8 @@ class DefaultBiddingServiceTest {
       void ItThrowsNotFoundException() {
         // given
         BiddingPrice biddingPrice = new BiddingPrice(1000L);
-        LongId productId = new LongId(1);
-        LongId bidderId = new LongId(1);
+        UnsignedLong productId = UnsignedLong.valueOf(1);
+        UnsignedLong bidderId = UnsignedLong.valueOf(1);
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -116,8 +116,8 @@ class DefaultBiddingServiceTest {
       void ItThrowsNotFoundException() {
         // given
         BiddingPrice biddingPrice = new BiddingPrice(1000L);
-        LongId productId = new LongId(1);
-        LongId bidderId = new LongId(1);
+        UnsignedLong productId = UnsignedLong.valueOf(1);
+        UnsignedLong bidderId = UnsignedLong.valueOf(1);
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -142,8 +142,8 @@ class DefaultBiddingServiceTest {
       void ItThrowsNotFoundException() {
         // given
         BiddingPrice biddingPrice = new BiddingPrice(1000L);
-        LongId productId = new LongId(1);
-        LongId bidderId = new LongId(1);
+        UnsignedLong productId = UnsignedLong.valueOf(1);
+        UnsignedLong bidderId = UnsignedLong.valueOf(1);
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
