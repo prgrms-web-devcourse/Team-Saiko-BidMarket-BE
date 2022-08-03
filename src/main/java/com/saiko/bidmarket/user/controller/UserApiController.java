@@ -48,7 +48,8 @@ public class UserApiController {
   @GetMapping("{encodedId}")
   @ResponseStatus(HttpStatus.OK)
   public UserSelectResponse getUser(@PathVariable String encodedId) {
-    return userService.findById(IdEncoder.decode(encodedId));
+    final long userId = IdEncoder.decode(encodedId);
+    return userService.findById(userId);
   }
 
   @GetMapping("auth")
@@ -57,7 +58,8 @@ public class UserApiController {
       @AuthenticationPrincipal JwtAuthentication authentication
   ) {
     final UserSelectResponse userResponse = userService.findById(authentication.getUserId());
-    return new UserEncodedIdResponse(userResponse.getEncodedUserId());
+    final String encodedUserId = userResponse.getEncodedUserId();
+    return new UserEncodedIdResponse(encodedUserId);
   }
 
   @GetMapping("products")
