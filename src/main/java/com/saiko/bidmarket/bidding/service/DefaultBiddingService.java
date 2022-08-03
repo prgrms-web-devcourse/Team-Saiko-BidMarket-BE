@@ -38,6 +38,10 @@ public class DefaultBiddingService implements BiddingService {
     Product product = productRepository.findById(createDto.getProductId().getValue())
                                        .orElseThrow(NotFoundException::new);
 
+    if (!product.isProgressed()) {
+      throw new IllegalArgumentException("비딩이 종료된 상품에 비딩할 수 없습니다.");
+    }
+
     Bidding bidding = new Bidding(createDto.getBiddingPrice(), bidder, product);
 
     Bidding createdBidding = biddingRepository.save(bidding);
