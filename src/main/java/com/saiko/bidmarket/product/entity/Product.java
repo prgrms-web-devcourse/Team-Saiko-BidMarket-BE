@@ -88,7 +88,7 @@ public class Product extends BaseTime {
     this.images = createImages(images);
     this.thumbnailImage = createThumbnailImage(images);
     this.writer = writer;
-    this.progressed = false;
+    this.progressed = true;
   }
 
   private List<Image> createImages(List<String> imageUrls) {
