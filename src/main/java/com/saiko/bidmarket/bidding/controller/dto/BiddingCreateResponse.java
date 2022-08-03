@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.bidding.controller.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 
 import lombok.Getter;

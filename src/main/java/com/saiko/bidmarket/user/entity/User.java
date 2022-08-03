@@ -16,6 +16,8 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
 
+import lombok.Builder;
+
 @Entity
 @Table(name = "`user`")
 public class User extends BaseTime {
@@ -46,6 +48,7 @@ public class User extends BaseTime {
 
   protected User() {/*no-op*/}
 
+  @Builder
   public User(String username, String profileImage, String provider, String providerId,
               Group group) {
     Assert.isTrue(isNotBlank(username), "Username must be provided");

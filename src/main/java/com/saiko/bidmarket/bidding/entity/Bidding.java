@@ -15,6 +15,7 @@ import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,6 +39,7 @@ public class Bidding extends BaseTime {
   @ManyToOne(fetch = FetchType.LAZY)
   private Product product;
 
+  @Builder
   public Bidding(BiddingPrice biddingPrice, User bidder, Product product) {
     Assert.notNull(biddingPrice, "Bidding price must be provided");
     Assert.notNull(bidder, "Bidder must be provided");
