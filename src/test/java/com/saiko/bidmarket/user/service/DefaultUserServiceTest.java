@@ -475,7 +475,7 @@ class DefaultUserServiceTest {
         Bidding bidding = Bidding.builder()
                                  .product(product)
                                  .bidder(bidder)
-                                 .biddingPrice(BiddingPrice.valueOf(10000))
+                                 .biddingPrice(BiddingPrice.valueOf(20000))
                                  .build();
 
         given(biddingRepository.findAllUserBidding(anyLong(), any(UserBiddingSelectRequest.class)))
