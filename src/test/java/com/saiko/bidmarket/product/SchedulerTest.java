@@ -60,15 +60,14 @@ public class SchedulerTest {
                                  .build();
         ReflectionTestUtils.setField(product, "id", 1L);
 
-        BDDMockito.given(productService.findAllThatNeedToClose(any(), any()))
-                  .willReturn(List.of(product));
+        BDDMockito.given(productService.findAllThatNeedToClose(any())).willReturn(List.of(product));
 
         // when, then
         await()
             .atMost(Duration.ofMinutes(1))
             .untilAsserted(() -> {
               verify(scheduler, atLeast(1)).closeProduct();
-              verify(productService).findAllThatNeedToClose(any(), any());
+              verify(productService).findAllThatNeedToClose(any());
               verify(productService).executeClosingProduct(any());
             });
       }
@@ -82,7 +81,7 @@ public class SchedulerTest {
       @DisplayName("경매 종료 로직을 실행하지 않는다.")
       void ItDoesNotExecuteClosingProduct() {
         // given
-        BDDMockito.given(productService.findAllThatNeedToClose(any(), any())).willReturn(
+        BDDMockito.given(productService.findAllThatNeedToClose(any())).willReturn(
             Collections.emptyList());
 
         // when, then
@@ -90,7 +89,7 @@ public class SchedulerTest {
             .atMost(Duration.ofMinutes(1))
             .untilAsserted(() -> {
               verify(scheduler, atLeast(1)).closeProduct();
-              verify(productService).findAllThatNeedToClose(any(), any());
+              verify(productService).findAllThatNeedToClose(any());
               verify(productService, times(0)).executeClosingProduct(any());
             });
       }
