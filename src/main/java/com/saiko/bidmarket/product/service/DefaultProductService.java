@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.product.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,5 +71,17 @@ public class DefaultProductService implements ProductService {
     return ProductDetailResponse.from(productRepository.findById(id)
                                                        .orElseThrow(() -> new NotFoundException(
                                                            "Product not exist")));
+  }
+
+  @Override
+  public List<Product> findAllThatNeedToClose(LocalDateTime nowTime) {
+    Assert.notNull(nowTime, "nowTime must be provided");
+
+    return productRepository.findAllByProgressedAndExpireAtLessThan(false, nowTime);
+  }
+
+  @Override
+  public void executeClosingProduct(List<Product> products) {
+    // TODO: 경매 종료시 수행되는 비즈니스 로직 구현
   }
 }

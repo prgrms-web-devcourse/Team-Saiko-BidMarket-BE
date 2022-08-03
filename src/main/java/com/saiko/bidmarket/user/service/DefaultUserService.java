@@ -2,6 +2,7 @@ package com.saiko.bidmarket.user.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -18,20 +20,21 @@ import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class DefaultUserService implements UserService {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
+  private final ProductRepository productRepository;
   private final UserRepository userRepository;
   private final GroupService groupService;
-
-  public DefaultUserService(UserRepository userRepository, GroupService groupService) {
-    this.userRepository = userRepository;
-    this.groupService = groupService;
-  }
 
   @Override
   @Transactional(readOnly = true)
@@ -90,8 +93,18 @@ public class DefaultUserService implements UserService {
   }
 
   @Override
-  public List<UserProductSelectResponse> findAllUserProducts(long userId,
-                                                             UserProductSelectRequest request) {
-    return null;
+  public List<UserProductSelectResponse> findAllUserProducts(
+      long userId,
+      UserProductSelectRequest request
+  ) {
+    Assert.isTrue(userId > 0, "User id must be positive");
+    Assert.notNull(request, "Request must be provided");
+
+    final UserProductSelectQueryParameter queryParameter = UserProductSelectQueryParameter.of(userId, request);
+
+    return productRepository.findAllUserProduct(queryParameter)
+                            .stream()
+                            .map(UserProductSelectResponse::from)
+                            .collect(Collectors.toList());
   }
 }

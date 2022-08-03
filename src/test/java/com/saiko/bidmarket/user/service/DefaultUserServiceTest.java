@@ -1,9 +1,13 @@
 package com.saiko.bidmarket.user.service;
 
+import static com.saiko.bidmarket.product.Category.*;
+import static com.saiko.bidmarket.product.Sort.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,11 +30,16 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.product.repository.ProductRepository;
+import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
+import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 
 @ExtendWith(MockitoExtension.class)
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
@@ -38,6 +47,9 @@ class DefaultUserServiceTest {
 
   @Mock
   UserRepository userRepository;
+
+  @Mock
+  ProductRepository productRepository;
 
   @Mock
   GroupService groupService;
@@ -194,7 +206,7 @@ class DefaultUserServiceTest {
       @DisplayName("IllegalArgumentException을 반환한다.")
       void itThrowIllegalArgumentException(long id) {
         //then
-        Assertions.assertThatThrownBy(() -> defaultUserService.findById(id))
+        assertThatThrownBy(() -> defaultUserService.findById(id))
                   .isInstanceOf(IllegalArgumentException.class);
       }
     }
@@ -210,7 +222,7 @@ class DefaultUserServiceTest {
         final long notExistUserId = 1;
 
         //then
-        Assertions.assertThatThrownBy(() -> defaultUserService.findById(notExistUserId))
+        assertThatThrownBy(() -> defaultUserService.findById(notExistUserId))
                   .isInstanceOf(NotFoundException.class);
       }
     }
@@ -262,7 +274,7 @@ class DefaultUserServiceTest {
         final UserUpdateRequest request = null;
 
         //then
-        Assertions.assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
+        assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
                   .isInstanceOf(IllegalArgumentException.class);
       }
     }
@@ -282,7 +294,7 @@ class DefaultUserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         //then
-        Assertions.assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
+        assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
                   .isInstanceOf(NotFoundException.class);
       }
     }
@@ -321,4 +333,73 @@ class DefaultUserServiceTest {
     }
   }
 
+  @Nested
+  @DisplayName("findAllUserProducts 메서드는")
+  class DescribeFindAllUserProducts {
+
+    @Nested
+    @DisplayName("userId 가 양수가 아니면")
+    class ContextWithNotPositive {
+
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1L, Long.MIN_VALUE})
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException(long src) {
+        UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
+
+        assertThatThrownBy(() -> defaultUserService.findAllUserProducts(src, request))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("request 가 null이면")
+    class ContextWithNullRequest {
+
+      @ParameterizedTest
+      @ValueSource(longs = {1, Long.MAX_VALUE})
+      @DisplayName("IllegalArgumentException 에러를 발생시킨다")
+      void ItIllegalArgumentException(long src) {
+        assertThatThrownBy(() -> defaultUserService.findAllUserProducts(src, null))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidParameters {
+
+      @Test
+      @DisplayName("UserProductSelectResponse 를 반환한다")
+      void ItResponseUserProductSelectResponse() {
+        //given
+        User writer = new User("아루루", "image", "google", "1234", new Group());
+
+        UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
+
+        Product product = Product.builder()
+                                 .title("감자 팜")
+                                 .description("zz")
+                                 .location("강원도")
+                                 .category(ETC)
+                                 .minimumPrice(15000)
+                                 .images(List.of("testUrl"))
+                                 .writer(writer)
+                                 .build();
+        long productId = 1L;
+        ReflectionTestUtils.setField(product, "id", productId);
+
+        given(productRepository.findAllUserProduct(any(UserProductSelectQueryParameter.class)))
+                               .willReturn(List.of(product));
+
+        //when
+        final List<UserProductSelectResponse> allUserProducts = defaultUserService.findAllUserProducts(
+            1L, request);
+
+        //then
+        assertThat(allUserProducts.size()).isEqualTo(1);
+        assertThat(allUserProducts.get(0).getId()).isEqualTo(productId);
+      }
+    }
+  }
 }

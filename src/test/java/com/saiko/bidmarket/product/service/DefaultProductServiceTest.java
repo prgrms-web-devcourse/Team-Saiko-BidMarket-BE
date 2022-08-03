@@ -4,6 +4,7 @@ import static com.saiko.bidmarket.product.Category.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -247,6 +248,56 @@ class DefaultProductServiceTest {
 
         //then
         assertThat(response.getId()).isEqualTo(product.getId());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findAllThatNeedToClose 메서드는")
+  class DescribeFindAllThatNeedToClose {
+
+    @Nested
+    @DisplayName("nowTime이 null 이면")
+    class ContextWithNullStart {
+
+      @Test
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> productService.findAllThatNeedToClose(null))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidArgument {
+
+      @Test
+      @DisplayName("요청에 해당하는 상품 리스트를 반환한다")
+      void ItResponseProductList() {
+        //when, then
+        User writer = new User("제로", "image", "google", "1234", new Group());
+        Product product = Product.builder()
+                                 .title("세탁기 팔아요")
+                                 .description("좋아요")
+                                 .minimumPrice(100000)
+                                 .category(HOUSEHOLD_APPLIANCE)
+                                 .location("수원")
+                                 .writer(writer)
+                                 .images(null)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+        given(productRepository.findAllByProgressedAndExpireAtLessThan(
+            anyBoolean(), any(LocalDateTime.class))).willReturn(List.of(product));
+
+        //when
+        List<Product> result = productService.findAllThatNeedToClose(LocalDateTime.now());
+
+        //then
+        verify(productRepository).findAllByProgressedAndExpireAtLessThan(anyBoolean(), any());
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getId()).isEqualTo(product.getId());
       }
     }
   }
