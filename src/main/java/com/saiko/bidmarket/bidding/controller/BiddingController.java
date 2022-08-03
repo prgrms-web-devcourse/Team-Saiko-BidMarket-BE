@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
@@ -33,11 +34,15 @@ public class BiddingController {
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody @Valid BiddingCreateRequest biddingCreateRequest
   ) {
-    var createDto = BiddingCreateDto.builder()
-                                    .biddingPrice(biddingCreateRequest.getBiddingPrice())
-                                    .productId(biddingCreateRequest.getProductId())
-                                    .bidderId(UnsignedLong.valueOf(authentication.getUserId()))
-                                    .build();
+    BiddingPrice biddingPrice = biddingCreateRequest.getBiddingPrice();
+    UnsignedLong productId = biddingCreateRequest.getProductId();
+    UnsignedLong bidderId = UnsignedLong.valueOf(authentication.getUserId());
+
+    BiddingCreateDto createDto = BiddingCreateDto.builder()
+                                                 .biddingPrice(biddingPrice)
+                                                 .productId(productId)
+                                                 .bidderId(bidderId)
+                                                 .build();
 
     long createdBiddingId = biddingService.create(createDto);
 
