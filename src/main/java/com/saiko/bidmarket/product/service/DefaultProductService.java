@@ -77,7 +77,7 @@ public class DefaultProductService implements ProductService {
   public List<Product> findAllThatNeedToClose(LocalDateTime nowTime) {
     Assert.notNull(nowTime, "nowTime must be provided");
 
-    return productRepository.findAllByProgressedAndExpireAtLessThan(false, nowTime);
+    return productRepository.findAllByProgressedAndExpireAtLessThan(true, nowTime);
   }
 
   @Override
