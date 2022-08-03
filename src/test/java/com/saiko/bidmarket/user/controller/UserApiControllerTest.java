@@ -35,6 +35,7 @@ import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
+import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
@@ -216,7 +217,6 @@ class UserApiControllerTest extends ControllerSetUp {
       @DisplayName("해당 유저의 Id와 이름과 사진URL을 반환한다.")
       void itReturnUsernameAndProfileImageUrl() throws Exception {
         //given
-        final UserSelectResponse expected;
         final User user = new User("test",
                                    "test",
                                    "test",
@@ -228,7 +228,7 @@ class UserApiControllerTest extends ControllerSetUp {
         //when
         when(userService.findById(anyLong())).thenReturn(UserSelectResponse.from(user));
         final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/1");
+            .get(BASE_URL + "/GOIOCDTSAZC8B");
 
         ResultActions response = mockMvc.perform(request);
 
@@ -239,6 +239,8 @@ class UserApiControllerTest extends ControllerSetUp {
             .andDo(document("Get User",
                             preprocessRequest(prettyPrint()),
                             responseFields(
+                                fieldWithPath("encodedUserId").type(JsonFieldType.STRING)
+                                                              .description("인코딩된 유저 ID"),
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("현재 유저 이름"),
                                 fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
@@ -247,8 +249,94 @@ class UserApiControllerTest extends ControllerSetUp {
             ));
       }
     }
+
+    @Nested
+    @DisplayName("encoded 아이디가 존재하지 않는 유저의 Id라면")
+    class ContextNotExistUserId {
+
+      @Test
+      @DisplayName("404 NotFound를 반환한다.")
+      void itReturnBadRequest() throws Exception {
+
+        //when
+        when(userService.findById(anyLong())).thenThrow(NotFoundException.class);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL + "/GOIOCDTSAZC8B");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).findById(anyLong());
+        response
+            .andExpect(status().isNotFound());
+      }
+    }
   }
 
+  @Nested
+  @DisplayName("getUserInfo메서드는")
+  @WithMockCustomLoginUser
+  class DescribeGetUserInfo {
+
+    @Nested
+    @DisplayName("로그인 된 사용자의 토큰이 유효하다면")
+    class ContextValidUserToken {
+
+      @Test
+      @DisplayName("해당 유저의 인코딩된 ID를 반환한다.")
+      void itReturnEncodedUserID() throws Exception {
+        //given
+        final User user = new User("test",
+                                   "test",
+                                   "test",
+                                   "test",
+                                   new Group());
+
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        //when
+        when(userService.findById(anyLong())).thenReturn(UserSelectResponse.from(user));
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL + "/auth");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).findById(anyLong());
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Get UserInfo",
+                            preprocessRequest(prettyPrint()),
+                            responseFields(
+                                fieldWithPath("encodedUserId").type(JsonFieldType.STRING)
+                                                              .description("인코딩된 유저 ID")
+                            )
+            ));
+      }
+    }
+
+    @Nested
+    @DisplayName("로그인 된 사용자의 토큰이 유효하지만 존재하지 않는 유저라면")
+    class ContextNotExistValidUserToken {
+
+      @Test
+      @DisplayName("404 NotFound를 반환한다.")
+      void itReturnEncodedUserID() throws Exception {
+        //when
+        when(userService.findById(anyLong())).thenThrow(NotFoundException.class);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL + "/auth");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).findById(anyLong());
+        response
+            .andExpect(status().isNotFound());
+      }
+    }
+  }
+}
   @WithMockCustomLoginUser
   @Nested
   @DisplayName("getAllUserProduct 메서드는")
