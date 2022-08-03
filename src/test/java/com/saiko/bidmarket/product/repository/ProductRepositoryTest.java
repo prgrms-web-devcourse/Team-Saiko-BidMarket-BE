@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
@@ -159,45 +160,31 @@ public class ProductRepositoryTest {
 
         Group group = groupRepository.findById(1L).get();
 
-        User writer1 = new User("제로", "image", "google", "123", group);
-        User writer2 = new User("재이", "image", "google", "1234", group);
+        User writer = new User("박동철", "image", "google", "1234", group);
+        writer = userRepository.save(writer);
+        ReflectionTestUtils.setField(writer, "id", 1L);
 
-        writer1 = userRepository.save(writer1);
-        writer2 = userRepository.save(writer2);
-
-        Product product1 = productRepository.save(
+        Product product = productRepository.save(
             Product.builder()
-                   .title("노트북 팝니다1")
+                   .title("노트북 팝니다")
                    .description("싸요")
                    .category(Category.DIGITAL_DEVICE)
                    .minimumPrice(10000)
                    .images(null)
                    .location(null)
-                   .writer(writer1)
-                   .build()
-        );
-
-        Product product2 = productRepository.save(
-            Product.builder()
-                   .title("노트북 팝니다2")
-                   .description("싸요")
-                   .category(Category.DIGITAL_DEVICE)
-                   .minimumPrice(10000)
-                   .images(null)
-                   .location(null)
-                   .writer(writer2)
+                   .writer(writer)
                    .build()
         );
 
         // when
         UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
         UserProductSelectQueryParameter parameter = UserProductSelectQueryParameter.of(
-            writer1.getId(), request);
+            writer.getId(), request);
         List<Product> result = productRepository.findAllUserProduct(parameter);
 
         // then
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(product1);
+        assertThat(result.get(0)).isEqualTo(product);
       }
     }
 
