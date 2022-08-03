@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.product.controller.ProductDetailResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;

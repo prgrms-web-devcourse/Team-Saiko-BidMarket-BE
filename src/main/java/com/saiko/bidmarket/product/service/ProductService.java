@@ -2,7 +2,7 @@ package com.saiko.bidmarket.product.service;
 
 import java.util.List;
 
-import com.saiko.bidmarket.product.controller.ProductDetailResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
