@@ -39,6 +39,8 @@ public class Bidding extends BaseTime {
   @ManyToOne(fetch = FetchType.EAGER)
   private Product product;
 
+  private boolean won;
+
   @Builder
   public Bidding(BiddingPrice biddingPrice, User bidder, Product product) {
     Assert.notNull(biddingPrice, "Bidding price must be provided");
@@ -48,6 +50,10 @@ public class Bidding extends BaseTime {
     this.biddingPrice = biddingPrice.getValue();
     this.bidder = bidder;
     this.product = product;
+    this.won = false;
   }
 
+  public void win() {
+    this.won = true;
+  }
 }
