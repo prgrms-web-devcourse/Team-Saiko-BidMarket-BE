@@ -106,6 +106,35 @@ class DefaultBiddingServiceTest {
             .isInstanceOf(NotFoundException.class);
       }
     }
+    
+    @Nested
+    @DisplayName("해당 상품의 비딩이 종료되었다면")
+    class ContextExpiredProduct {
+
+      @Test
+      @DisplayName("IllegalArgumentException을 발생시킨다.")
+      void ItThrowsIllegalArgumentException() {
+        // given
+        BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
+        UnsignedLong productId = UnsignedLong.valueOf(1);
+        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        BiddingCreateDto createDto = BiddingCreateDto.builder()
+                                                     .biddingPrice(biddingPrice)
+                                                     .bidderId(bidderId)
+                                                     .productId(productId)
+                                                     .build();
+
+        ReflectionTestUtils.setField(product, "progressed", false);
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(bidder));
+        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+
+        // when
+        // then
+        assertThatThrownBy(() -> biddingService.create(createDto))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
 
     @Nested
     @DisplayName("BiddingCreateDto의 bidder Id에 해당하는 사용자가 없으면")
@@ -149,6 +178,8 @@ class DefaultBiddingServiceTest {
                                                      .bidderId(bidderId)
                                                      .productId(productId)
                                                      .build();
+
+        ReflectionTestUtils.setField(product, "progressed", true);
 
         given(userRepository.findById(anyLong())).willReturn(Optional.of(bidder));
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
