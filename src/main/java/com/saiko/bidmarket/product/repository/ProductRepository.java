@@ -9,6 +9,5 @@ import com.saiko.bidmarket.product.entity.Product;
 
 public interface ProductRepository extends ProductCustomRepository, JpaRepository<Product, Long> {
 
-  List<Product> findAllByProgressedAndExpireAtGreaterThanEqualAndExpireAtLessThan(
-      boolean progressed, LocalDateTime start, LocalDateTime end);
+  List<Product> findAllByProgressedAndExpireAtLessThan(boolean progressed, LocalDateTime nowTime);
 }
