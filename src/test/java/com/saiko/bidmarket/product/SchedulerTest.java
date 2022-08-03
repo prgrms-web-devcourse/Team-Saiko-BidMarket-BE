@@ -64,7 +64,7 @@ public class SchedulerTest {
 
         // when, then
         await()
-            .atMost(Duration.ofMinutes(1))
+            .atMost(Duration.ofSeconds(119))
             .untilAsserted(() -> {
               verify(scheduler, atLeast(1)).closeProduct();
               verify(productService).findAllThatNeedToClose(any());
@@ -86,7 +86,7 @@ public class SchedulerTest {
 
         // when, then
         await()
-            .atMost(Duration.ofMinutes(1))
+            .atMost(Duration.ofSeconds(119))
             .untilAsserted(() -> {
               verify(scheduler, atLeast(1)).closeProduct();
               verify(productService).findAllThatNeedToClose(any());
