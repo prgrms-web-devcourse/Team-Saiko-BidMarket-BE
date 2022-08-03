@@ -119,7 +119,7 @@ public class BiddingRepositoryTest {
         Bidding bidding = biddingRepository.save(Bidding.builder()
                                                         .bidder(bidder)
                                                         .product(product)
-                                                        .biddingPrice(BiddingPrice.valueOf(1000))
+                                                        .biddingPrice(BiddingPrice.valueOf(10000))
                                                         .build());
 
         UserBiddingSelectRequest userBiddingSelectRequest = new UserBiddingSelectRequest(0, 1,
