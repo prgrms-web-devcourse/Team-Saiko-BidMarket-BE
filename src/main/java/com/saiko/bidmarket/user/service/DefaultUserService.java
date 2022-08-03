@@ -120,8 +120,9 @@ public class DefaultUserService implements UserService {
     Assert.notNull(request, "Request must be provided");
 
     return biddingRepository.findAllUserBidding(userId, request)
-                            .stream().map((bidding) -> bidding.getProduct())
-                            .map((product) -> UserBiddingSelectResponse.from(product))
+                            .stream()
+                            .map((bidding) -> bidding.getProduct())
+                            .map(UserBiddingSelectResponse::from)
                             .collect(Collectors.toList());
   }
 }
