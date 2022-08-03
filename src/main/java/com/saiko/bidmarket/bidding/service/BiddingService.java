@@ -1,8 +1,9 @@
 package com.saiko.bidmarket.bidding.service;
 
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 
 public interface BiddingService {
 
-  long create(BiddingCreateDto createDto);
+  UnsignedLong create(BiddingCreateDto createDto);
 }

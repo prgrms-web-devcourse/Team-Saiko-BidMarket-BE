@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.respository.BiddingRepository;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -29,7 +30,7 @@ public class DefaultBiddingService implements BiddingService {
   }
 
   @Override
-  public long create(BiddingCreateDto createDto) {
+  public UnsignedLong create(BiddingCreateDto createDto) {
     Assert.notNull(createDto, "createDto must be provided");
 
     User bidder = userRepository.findById(createDto.getBidderId().getValue())
@@ -38,6 +39,9 @@ public class DefaultBiddingService implements BiddingService {
                                        .orElseThrow(NotFoundException::new);
 
     Bidding bidding = new Bidding(createDto.getBiddingPrice(), bidder, product);
-    return biddingRepository.save(bidding).getId();
+
+    Bidding createdBidding = biddingRepository.save(bidding);
+
+    return UnsignedLong.valueOf(createdBidding.getId());
   }
 }

@@ -1,12 +1,16 @@
 package com.saiko.bidmarket.bidding.controller.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
+
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public class BiddingCreateResponse {
 
-  private final long id;
+  private final UnsignedLong id;
 
+  public BiddingCreateResponse(UnsignedLong id) {
+    this.id = id;
+  }
 }

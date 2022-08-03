@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
@@ -143,7 +144,7 @@ class BiddingControllerTest extends ControllerSetUp {
 
         long biddingId = 1L;
         given(biddingService.create(any(BiddingCreateDto.class)))
-            .willReturn(biddingId);
+            .willReturn(UnsignedLong.valueOf(biddingId));
 
         // when
         ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
