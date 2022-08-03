@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.product.repository;
 
+import static com.saiko.bidmarket.product.Sort.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -18,10 +19,12 @@ import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.GroupRepository;
 import com.saiko.bidmarket.user.repository.UserRepository;
+import com.saiko.bidmarket.user.service.dto.UserProductSelectQueryParameter;
 
 @DataJpaTest()
 @ActiveProfiles("test")
@@ -137,6 +140,77 @@ public class ProductRepositoryTest {
         // then
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(product1);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findAllUserProduct 메소드는")
+  class DescribeFindAllUserProduct {
+
+    @Nested
+    @DisplayName("정상적인 값이 들어오면")
+    class ContextValidData {
+
+      @Test
+      @DisplayName("해당 유저가 판매한, 페이징 처리된 상품 목록을 반환한다")
+      void itReturnProductList() {
+        // given
+
+        Group group = groupRepository.findById(1L).get();
+
+        User writer1 = new User("제로", "image", "google", "123", group);
+        User writer2 = new User("재이", "image", "google", "1234", group);
+
+        writer1 = userRepository.save(writer1);
+        writer2 = userRepository.save(writer2);
+
+        Product product1 = productRepository.save(
+            Product.builder()
+                   .title("노트북 팝니다1")
+                   .description("싸요")
+                   .category(Category.DIGITAL_DEVICE)
+                   .minimumPrice(10000)
+                   .images(null)
+                   .location(null)
+                   .writer(writer1)
+                   .build()
+        );
+
+        Product product2 = productRepository.save(
+            Product.builder()
+                   .title("노트북 팝니다2")
+                   .description("싸요")
+                   .category(Category.DIGITAL_DEVICE)
+                   .minimumPrice(10000)
+                   .images(null)
+                   .location(null)
+                   .writer(writer2)
+                   .build()
+        );
+
+        // when
+        UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
+        UserProductSelectQueryParameter parameter = UserProductSelectQueryParameter.of(
+            writer1.getId(), request);
+        List<Product> result = productRepository.findAllUserProduct(parameter);
+
+        // then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(product1);
+      }
+    }
+
+    @Nested
+    @DisplayName("UserProductSelectQueryParameter 가 null 이면")
+    class ContextWithNullPageRequest {
+
+      @Test
+      @DisplayName("InvalidDataAccessApiUsageException 에러를 발생시킨다")
+      void ItThrowsInvalidDataAccessApiUsageException() {
+        //when, then
+        assertThatThrownBy(() -> productRepository.findAllUserProduct(null))
+            .isInstanceOf(InvalidDataAccessApiUsageException.class);
       }
     }
   }
