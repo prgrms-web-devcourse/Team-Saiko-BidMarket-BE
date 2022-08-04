@@ -15,7 +15,11 @@ spring:
         - classpath:sql/user/oauth2_authorized_client.sql
         - classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
         - classpath:sql/constraint.sql
-      data-locations: classpath:sql/user/user_data.sql
+      data-locations:
+        - classpath:sql/user/user_data.sql
+        - classpath:sql/product/product_data.sql
+        - classpath:sql/product/image_data.sql
+        - classpath:sql/bidding/bidding_data.sql
       encoding: UTF-8
       mode: always
 
