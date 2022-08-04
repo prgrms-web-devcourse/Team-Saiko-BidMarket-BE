@@ -23,6 +23,9 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.saiko.bidmarket.common.jwt.Jwt;
 import com.saiko.bidmarket.common.jwt.JwtAuthenticationFilter;
@@ -101,6 +104,19 @@ public class WebSecurityConfig {
     return new OAuth2AuthenticationSuccessHandler(jwt, userService);
   }
 
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+
+    configuration.addAllowedOrigin("*");
+    configuration.addAllowedHeader("*");
+    configuration.addAllowedMethod("*");
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
   @Bean
   public SecurityFilterChain filterChain(Jwt jwt,
                                          HttpSecurity http,
@@ -112,6 +128,9 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("USER", "ADMIN")
         .antMatchers(HttpMethod.POST, "/api/v1/bidding").hasAnyRole("USER", "ADMIN")
         .anyRequest().permitAll()
+        .and()
+        .cors()
+        .configurationSource(corsConfigurationSource())
         .and()
         /**
          * formLogin, csrf, headers, http-basic, rememberMe, logout filter 비활성화
