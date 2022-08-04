@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS `product` CASCADE;
 CREATE TABLE `product`
 (
     id              bigint       not null,
-    title           varchar(16)  not null,
+    title           varchar(32)  not null,
     description     varchar(500) not null,
     minimum_price   int          not null,
     category        varchar(100) not null,

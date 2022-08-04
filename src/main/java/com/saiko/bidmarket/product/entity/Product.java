@@ -39,7 +39,7 @@ public class Product extends BaseTime {
   private Long id;
 
   @NotNull
-  @Column(length = 16)
+  @Column(length = 32)
   private String title;
 
   @NotNull
