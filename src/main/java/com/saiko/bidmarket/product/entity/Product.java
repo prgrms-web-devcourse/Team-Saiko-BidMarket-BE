@@ -27,10 +27,12 @@ import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Entity
 @Getter
+@EqualsAndHashCode(of = { "id" }, callSuper = false)
 public class Product extends BaseTime {
   public static final int PROGRESSION_PERIOD_OF_BIDDING = 7;
 
