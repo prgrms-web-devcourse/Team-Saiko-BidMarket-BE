@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.bidding.respository.BiddingRepository;
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
@@ -39,7 +41,17 @@ public class ProductRepositoryTest {
   private GroupRepository groupRepository;
 
   @Autowired
+  private BiddingRepository biddingRepository;
+
+  @Autowired
   private UserRepository userRepository;
+
+  @BeforeEach
+  void deleteAll() {
+    biddingRepository.deleteAll();
+    productRepository.deleteAll();
+    userRepository.deleteAll();
+  }
 
   @Nested
   @DisplayName("findAllProduct 메소드는")
