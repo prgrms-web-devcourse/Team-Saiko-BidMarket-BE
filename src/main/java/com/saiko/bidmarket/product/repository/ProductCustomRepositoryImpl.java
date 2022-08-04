@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.product.repository;
 
-import static com.saiko.bidmarket.product.Sort.*;
 import static com.saiko.bidmarket.product.entity.QProduct.*;
 import static com.saiko.bidmarket.user.entity.QUser.*;
 
@@ -15,6 +14,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.product.Category;
+import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
@@ -33,7 +33,8 @@ public class ProductCustomRepositoryImpl
     Assert.notNull(productSelectRequest, "ProductSelectRequest must be provided");
     return jpaQueryFactory
         .selectFrom(product)
-        .where(eqCategory(productSelectRequest.getCategory()))
+        .where(eqCategory(productSelectRequest.getCategory()),
+               eqProgressed(productSelectRequest.getProgressed()))
         .offset(productSelectRequest.getOffset())
         .limit(productSelectRequest.getLimit())
         .orderBy(getOrderSpecifier(productSelectRequest.getSort()))
@@ -60,11 +61,20 @@ public class ProductCustomRepositoryImpl
     return product.category.eq(category);
   }
 
+  private Predicate eqProgressed(String progressed) {
+    if (progressed == null) {
+      return null;
+    }
+    return product.progressed.eq(Boolean.valueOf(progressed));
+  }
+
   private OrderSpecifier getOrderSpecifier(com.saiko.bidmarket.product.Sort sort) {
-    if (sort == END_DATE_ASC) {
-      Path<Object> fieldPath = Expressions.path(Object.class, product,
-                                                END_DATE_ASC.getProperty());
-      return new OrderSpecifier(END_DATE_ASC.getOrder(), fieldPath);
+    for (Sort value : Sort.values()) {
+      if (sort == value) {
+        Path<Object> fieldPath = Expressions.path(Object.class, product,
+                                                  value.getProperty());
+        return new OrderSpecifier(value.getOrder(), fieldPath);
+      }
     }
     return null;
   }

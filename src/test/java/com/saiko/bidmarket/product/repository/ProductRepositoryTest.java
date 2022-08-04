@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
@@ -58,6 +59,268 @@ public class ProductRepositoryTest {
     }
 
     @Nested
+    @DisplayName("상품 입찰 진행 여부가 true 라면")
+    class ContextProgressedTrue {
+
+      @Test
+      @DisplayName("입찰 중인 상품 목록 리스트를 반환한다")
+      void itReturnProgressProductList() {
+        // given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("true", null, 0, 2,
+                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+        Group group = groupRepository.findById(1L).get();
+        User writer = new User("제로", "image", "google", "123", group);
+        writer = userRepository.save(writer);
+
+        Product progressProduct = productRepository.save(Product.builder()
+                                                                .title("노트북 팝니다1")
+                                                                .description("싸요")
+                                                                .category(Category.DIGITAL_DEVICE)
+                                                                .minimumPrice(10000)
+                                                                .images(null)
+                                                                .location(null)
+                                                                .writer(writer)
+                                                                .build());
+        Product notInProgressProduct = productRepository.save(Product.builder()
+                                                                     .title("노트북 팝니다2")
+                                                                     .description("싸요")
+                                                                     .category(
+                                                                         Category.DIGITAL_DEVICE)
+                                                                     .minimumPrice(10000)
+                                                                     .images(null)
+                                                                     .location(null)
+                                                                     .writer(writer)
+                                                                     .build());
+        ReflectionTestUtils.setField(notInProgressProduct, "progressed", false);
+
+        // when
+        List<Product> result = productRepository.findAllProduct(productSelectRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(progressProduct);
+      }
+    }
+
+    @Nested
+    @DisplayName("상품 입찰 여부가 false 라면")
+    class ContextProgressedFalse {
+
+      @Test
+      @DisplayName("입찰이 끝난 상품 목록 리스트를 반환한다")
+      void itReturnNotInProgressProductList() {
+        // given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("false", null, 0, 2,
+                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+        Group group = groupRepository.findById(1L).get();
+        User writer = new User("제로", "image", "google", "123", group);
+        writer = userRepository.save(writer);
+
+        Product progressProduct = productRepository.save(Product.builder()
+                                                                .title("노트북 팝니다1")
+                                                                .description("싸요")
+                                                                .category(Category.DIGITAL_DEVICE)
+                                                                .minimumPrice(10000)
+                                                                .images(null)
+                                                                .location(null)
+                                                                .writer(writer)
+                                                                .build());
+        Product notInProgressProduct = productRepository.save(Product.builder()
+                                                                     .title("노트북 팝니다2")
+                                                                     .description("싸요")
+                                                                     .category(
+                                                                         Category.DIGITAL_DEVICE)
+                                                                     .minimumPrice(10000)
+                                                                     .images(null)
+                                                                     .location(null)
+                                                                     .writer(writer)
+                                                                     .build());
+        ReflectionTestUtils.setField(notInProgressProduct, "progressed", false);
+
+        // when
+        List<Product> result = productRepository.findAllProduct(productSelectRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(notInProgressProduct);
+      }
+    }
+
+    @Nested
+    @DisplayName("정렬 조건이 최신순이라면")
+    class ContextSortCreatedAtDesc {
+
+      @Test
+      @DisplayName("최신순으로 정렬된 상품 목록 리스트를 반환한다")
+      void itReturnCreatedAtDescProductList() {
+        // given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("true", null, 0, 2,
+                                                                             CREATED_AT_DESC);
+        Group group = groupRepository.findById(1L).get();
+        User writer = new User("제로", "image", "google", "123", group);
+        writer = userRepository.save(writer);
+
+        Product product1 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다1")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+        Product product2 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다2")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+        ReflectionTestUtils.setField(product2, "createdAt",
+                                     product1.getCreatedAt().plusMinutes(10));
+
+        // when
+        List<Product> result = productRepository.findAllProduct(productSelectRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0)).isEqualTo(product2);
+        assertThat(result.get(1)).isEqualTo(product1);
+      }
+    }
+
+    @Nested
+    @DisplayName("정렬 조건이 시작가 오름차순 이라면")
+    class ContextSortMinimumPriceAsc {
+
+      @Test
+      @DisplayName("시작가 오름차순으로 정렬된 상품 목록 리스트를 반환한다")
+      void itReturnMinimumPriceAscProductList() {
+        // given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("true", null, 0, 2,
+                                                                             MINIMUM_PRICE_ASC);
+        Group group = groupRepository.findById(1L).get();
+        User writer = new User("제로", "image", "google", "123", group);
+        writer = userRepository.save(writer);
+
+        Product product1 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다1")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+        Product product2 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다2")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+
+        // when
+        List<Product> result = productRepository.findAllProduct(productSelectRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0)).isEqualTo(product1);
+        assertThat(result.get(1)).isEqualTo(product2);
+      }
+    }
+
+    @Nested
+    @DisplayName("정렬 조건이 시작가 내림차순 이라면")
+    class ContextSortMinimumPriceDesc {
+
+      @Test
+      @DisplayName("시작가 내림차순으로 정렬된 상품 목록 리스트를 반환한다")
+      void itReturnMinimumPriceDescProductList() {
+        // given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("true", null, 0, 2,
+                                                                             MINIMUM_PRICE_DESC);
+        Group group = groupRepository.findById(1L).get();
+        User writer = new User("제로", "image", "google", "123", group);
+        writer = userRepository.save(writer);
+
+        Product product1 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다1")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+        Product product2 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다2")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+
+        // when
+        List<Product> result = productRepository.findAllProduct(productSelectRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0)).isEqualTo(product2);
+        assertThat(result.get(1)).isEqualTo(product1);
+      }
+    }
+
+    @Nested
+    @DisplayName("정렬 조건이 null 이라면")
+    class ContextSortNull {
+
+      @Test
+      @DisplayName("종료 임박순으로 정렬된 상품 목록 리스트를 반환한다")
+      void itReturnEndDateAscProductList() {
+        // given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("true", null, 0, 2,
+                                                                             null);
+        Group group = groupRepository.findById(1L).get();
+        User writer = new User("제로", "image", "google", "123", group);
+        writer = userRepository.save(writer);
+
+        Product product1 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다1")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+        Product product2 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다2")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+
+        // when
+        List<Product> result = productRepository.findAllProduct(productSelectRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0)).isEqualTo(product1);
+        assertThat(result.get(1)).isEqualTo(product2);
+      }
+    }
+
+    @Nested
     @DisplayName("카테고리 정보가 안넘어온다면")
     class ContextValidData {
 
@@ -65,7 +328,7 @@ public class ProductRepositoryTest {
       @DisplayName("페이징 처리된 전체 카테고리 상품 목록을 반환한다")
       void itReturnProductList() {
         // given
-        ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, 0, 2,
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("true", null, 0, 2,
                                                                              com.saiko.bidmarket.product.Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
@@ -109,7 +372,7 @@ public class ProductRepositoryTest {
       void itReturnCategoryProductList() {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(
-            Category.DIGITAL_DEVICE, 0, 2,
+            "true", Category.DIGITAL_DEVICE, 0, 2,
             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);

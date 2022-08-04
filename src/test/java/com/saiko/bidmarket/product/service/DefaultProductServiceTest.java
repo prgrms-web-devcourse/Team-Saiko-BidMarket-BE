@@ -23,9 +23,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
@@ -162,7 +162,8 @@ class DefaultProductServiceTest {
       @DisplayName("요청에 해당하는 상품 리스트를 반환한다")
       void ItResponseProductList() {
         //given
-        ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, 0, 2, null);
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest("true", null, 0, 2,
+                                                                             null);
         User writer = new User("제로", "image", "google", "1234", new Group());
         Product product = Product.builder()
                                  .title("세탁기 팔아요")
