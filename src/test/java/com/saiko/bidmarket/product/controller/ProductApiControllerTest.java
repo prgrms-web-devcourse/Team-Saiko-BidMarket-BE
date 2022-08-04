@@ -69,7 +69,7 @@ class ProductApiControllerTest extends ControllerSetUp {
           Arguments.of(""),
           Arguments.of("\t"),
           Arguments.of("\n"),
-          Arguments.of("a".repeat(17))
+          Arguments.of("a".repeat(33))
       );
     }
   }
