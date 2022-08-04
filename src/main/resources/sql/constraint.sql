@@ -94,8 +94,5 @@ ALTER TABLE `group_permission`
     ADD UNIQUE unq_group_id_permission_id (group_id, permission_id);
 
 ALTER TABLE `user`
-    ADD UNIQUE unq_username (username);
-
-ALTER TABLE `user`
     ADD UNIQUE unq_provider_and_id (provider, provider_id);
 
