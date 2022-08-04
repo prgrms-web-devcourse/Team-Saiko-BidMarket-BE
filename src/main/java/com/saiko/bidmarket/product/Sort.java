@@ -3,7 +3,10 @@ package com.saiko.bidmarket.product;
 import com.querydsl.core.types.Order;
 
 public enum Sort {
-  END_DATE_ASC("expireAt", Order.ASC);
+  END_DATE_ASC("expireAt", Order.ASC),
+  MINIMUM_PRICE_ASC("minimumPrice", Order.ASC),
+  MINIMUM_PRICE_DESC("minimumPrice", Order.DESC),
+  CREATED_AT_DESC("createdAt", Order.DESC);
 
   private final String property;
   private final Order order;

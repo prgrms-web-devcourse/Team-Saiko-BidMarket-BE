@@ -455,9 +455,9 @@ class ProductApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("updatedAt").type(JsonFieldType.STRING)
                                                               .description("수정 시간"),
                                     fieldWithPath("writer.encodedId").type(JsonFieldType.STRING)
-                                                              .description("유저 id"),
+                                                                     .description("유저 id"),
                                     fieldWithPath("writer.username").type(JsonFieldType.STRING)
-                                                                .description("작성자 이름"),
+                                                                    .description("작성자 이름"),
                                     fieldWithPath("writer.thumbnailImg")
                                         .type(JsonFieldType.STRING)
                                         .description("작성자 이미지 주소"),
@@ -502,6 +502,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
             .get(BASE_URL)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .queryParam("progressed", "true")
             .queryParam("offset", "1")
             .queryParam("limit", "1")
             .queryParam("sort", Sort.END_DATE_ASC.name());
@@ -513,6 +514,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         response.andExpect(status().isOk())
                 .andDo(document("Select product", preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()), requestParameters(
+                        parameterWithName("progressed").description("상품 입찰 진행 여부"),
                         parameterWithName("offset").description("상품 조회 시작 번호"),
                         parameterWithName("limit").description("상품 조회 개수"),
                         parameterWithName("sort").description("상품 정렬 기준")), responseFields(
@@ -529,6 +531,25 @@ class ProductApiControllerTest extends ControllerSetUp {
                                                      .description("생성 시간"),
                         fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
                                                      .description("수정 시간"))));
+      }
+    }
+
+    @Nested
+    @DisplayName("progressed 에 boolean 외에 다른 문자가 들어온다면")
+    class ContextNotBooleanProgressed {
+
+      @Test
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+        String progressed = "NotBoolean";
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(BASE_URL).param("progressed", progressed));
+
+        // then
+        response.andExpect(status().isBadRequest());
       }
     }
 
