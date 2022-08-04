@@ -51,8 +51,19 @@ public class Bidding extends BaseTime {
     this.product = product;
     this.won = false;
 
+    validateCreatedField();
+  }
+
+  private void validateCreatedField() {
+    validateMyProduct();
     validateProductProgress();
     validateBiddingPrice();
+  }
+
+  private void validateMyProduct() {
+    if (product.getWriter() == bidder) {
+      throw new IllegalArgumentException("자신의 상품에 비딩할 수 없습니다.");
+    }
   }
 
   private void validateProductProgress() {
