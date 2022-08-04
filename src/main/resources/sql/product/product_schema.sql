@@ -11,7 +11,7 @@ CREATE TABLE `product`
     location        varchar(100),
     thumbnail_image varchar(512),
     progressed      tinyint(1)   not null,
-    winning_price   bigint,
+    winning_price   bigint       not null default 0,
     expire_at       timestamp    not null,
     created_at      timestamp,
     updated_at      timestamp,
