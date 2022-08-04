@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,23 +44,33 @@ class DefaultBiddingServiceTest {
   @Mock
   private ProductRepository productRepository;
 
-  private static final User bidder = new User("test",
-                                              "imageURl",
-                                              "provider",
-                                              "providerId",
-                                              new Group());
+  private static User bidder;
 
-  private static final User writer = new User("test",
-                                              "imageURl",
-                                              "provider",
-                                              "providerId",
-                                              new Group());
+  private static User writer;
 
-  private static final Product product = Product.builder()
-                                                .title("title")
-                                                .description("description")
-                                                .writer(writer)
-                                                .build();
+  private static Product product;
+
+
+  @BeforeEach
+  void setUpDomain() {
+    bidder = new User("test",
+                      "imageURl",
+                      "provider",
+                      "providerId",
+                      new Group());
+
+    writer = new User("test",
+                      "imageURl",
+                      "provider",
+                      "providerId",
+                      new Group());
+
+    product = Product.builder()
+                     .title("title")
+                     .description("description")
+                     .writer(writer)
+                     .build();
+  }
 
   @Nested
   @DisplayName("create 메소드는")
@@ -108,7 +119,36 @@ class DefaultBiddingServiceTest {
             .isInstanceOf(NotFoundException.class);
       }
     }
-    
+
+    @Nested
+    @DisplayName("해당 상품의 작성자와 비더가 같다면")
+    class ContextProductWriterAndBidderSame{
+
+      @Test
+      @DisplayName("IllegalArgumentException을 발생시킨다.")
+      void ItThrowsIllegalArgumentException() {
+        // given
+        BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
+        UnsignedLong productId = UnsignedLong.valueOf(1);
+        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        BiddingCreateDto createDto = BiddingCreateDto.builder()
+                                                     .biddingPrice(biddingPrice)
+                                                     .bidderId(bidderId)
+                                                     .productId(productId)
+                                                     .build();
+
+        ReflectionTestUtils.setField(product, "writer", bidder);
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(bidder));
+        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+
+        // when
+        // then
+        assertThatThrownBy(() -> biddingService.create(createDto))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
     @Nested
     @DisplayName("해당 상품의 비딩이 종료되었다면")
     class ContextExpiredProduct {
@@ -137,7 +177,7 @@ class DefaultBiddingServiceTest {
             .isInstanceOf(IllegalArgumentException.class);
       }
     }
-    
+
     @Nested
     @DisplayName("해당 상품의 최소 금액보다 적게 비딩 금액을 입력하면")
     class ContextAmountSmallerThanMinPrice {
@@ -157,7 +197,7 @@ class DefaultBiddingServiceTest {
                                                      .build();
 
         ReflectionTestUtils.setField(product, "progressed", false);
-        ReflectionTestUtils.setField(product, "minimumPrice", (int) priceValue * 2);
+        ReflectionTestUtils.setField(product, "minimumPrice", (int)priceValue * 2);
 
         given(userRepository.findById(anyLong())).willReturn(Optional.of(bidder));
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
