@@ -13,7 +13,7 @@ import com.saiko.bidmarket.product.Category;
 
 public class ProductCreateRequest {
   @NotBlank
-  @Length(max = 16)
+  @Length(max = 32)
   private final String title;
 
   @NotBlank
