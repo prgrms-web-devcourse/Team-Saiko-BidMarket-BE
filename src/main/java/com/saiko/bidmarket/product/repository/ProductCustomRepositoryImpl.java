@@ -34,7 +34,8 @@ public class ProductCustomRepositoryImpl
     return jpaQueryFactory
         .selectFrom(product)
         .where(eqCategory(productSelectRequest.getCategory()),
-               eqProgressed(productSelectRequest.getProgressed()))
+               eqProgressed(productSelectRequest.getProgressed()),
+               eqTitle(productSelectRequest.getTitle()))
         .offset(productSelectRequest.getOffset())
         .limit(productSelectRequest.getLimit())
         .orderBy(getOrderSpecifier(productSelectRequest.getSort()))
@@ -66,6 +67,13 @@ public class ProductCustomRepositoryImpl
       return null;
     }
     return product.progressed.eq(Boolean.valueOf(progressed));
+  }
+
+  private Predicate eqTitle(String title) {
+    if (title == null) {
+      return null;
+    }
+    return product.title.contains(title);
   }
 
   private OrderSpecifier getOrderSpecifier(com.saiko.bidmarket.product.Sort sort) {
