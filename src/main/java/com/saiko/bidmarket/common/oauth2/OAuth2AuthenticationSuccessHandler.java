@@ -50,7 +50,7 @@ public class OAuth2AuthenticationSuccessHandler extends
       String loginSuccessJson = generateLoginSuccessJson(user);
       response.setContentType("application/json;charset=UTF-8");
       response.setContentLength(loginSuccessJson.getBytes(StandardCharsets.UTF_8).length);
-      response.sendRedirect("https://bidmarket.vercel.app/auth?" + loginSuccessJson);
+      response.sendRedirect("http://localhost:3000/auth?" + loginSuccessJson);
     }
   }
 
