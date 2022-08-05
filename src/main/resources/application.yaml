@@ -12,6 +12,7 @@ spring:
         - classpath:sql/bidding/bidding_schema.sql
         - classpath:sql/product/product_schema.sql
         - classpath:sql/user/user_schema.sql
+        - classpath:sql/report/report_schema.sql
         - classpath:sql/user/oauth2_authorized_client.sql
         - classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
         - classpath:sql/constraint.sql
