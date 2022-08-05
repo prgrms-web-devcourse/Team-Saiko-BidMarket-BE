@@ -2,8 +2,8 @@ package com.saiko.bidmarket.common.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+@Disabled
 class IdEncoderTest {
 
   private final IdEncoder idEncoder = new IdEncoder();

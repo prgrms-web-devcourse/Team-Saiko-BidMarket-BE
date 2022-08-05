@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.common.util.IdEncoder;
+import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
@@ -217,18 +218,18 @@ class UserApiControllerTest extends ControllerSetUp {
       @DisplayName("해당 유저의 Id와 이름과 사진URL을 반환한다.")
       void itReturnUsernameAndProfileImageUrl() throws Exception {
         //given
+        long userId = 1L;
         final User user = new User("test",
                                    "test",
                                    "test",
                                    "test",
                                    new Group());
-
-        ReflectionTestUtils.setField(user, "id", 1L);
+        ReflectionTestUtils.setField(user, "id", userId);
 
         //when
         when(userService.findById(anyLong())).thenReturn(UserSelectResponse.from(user));
         final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/GOIOCDTSAZC8B");
+            .get(BASE_URL + "/" + userId);
 
         ResultActions response = mockMvc.perform(request);
 
@@ -239,8 +240,8 @@ class UserApiControllerTest extends ControllerSetUp {
             .andDo(document("Get User",
                             preprocessRequest(prettyPrint()),
                             responseFields(
-                                fieldWithPath("encodedId").type(JsonFieldType.STRING)
-                                                          .description("인코딩된 유저 ID"),
+                                fieldWithPath("id").type(JsonFieldType.NUMBER)
+                                                   .description("유저 식별자"),
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("현재 유저 이름"),
                                 fieldWithPath("thumbnailImg").type(JsonFieldType.STRING)
@@ -261,7 +262,7 @@ class UserApiControllerTest extends ControllerSetUp {
         //when
         when(userService.findById(anyLong())).thenThrow(NotFoundException.class);
         final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/GOIOCDTSAZC8B");
+            .get(BASE_URL + "/" + 1L);
 
         ResultActions response = mockMvc.perform(request);
 
@@ -308,8 +309,8 @@ class UserApiControllerTest extends ControllerSetUp {
             .andDo(document("Get UserInfo",
                             preprocessRequest(prettyPrint()),
                             responseFields(
-                                fieldWithPath("encodedId").type(JsonFieldType.STRING)
-                                                          .description("인코딩된 유저 ID"),
+                                fieldWithPath("id").type(JsonFieldType.NUMBER)
+                                                   .description("유저 식별자"),
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("현재 유저 이름"),
                                 fieldWithPath("thumbnailImg").type(JsonFieldType.STRING)
@@ -353,7 +354,7 @@ class UserApiControllerTest extends ControllerSetUp {
       @DisplayName("상품을 조회하고 결과를 반환한다")
       void ItReturnProductList() throws Exception {
         //given
-        String encodedId = IdEncoder.encode(1);
+        long userId = 1L;
         Product product = Product.builder()
                                  .title("감자팜")
                                  .description("가격 선제")
@@ -364,7 +365,7 @@ class UserApiControllerTest extends ControllerSetUp {
                                  .writer(new User("감자킹", "image", "google", "123", new Group()))
                                  .build();
 
-        ReflectionTestUtils.setField(product, "id", 1L);
+        ReflectionTestUtils.setField(product, "id", userId);
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
 
         List<UserProductSelectResponse> responses = List.of(
@@ -376,7 +377,7 @@ class UserApiControllerTest extends ControllerSetUp {
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/" + encodedId + "/products")
+            .get(BASE_URL + "/" + userId + "/products")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .queryParam("offset", "1")
             .queryParam("limit", "1")
