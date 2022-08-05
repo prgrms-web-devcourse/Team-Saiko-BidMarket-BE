@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.util.Assert;
+
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -54,6 +56,8 @@ public class ProductDetailResponse {
   }
 
   public static ProductDetailResponse from(Product product) {
+    Assert.notNull(product, "product must be provided");
+
     return new ProductDetailResponse(product);
   }
 }

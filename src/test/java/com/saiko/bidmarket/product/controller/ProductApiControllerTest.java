@@ -434,43 +434,40 @@ class ProductApiControllerTest extends ControllerSetUp {
         // then
         verify(productService, atLeastOnce()).findById(anyLong());
         response.andExpect(status().isOk())
-                .andDo(document("Find Product by id",
-                                preprocessResponse(prettyPrint()),
-                                responseFields(
-                                    fieldWithPath("id").type(JsonFieldType.NUMBER)
-                                                       .description("상품 식별자"),
-                                    fieldWithPath("title").type(JsonFieldType.STRING)
-                                                          .description("상품 제목"),
-                                    fieldWithPath("description").type(JsonFieldType.STRING)
-                                                                .description("상품 소개"),
-                                    fieldWithPath("minimumPrice").type(JsonFieldType.NUMBER)
-                                                                 .description("최소주문금액"),
-                                    fieldWithPath("category").type(JsonFieldType.STRING)
-                                                             .description("카테고리 이름"),
-                                    fieldWithPath("location").type(JsonFieldType.STRING)
-                                                             .description("거래 위치")
-                                                             .optional(),
-                                    fieldWithPath("expireAt").type(JsonFieldType.STRING)
-                                                             .description("비딩 종료 시간"),
-                                    fieldWithPath("createdAt").type(JsonFieldType.STRING)
-                                                              .description("생성 시간"),
-                                    fieldWithPath("updatedAt").type(JsonFieldType.STRING)
-                                                              .description("수정 시간")
-                                                              .optional(),
-                                    fieldWithPath("writer.encodedId").type(JsonFieldType.STRING)
-                                                                     .description("유저 id"),
-                                    fieldWithPath("writer.username").type(JsonFieldType.STRING)
-                                                                    .description("작성자 이름"),
-                                    fieldWithPath("writer.thumbnailImg")
-                                        .type(JsonFieldType.STRING)
-                                        .description("작성자 이미지 주소"),
-                                    fieldWithPath("images[].url").type(JsonFieldType.STRING)
-                                                                 .description("이미지 주소"),
-                                    fieldWithPath("images[].order").type(JsonFieldType.NUMBER)
-                                                                   .description("이미지 순서")
-
-                                )
-                ));
+                .andDo(
+                    document(
+                        "Find Product by id", preprocessResponse(prettyPrint()),
+                        responseFields(
+                            fieldWithPath("id")
+                                .type(JsonFieldType.NUMBER).description("상품 식별자"),
+                            fieldWithPath("title")
+                                .type(JsonFieldType.STRING).description("상품 제목"),
+                            fieldWithPath("description")
+                                .type(JsonFieldType.STRING).description("상품 소개"),
+                            fieldWithPath("minimumPrice")
+                                .type(JsonFieldType.NUMBER).description("최소주문금액"),
+                            fieldWithPath("category")
+                                .type(JsonFieldType.STRING).description("카테고리 이름"),
+                            fieldWithPath("location")
+                                .type(JsonFieldType.STRING).description("거래 위치").optional(),
+                            fieldWithPath("expireAt")
+                                .type(JsonFieldType.STRING).description("비딩 종료 시간"),
+                            fieldWithPath("createdAt")
+                                .type(JsonFieldType.STRING).description("생성 시간"),
+                            fieldWithPath("updatedAt")
+                                .type(JsonFieldType.STRING).description("수정 시간").optional(),
+                            fieldWithPath("writer.id")
+                                .type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                            fieldWithPath("writer.username")
+                                .type(JsonFieldType.STRING).description("작성자 이름"),
+                            fieldWithPath("writer.thumbnailImg")
+                                .type(JsonFieldType.STRING).description("작성자 이미지 주소"),
+                            fieldWithPath("images[].url")
+                                .type(JsonFieldType.STRING).description("이미지 주소"),
+                            fieldWithPath("images[].order")
+                                .type(JsonFieldType.NUMBER).description("이미지 순서")
+                        )
+                    ));
       }
     }
   }

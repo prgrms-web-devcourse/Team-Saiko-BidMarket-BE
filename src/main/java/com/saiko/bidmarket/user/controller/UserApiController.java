@@ -20,7 +20,6 @@ import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
-import com.saiko.bidmarket.common.util.IdEncoder;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.service.UserService;
@@ -44,10 +43,9 @@ public class UserApiController {
     userService.updateUser(authentication.getUserId(), request);
   }
 
-  @GetMapping("{encodedId}")
+  @GetMapping("{userId}")
   @ResponseStatus(HttpStatus.OK)
-  public UserSelectResponse getUser(@PathVariable String encodedId) {
-    final long userId = IdEncoder.decode(encodedId);
+  public UserSelectResponse getUser(@PathVariable long userId) {
     return userService.findById(userId);
   }
 
@@ -60,13 +58,12 @@ public class UserApiController {
     return userService.findById(userId);
   }
 
-  @GetMapping("{encodedId}/products")
+  @GetMapping("{userId}/products")
   @ResponseStatus(HttpStatus.OK)
   public List<UserProductSelectResponse> getAllUserProduct(
       @ModelAttribute @Valid UserProductSelectRequest request,
-      @PathVariable String encodedId
+      @PathVariable long userId
   ) {
-    final long userId = IdEncoder.decode(encodedId);
     return userService.findAllUserProducts(userId, request);
   }
 
