@@ -132,13 +132,15 @@ class ProductApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("description").type(JsonFieldType.STRING)
                                                                 .description("설명"),
                                     fieldWithPath("images").type(JsonFieldType.ARRAY)
-                                                           .description("상품 이미지"),
+                                                           .description("상품 이미지")
+                                                           .optional(),
                                     fieldWithPath("category").type(JsonFieldType.STRING)
                                                              .description("카테고리"),
                                     fieldWithPath("minimumPrice").type(JsonFieldType.NUMBER)
                                                                  .description("최소 가격"),
                                     fieldWithPath("location").type(JsonFieldType.STRING)
-                                                             .description("희망 거래 장소")),
+                                                             .description("희망 거래 장소")
+                                                             .optional()),
                                 responseFields(
                                     fieldWithPath("id")
                                         .type(JsonFieldType.NUMBER)
@@ -408,7 +410,6 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         ReflectionTestUtils.setField(foundProduct, "id", inputId);
         ReflectionTestUtils.setField(foundProduct, "createdAt", LocalDateTime.now());
-        ReflectionTestUtils.setField(foundProduct, "updatedAt", LocalDateTime.now());
 
         Image image1 = Image.builder()
                             .product(foundProduct)
@@ -447,13 +448,15 @@ class ProductApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("category").type(JsonFieldType.STRING)
                                                              .description("카테고리 이름"),
                                     fieldWithPath("location").type(JsonFieldType.STRING)
-                                                             .description("거래 위치"),
+                                                             .description("거래 위치")
+                                                             .optional(),
                                     fieldWithPath("expireAt").type(JsonFieldType.STRING)
                                                              .description("비딩 종료 시간"),
                                     fieldWithPath("createdAt").type(JsonFieldType.STRING)
                                                               .description("생성 시간"),
                                     fieldWithPath("updatedAt").type(JsonFieldType.STRING)
-                                                              .description("수정 시간"),
+                                                              .description("수정 시간")
+                                                              .optional(),
                                     fieldWithPath("writer.encodedId").type(JsonFieldType.STRING)
                                                                      .description("유저 id"),
                                     fieldWithPath("writer.username").type(JsonFieldType.STRING)
@@ -465,6 +468,7 @@ class ProductApiControllerTest extends ControllerSetUp {
                                                                  .description("이미지 주소"),
                                     fieldWithPath("images[].order").type(JsonFieldType.NUMBER)
                                                                    .description("이미지 순서")
+
                                 )
                 ));
       }
@@ -486,14 +490,13 @@ class ProductApiControllerTest extends ControllerSetUp {
                                  .title("귤 팔아요")
                                  .description("맛있어요")
                                  .category(FOOD)
-                                 .images(Collections.emptyList())
+                                 .images(List.of("image1"))
                                  .location("제주도")
                                  .minimumPrice(1000)
                                  .writer(new User("제로", "image", "google", "123", new Group()))
                                  .build();
         ReflectionTestUtils.setField(product, "id", 1L);
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
-        ReflectionTestUtils.setField(product, "updatedAt", LocalDateTime.now());
 
         List<ProductSelectResponse> responses = List.of(ProductSelectResponse.from(product));
         given(productService.findAll(any(ProductSelectRequest.class))).willReturn(responses);
@@ -502,6 +505,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
             .get(BASE_URL)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .queryParam("title", "null")
             .queryParam("progressed", "true")
             .queryParam("offset", "1")
             .queryParam("limit", "1")
@@ -513,24 +517,31 @@ class ProductApiControllerTest extends ControllerSetUp {
         verify(productService).findAll(any(ProductSelectRequest.class));
         response.andExpect(status().isOk())
                 .andDo(document("Select product", preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()), requestParameters(
-                        parameterWithName("progressed").description("상품 입찰 진행 여부"),
-                        parameterWithName("offset").description("상품 조회 시작 번호"),
-                        parameterWithName("limit").description("상품 조회 개수"),
-                        parameterWithName("sort").description("상품 정렬 기준")), responseFields(
-                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
-                        fieldWithPath("[].title").type(JsonFieldType.STRING).description("상품 제목"),
-                        fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
-                                                          .description("상품 썸네일 이미지")
-                                                          .optional(),
-                        fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
-                                                        .description("최소주문금액"),
-                        fieldWithPath("[].expireAt").type(JsonFieldType.STRING)
-                                                    .description("비딩 종료 시간"),
-                        fieldWithPath("[].createdAt").type(JsonFieldType.STRING)
-                                                     .description("생성 시간"),
-                        fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                     .description("수정 시간"))));
+                                preprocessResponse(prettyPrint()),
+                                requestParameters(
+                                    parameterWithName("title").description("상품 제목").optional(),
+                                    parameterWithName("progressed").description("상품 입찰 진행 여부")
+                                                                   .optional(),
+                                    parameterWithName("offset").description("상품 조회 시작 번호"),
+                                    parameterWithName("limit").description("상품 조회 개수"),
+                                    parameterWithName("sort").description("상품 정렬 기준").optional()),
+                                responseFields(
+                                    fieldWithPath("[].id").type(JsonFieldType.NUMBER)
+                                                          .description("상품 식별자"),
+                                    fieldWithPath("[].title").type(JsonFieldType.STRING)
+                                                             .description("상품 제목"),
+                                    fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
+                                                                      .description("상품 썸네일 이미지"),
+                                    fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
+                                                                    .description("최소주문금액"),
+                                    fieldWithPath("[].expireAt").type(JsonFieldType.STRING)
+                                                                .description("비딩 종료 시간"),
+                                    fieldWithPath("[].createdAt").type(JsonFieldType.STRING)
+                                                                 .description("생성 시간"),
+                                    fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
+                                                                 .description("수정 시간")
+                                                                 .optional()
+                                )));
       }
     }
 

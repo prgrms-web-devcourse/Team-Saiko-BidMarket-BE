@@ -9,7 +9,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.common.util.IdEncoder;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.entity.Product;
@@ -36,7 +36,6 @@ import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
-import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.Group;
@@ -241,11 +240,11 @@ class UserApiControllerTest extends ControllerSetUp {
                             preprocessRequest(prettyPrint()),
                             responseFields(
                                 fieldWithPath("encodedId").type(JsonFieldType.STRING)
-                                                              .description("인코딩된 유저 ID"),
+                                                          .description("인코딩된 유저 ID"),
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("현재 유저 이름"),
                                 fieldWithPath("thumbnailImg").type(JsonFieldType.STRING)
-                                                                .description("현재 유저 프로필 이미지")
+                                                             .description("현재 유저 프로필 이미지")
                             )
             ));
       }
@@ -359,7 +358,7 @@ class UserApiControllerTest extends ControllerSetUp {
                                  .title("감자팜")
                                  .description("가격 선제")
                                  .category(FOOD)
-                                 .images(Collections.emptyList())
+                                 .images(List.of("image1"))
                                  .location("강원도")
                                  .minimumPrice(1000)
                                  .writer(new User("감자킹", "image", "google", "123", new Group()))
@@ -367,7 +366,6 @@ class UserApiControllerTest extends ControllerSetUp {
 
         ReflectionTestUtils.setField(product, "id", 1L);
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
-        ReflectionTestUtils.setField(product, "updatedAt", LocalDateTime.now());
 
         List<UserProductSelectResponse> responses = List.of(
             UserProductSelectResponse.from(product));
@@ -378,7 +376,7 @@ class UserApiControllerTest extends ControllerSetUp {
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL +  "/" + encodedId + "/products")
+            .get(BASE_URL + "/" + encodedId + "/products")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .queryParam("offset", "1")
             .queryParam("limit", "1")
@@ -392,18 +390,17 @@ class UserApiControllerTest extends ControllerSetUp {
                     prettyPrint()), preprocessResponse(prettyPrint()), requestParameters(
                     parameterWithName("offset").description("상품 조회 시작 번호"),
                     parameterWithName("limit").description("상품 조회 개수"),
-                    parameterWithName("sort").description("상품 정렬 기준")), responseFields(
+                    parameterWithName("sort").description("상품 정렬 기준").optional()), responseFields(
                     fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
                     fieldWithPath("[].title").type(JsonFieldType.STRING).description("상품 제목"),
                     fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
-                                                      .description("상품 썸네일 이미지")
-                                                      .optional(),
+                                                      .description("상품 썸네일 이미지"),
                     fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
                                                     .description("최소주문금액"),
                     fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
                     fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
                     fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                 .description("수정 시간"))));
+                                                 .description("수정 시간").optional())));
       }
     }
 
@@ -510,14 +507,13 @@ class UserApiControllerTest extends ControllerSetUp {
                                  .title("감자팜")
                                  .description("가격 선제")
                                  .category(FOOD)
-                                 .images(Collections.emptyList())
+                                 .images(List.of("image1"))
                                  .location("강원도")
                                  .minimumPrice(1000)
                                  .writer(user)
                                  .build();
         ReflectionTestUtils.setField(product, "id", 1L);
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
-        ReflectionTestUtils.setField(product, "updatedAt", LocalDateTime.now());
 
         given(userService.findAllUserBiddings(anyLong(), any(UserBiddingSelectRequest.class)))
             .willReturn(List.of(UserBiddingSelectResponse.from(product)));
@@ -539,18 +535,17 @@ class UserApiControllerTest extends ControllerSetUp {
                     prettyPrint()), preprocessResponse(prettyPrint()), requestParameters(
                     parameterWithName("offset").description("상품 조회 시작 번호"),
                     parameterWithName("limit").description("상품 조회 개수"),
-                    parameterWithName("sort").description("상품 정렬 기준")), responseFields(
+                    parameterWithName("sort").description("상품 정렬 기준").optional()), responseFields(
                     fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
                     fieldWithPath("[].title").type(JsonFieldType.STRING).description("상품 제목"),
                     fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
-                                                      .description("상품 썸네일 이미지")
-                                                      .optional(),
+                                                      .description("상품 썸네일 이미지"),
                     fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
                                                     .description("최소주문금액"),
                     fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
                     fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
                     fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                 .description("수정 시간"))));
+                                                 .description("수정 시간").optional())));
       }
     }
 

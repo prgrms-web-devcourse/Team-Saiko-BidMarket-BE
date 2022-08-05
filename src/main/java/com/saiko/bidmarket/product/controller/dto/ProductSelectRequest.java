@@ -7,7 +7,8 @@ import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.Sort;
 
 public class ProductSelectRequest {
-  private String progressed;
+  private final String title;
+  private final String progressed;
   private final Category category;
   @PositiveOrZero
   private final int offset;
@@ -15,13 +16,19 @@ public class ProductSelectRequest {
   private final int limit;
   private final Sort sort;
 
-  public ProductSelectRequest(String progressed, Category category, int offset, int limit,
+  public ProductSelectRequest(String title, String progressed, Category category, int offset,
+                              int limit,
                               Sort sort) {
+    this.title = title;
     this.progressed = progressed;
     this.category = category;
     this.offset = offset;
     this.limit = limit;
     this.sort = sort == null ? Sort.END_DATE_ASC : sort;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public String getProgressed() {
