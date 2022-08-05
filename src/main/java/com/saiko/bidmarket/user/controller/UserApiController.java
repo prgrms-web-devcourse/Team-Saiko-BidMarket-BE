@@ -43,10 +43,10 @@ public class UserApiController {
     userService.updateUser(authentication.getUserId(), request);
   }
 
-  @GetMapping("{userId}")
+  @GetMapping("{id}")
   @ResponseStatus(HttpStatus.OK)
-  public UserSelectResponse getUser(@PathVariable long userId) {
-    return userService.findById(userId);
+  public UserSelectResponse getUser(@PathVariable long id) {
+    return userService.findById(id);
   }
 
   @GetMapping("auth")
@@ -58,13 +58,13 @@ public class UserApiController {
     return userService.findById(userId);
   }
 
-  @GetMapping("{userId}/products")
+  @GetMapping("{id}/products")
   @ResponseStatus(HttpStatus.OK)
   public List<UserProductSelectResponse> getAllUserProduct(
       @ModelAttribute @Valid UserProductSelectRequest request,
-      @PathVariable long userId
+      @PathVariable long id
   ) {
-    return userService.findAllUserProducts(userId, request);
+    return userService.findAllUserProducts(id, request);
   }
 
   @GetMapping("biddings")
