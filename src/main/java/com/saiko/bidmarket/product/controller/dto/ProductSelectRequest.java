@@ -3,10 +3,13 @@ package com.saiko.bidmarket.product.controller.dto;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.Sort;
 
 public class ProductSelectRequest {
+  @Length(max = 32)
   private final String title;
   private final String progressed;
   private final Category category;

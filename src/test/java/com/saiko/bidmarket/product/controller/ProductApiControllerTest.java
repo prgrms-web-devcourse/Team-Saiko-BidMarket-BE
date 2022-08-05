@@ -642,5 +642,25 @@ class ProductApiControllerTest extends ControllerSetUp {
         response.andExpect(status().isBadRequest());
       }
     }
+
+    @Nested
+    @DisplayName("title 이 길이 제한을 초과한다면")
+    class ContextTitleOutOfLength {
+
+      @Test
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+        // when
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.get(BASE_URL)
+                                                                                 .param("title",  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                                                                                 .param("offset",
+                                                                                        "1")
+                                                                                 .param("limit",
+                                                                                        "1"));
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
   }
 }
