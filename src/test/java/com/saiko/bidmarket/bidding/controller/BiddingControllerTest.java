@@ -34,7 +34,7 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
-@WebMvcTest(controllers = BiddingController.class)
+@WebMvcTest(controllers = BiddingApiController.class)
 class BiddingControllerTest extends ControllerSetUp {
 
   private static final int MIN_AMOUNT = 1_000;
