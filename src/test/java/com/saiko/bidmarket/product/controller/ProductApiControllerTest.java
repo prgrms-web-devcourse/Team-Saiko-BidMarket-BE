@@ -460,7 +460,7 @@ class ProductApiControllerTest extends ControllerSetUp {
                                 .type(JsonFieldType.NUMBER).description("작성자 식별자"),
                             fieldWithPath("writer.username")
                                 .type(JsonFieldType.STRING).description("작성자 이름"),
-                            fieldWithPath("writer.thumbnailImg")
+                            fieldWithPath("writer.profileImage")
                                 .type(JsonFieldType.STRING).description("작성자 이미지 주소"),
                             fieldWithPath("images[].url")
                                 .type(JsonFieldType.STRING).description("이미지 주소"),
