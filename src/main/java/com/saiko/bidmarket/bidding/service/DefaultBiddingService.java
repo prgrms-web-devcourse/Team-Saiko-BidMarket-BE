@@ -49,17 +49,19 @@ public class DefaultBiddingService implements BiddingService {
   }
 
   @Override
-  public long selectWinner(Product product) {
+  public Long selectWinner(Product product) {
     Assert.notNull(product, "product must be provided");
 
     List<Bidding> biddings = biddingRepository.findAllByProductOrderByBiddingPriceDesc(product);
 
-    //TODO: 비딩한 내역이 존재하지 않는 Product일 경우 로직 구현
+    if (biddings.isEmpty()) {
+      return null;
+    }
 
     biddings.get(0).win();
 
     if (biddings.size() == 1) {
-      return product.getMinimumPrice();
+      return (long)product.getMinimumPrice();
     }
 
     return biddings.get(1).getBiddingPrice() + 1000L;
