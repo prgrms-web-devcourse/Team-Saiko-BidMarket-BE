@@ -15,6 +15,7 @@ spring:
         - classpath:sql/user/user_schema.sql
         - classpath:sql/user/oauth2_authorized_client.sql
         - classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
+        - classpath:sql/comment/comment_schema.sql
         - classpath:sql/constraint.sql
       data-locations:
         - classpath:sql/user/user_data.sql
