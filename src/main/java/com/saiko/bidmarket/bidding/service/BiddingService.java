@@ -8,5 +8,5 @@ public interface BiddingService {
 
   UnsignedLong create(BiddingCreateDto createDto);
 
-  long selectWinner(Product product);
+  Long selectWinner(Product product);
 }
