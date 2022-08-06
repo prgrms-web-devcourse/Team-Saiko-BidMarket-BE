@@ -18,7 +18,8 @@ public enum Category {
   PET_SUPPLY("반려 동물 용품"),
   BOOK_TICKET_RECORD("도서/티켓/음반"),
   PLANT("식물"),
-  ETC("기타 중고 물품");
+  ETC("기타 중고 물품"),
+  ALL("전체 조회");
 
   private final String displayName;
 

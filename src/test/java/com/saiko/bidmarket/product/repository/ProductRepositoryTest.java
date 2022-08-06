@@ -383,6 +383,50 @@ public class ProductRepositoryTest {
     }
 
     @Nested
+    @DisplayName("카테고리가 ALL 이라면")
+    class ContextWithCategoryAll {
+
+      @Test
+      @DisplayName("페이징 처리된 전체 카테고리 상품 목록을 반환한다")
+      void itReturnProductList() {
+        // given
+        ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
+                                                                             2,
+                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+        Group group = groupRepository.findById(1L).get();
+        User writer = new User("제로", "image", "google", "123", group);
+        writer = userRepository.save(writer);
+
+        Product product1 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다1")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+        Product product2 = productRepository.save(Product.builder()
+                                                         .title("노트북 팝니다2")
+                                                         .description("싸요")
+                                                         .category(Category.DIGITAL_DEVICE)
+                                                         .minimumPrice(10000)
+                                                         .images(null)
+                                                         .location(null)
+                                                         .writer(writer)
+                                                         .build());
+
+        // when
+        List<Product> result = productRepository.findAllProduct(productSelectRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0)).isEqualTo(product1);
+        assertThat(result.get(1)).isEqualTo(product2);
+      }
+    }
+
+    @Nested
     @DisplayName("카테고리가 넘어온다면")
     class ContextWithCategoryFilter {
 
