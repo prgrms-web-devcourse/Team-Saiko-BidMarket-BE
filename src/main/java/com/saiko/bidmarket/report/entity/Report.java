@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.product.controller.dto;
+package com.saiko.bidmarket.report.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
