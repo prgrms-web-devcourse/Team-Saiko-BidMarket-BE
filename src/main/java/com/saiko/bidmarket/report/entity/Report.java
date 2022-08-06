@@ -43,9 +43,7 @@ public class Report extends BaseTime {
     Assert.notNull(fromUser, "From user must be provided");
     Assert.notNull(toUser, "To user must be provided");
 
-    if (id != null) {
-      this.id = id.getValue();
-    }
+    this.id = id != null ? id.getValue() : null;
     this.reason = reason;
     this.fromUser = fromUser;
     this.toUser = toUser;
