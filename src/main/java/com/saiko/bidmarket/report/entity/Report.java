@@ -31,11 +31,9 @@ public class Report extends BaseTime {
   @Column(columnDefinition = "text", nullable = false, updatable = false)
   private String reason;
 
-  @Column(updatable = false)
   @ManyToOne(fetch = FetchType.EAGER)
   private User fromUser;
 
-  @Column(updatable = false)
   @ManyToOne(fetch = FetchType.EAGER)
   private User toUser;
 
