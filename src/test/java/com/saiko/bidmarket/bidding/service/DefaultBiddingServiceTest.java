@@ -4,6 +4,7 @@ import static com.saiko.bidmarket.product.Category.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -320,7 +321,7 @@ class DefaultBiddingServiceTest {
             .willReturn(List.of(bidding));
 
         // when
-        long winningPrice = biddingService.selectWinner(product);
+        Long winningPrice = biddingService.selectWinner(product);
 
         // then
         assertThat(bidding).extracting("won").isEqualTo(true);
@@ -359,12 +360,43 @@ class DefaultBiddingServiceTest {
             .willReturn(List.of(biddingTwo, biddingOne));
 
         // when
-        long winningPrice = biddingService.selectWinner(product);
+        Long winningPrice = biddingService.selectWinner(product);
 
         // then
         assertThat(biddingTwo).extracting("won").isEqualTo(true);
         assertThat(biddingOne).extracting("won").isEqualTo(false);
         assertThat(winningPrice).isEqualTo(biddingOne.getBiddingPrice() + 1000L);
+      }
+    }
+
+    @Nested
+    @DisplayName("입찰자가 없다면")
+    class ContextNoBidder {
+
+      @Test
+      @DisplayName("경매의 최소 금액을 반환하지 않는다.")
+      void ItThrowsNull() {
+        // given
+        Product product = Product.builder()
+                                 .title("세탁기 팔아요")
+                                 .description("좋아요")
+                                 .minimumPrice(1000)
+                                 .category(HOUSEHOLD_APPLIANCE)
+                                 .location("수원")
+                                 .writer(writer)
+                                 .images(null)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+        ReflectionTestUtils.setField(product, "progressed", true);
+
+        given(biddingRepository.findAllByProductOrderByBiddingPriceDesc(any(Product.class)))
+            .willReturn(Collections.emptyList());
+
+        // when
+        Long winningPrice = biddingService.selectWinner(product);
+
+        // then
+        assertThat(winningPrice).isEqualTo(null);
       }
     }
   }
