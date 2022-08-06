@@ -13,7 +13,7 @@ CREATE TABLE `product`
     progressed      tinyint(1)   not null,
     winning_price   bigint,
     expire_at       timestamp    not null,
-    created_at      timestamp,
+    created_at      timestamp    not null,
     updated_at      timestamp,
     user_id         bigint
 );
@@ -24,6 +24,6 @@ CREATE TABLE `image`
     product_id bigint,
     url        varchar(512) not null,
     `order`    int          not null,
-    created_at timestamp,
+    created_at timestamp    not null,
     updated_at timestamp
 );
