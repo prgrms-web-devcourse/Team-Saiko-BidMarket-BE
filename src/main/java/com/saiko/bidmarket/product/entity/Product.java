@@ -61,7 +61,7 @@ public class Product extends BaseTime {
 
   private boolean progressed;
 
-  private long winningPrice;
+  private Long winningPrice;
 
   @NotNull
   private LocalDateTime expireAt;
@@ -117,12 +117,12 @@ public class Product extends BaseTime {
     return imageUrls.get(0);
   }
 
-  public void finish(long winningPrice) {
+  public void finish(Long winningPrice) {
     this.progressed = false;
     setWinningPrice(winningPrice);
   }
 
-  private void setWinningPrice(long winningPrice) {
+  private void setWinningPrice(Long winningPrice) {
     this.winningPrice = winningPrice;
   }
 }
