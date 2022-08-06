@@ -4,6 +4,6 @@ CREATE TABLE `comment`
 (
     id         bigint       not null,
     content    varchar(500) not null,
-    product_id bigint,
-    user_id    bigint
+    product_id bigint       not null,
+    user_id    bigint       not null
 );
