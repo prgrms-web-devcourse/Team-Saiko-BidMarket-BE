@@ -31,19 +31,18 @@ public class Report extends BaseTime {
   @Column(columnDefinition = "text", nullable = false, updatable = false)
   private String reason;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   private User fromUser;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   private User toUser;
 
   @Builder
-  private Report(UnsignedLong id, String reason, User fromUser, User toUser) {
+  private Report(String reason, User fromUser, User toUser) {
     Assert.hasText(reason, "Reason must contain contexts");
     Assert.notNull(fromUser, "From user must be provided");
     Assert.notNull(toUser, "To user must be provided");
 
-    this.id = id != null ? id.getValue() : null;
     this.reason = reason;
     this.fromUser = fromUser;
     this.toUser = toUser;
