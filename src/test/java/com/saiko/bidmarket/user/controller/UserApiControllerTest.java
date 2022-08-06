@@ -89,7 +89,7 @@ class UserApiControllerTest extends ControllerSetUp {
                             requestFields(
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("변경할 유저 이름"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+                                fieldWithPath("profileImage").type(JsonFieldType.STRING)
                                                                 .description("변경할 유저 프로필 이미지")
                             )
             ));
@@ -244,7 +244,7 @@ class UserApiControllerTest extends ControllerSetUp {
                                                    .description("유저 식별자"),
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("현재 유저 이름"),
-                                fieldWithPath("thumbnailImg").type(JsonFieldType.STRING)
+                                fieldWithPath("profileImage").type(JsonFieldType.STRING)
                                                              .description("현재 유저 프로필 이미지")
                             )
             ));
@@ -313,7 +313,7 @@ class UserApiControllerTest extends ControllerSetUp {
                                                    .description("유저 식별자"),
                                 fieldWithPath("username").type(JsonFieldType.STRING)
                                                          .description("현재 유저 이름"),
-                                fieldWithPath("thumbnailImg").type(JsonFieldType.STRING)
+                                fieldWithPath("profileImage").type(JsonFieldType.STRING)
                                                              .description("현재 유저 프로필 이미지")
                             )
             ));
