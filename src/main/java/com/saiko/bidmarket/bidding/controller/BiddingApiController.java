@@ -20,11 +20,11 @@ import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
 @RestController
 @RequestMapping("api/v1/biddings")
-public class BiddingController {
+public class BiddingApiController {
 
   private final BiddingService biddingService;
 
-  public BiddingController(BiddingService biddingService) {
+  public BiddingApiController(BiddingService biddingService) {
     this.biddingService = biddingService;
   }
 
