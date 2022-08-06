@@ -30,6 +30,6 @@ CREATE TABLE `user`
     provider_id   varchar(80) NOT NULL,
     profile_image varchar(512) DEFAULT NULL,
     group_id      bigint      NOT NULL,
-    created_at    timestamp,
+    created_at    timestamp   NOT NULL,
     updated_at    timestamp
 );
