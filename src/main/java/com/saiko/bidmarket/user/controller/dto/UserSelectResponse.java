@@ -11,15 +11,15 @@ public class UserSelectResponse {
 
   private final String username;
 
-  private final String thumbnailImg;
+  private final String profileImage;
 
-  public UserSelectResponse(long id, String username, String thumbnailImg) {
+  public UserSelectResponse(long id, String username, String profileImage) {
     Assert.notNull(username, "User name must be provided");
-    Assert.notNull(thumbnailImg, "User name must be provided");
+    Assert.notNull(profileImage, "User name must be provided");
 
     this.id = UnsignedLong.valueOf(id);
     this.username = username;
-    this.thumbnailImg = thumbnailImg;
+    this.profileImage = profileImage;
   }
 
   public long getId() {
@@ -30,8 +30,8 @@ public class UserSelectResponse {
     return username;
   }
 
-  public String getThumbnailImg() {
-    return thumbnailImg;
+  public String getProfileImage() {
+    return profileImage;
   }
 
   public static UserSelectResponse from(User user) {
