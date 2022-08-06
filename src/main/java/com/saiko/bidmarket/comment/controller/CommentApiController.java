@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.comment.controller.dto.CommentCreateRequest;
 import com.saiko.bidmarket.comment.controller.dto.CommentCreateResponse;
 import com.saiko.bidmarket.comment.service.CommentService;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
 @RestController
@@ -28,6 +29,6 @@ public class CommentApiController {
   @ResponseStatus(HttpStatus.CREATED)
   public CommentCreateResponse create(@AuthenticationPrincipal JwtAuthentication authentication,
                                       @RequestBody @Valid CommentCreateRequest request) {
-    return commentService.create(authentication.getUserId(), request);
+    return commentService.create(UnsignedLong.valueOf(authentication.getUserId()), request);
   }
 }

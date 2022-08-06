@@ -1,7 +1,6 @@
 package com.saiko.bidmarket.comment.controller;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -78,7 +77,7 @@ class CommentApiControllerTest extends ControllerSetUp {
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
-        given(commentService.create(anyLong(), any(CommentCreateRequest.class)))
+        given(commentService.create(any(UnsignedLong.class), any(CommentCreateRequest.class)))
             .willReturn(new CommentCreateResponse(UnsignedLong.valueOf(1)));
 
         //when
@@ -90,7 +89,7 @@ class CommentApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(commentService).create(anyLong(), any(CommentCreateRequest.class));
+        verify(commentService).create(any(UnsignedLong.class), any(CommentCreateRequest.class));
         response.andExpect(status().isCreated())
                 .andDo(document("Create comment",
                                 preprocessRequest(prettyPrint()),
