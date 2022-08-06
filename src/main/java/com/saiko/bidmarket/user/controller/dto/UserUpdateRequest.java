@@ -11,19 +11,19 @@ public class UserUpdateRequest {
   private final String username;
 
   @NotBlank
-  private final String profileImageUrl;
+  private final String profileImage;
 
-  public UserUpdateRequest(String username, String profileImageUrl) {
+  public UserUpdateRequest(String username, String profileImage) {
 
     this.username = username;
-    this.profileImageUrl = profileImageUrl;
+    this.profileImage = profileImage;
   }
 
   public String getUsername() {
     return username;
   }
 
-  public String getProfileImageUrl() {
-    return profileImageUrl;
+  public String getProfileImage() {
+    return profileImage;
   }
 }

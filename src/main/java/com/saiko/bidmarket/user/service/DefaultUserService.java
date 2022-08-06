@@ -93,7 +93,7 @@ public class DefaultUserService implements UserService {
     final User user = userRepository.findById(id)
                                     .orElseThrow(
                                         () -> new NotFoundException("User does not exist"));
-    user.update(request.getUsername(), request.getProfileImageUrl());
+    user.update(request.getUsername(), request.getProfileImage());
   }
 
   @Override
