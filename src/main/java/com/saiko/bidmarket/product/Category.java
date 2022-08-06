@@ -19,7 +19,7 @@ public enum Category {
   BOOK_TICKET_RECORD("도서/티켓/음반"),
   PLANT("식물"),
   ETC("기타 중고 물품"),
-  ALL("전체 조회");
+  ALL("전체");
 
   private final String displayName;
 
