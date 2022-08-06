@@ -56,7 +56,7 @@ public class ProductCustomRepositoryImpl
   }
 
   private Predicate eqCategory(Category category) {
-    if (category == null) {
+    if (category == null || category == Category.ALL) {
       return null;
     }
     return product.category.eq(category);
