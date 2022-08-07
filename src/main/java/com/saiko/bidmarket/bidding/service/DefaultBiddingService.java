@@ -1,7 +1,5 @@
 package com.saiko.bidmarket.bidding.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -46,24 +44,5 @@ public class DefaultBiddingService implements BiddingService {
     Bidding createdBidding = biddingRepository.save(bidding);
 
     return UnsignedLong.valueOf(createdBidding.getId());
-  }
-
-  @Override
-  public Long selectWinner(Product product) {
-    Assert.notNull(product, "product must be provided");
-
-    List<Bidding> biddings = biddingRepository.findAllByProductOrderByBiddingPriceDesc(product);
-
-    if (biddings.isEmpty()) {
-      return null;
-    }
-
-    biddings.get(0).win();
-
-    if (biddings.size() == 1) {
-      return (long)product.getMinimumPrice();
-    }
-
-    return biddings.get(1).getBiddingPrice() + 1000L;
   }
 }
