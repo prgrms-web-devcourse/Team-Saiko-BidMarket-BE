@@ -58,6 +58,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.testcontainers:junit-jupiter:1.17.2'
     testImplementation 'org.testcontainers:mysql:1.17.2'
+    testImplementation 'com.h2database:h2'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
