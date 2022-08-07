@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.common.entity.UnsignedLong;
@@ -56,6 +57,7 @@ class DefaultReportServiceTest {
                                          .group(new Group())
                                          .build();
 
+
   @BeforeAll
   static void setUpUsersId() {
     ReflectionTestUtils.setField(fromUser, "id", requestUserId);
@@ -85,6 +87,30 @@ class DefaultReportServiceTest {
     }
 
     @Nested
+    @DisplayName("requestUserId와 fromUserId가 다른 경우")
+    class ContextNotSameIdWithRequestUserAndFromUser {
+
+      @Test
+      @DisplayName("AuthorizationServiceException을 던진다")
+      void ItReturnCreatedReportId() {
+        // given
+        ReportCreateDto createDto = ReportCreateDto
+            .builder()
+            .requestUserId(UnsignedLong.valueOf(Long.MAX_VALUE - fromUser.getId()))
+            .reason(reason)
+            .fromUserId(UnsignedLong.valueOf(fromUser.getId()))
+            .toUserId(UnsignedLong.valueOf(toUser.getId()))
+            .build();
+
+        // when
+        // then
+        assertThatThrownBy(() -> reportService.create(createDto))
+            .isInstanceOf(AuthorizationServiceException.class);
+
+      }
+    }
+    
+    @Nested
     @DisplayName("fromUser를 찾을 수 없는 경우")
     class ContextNotFoundFromUser {
 
@@ -94,6 +120,7 @@ class DefaultReportServiceTest {
         // given
         ReportCreateDto createDto = ReportCreateDto
             .builder()
+            .requestUserId(UnsignedLong.valueOf(fromUser.getId()))
             .reason(reason)
             .fromUserId(UnsignedLong.valueOf(fromUser.getId()))
             .toUserId(UnsignedLong.valueOf(toUser.getId()))
@@ -119,6 +146,7 @@ class DefaultReportServiceTest {
         // given
         ReportCreateDto createDto = ReportCreateDto
             .builder()
+            .requestUserId(UnsignedLong.valueOf(fromUser.getId()))
             .reason(reason)
             .fromUserId(UnsignedLong.valueOf(fromUser.getId()))
             .toUserId(UnsignedLong.valueOf(toUser.getId()))
@@ -145,6 +173,7 @@ class DefaultReportServiceTest {
         // given
         ReportCreateDto createDto = ReportCreateDto
             .builder()
+            .requestUserId(UnsignedLong.valueOf(fromUser.getId()))
             .reason(reason)
             .fromUserId(UnsignedLong.valueOf(fromUser.getId()))
             .toUserId(UnsignedLong.valueOf(toUser.getId()))
@@ -183,6 +212,7 @@ class DefaultReportServiceTest {
 
         ReportCreateDto createDto = ReportCreateDto
             .builder()
+            .requestUserId(UnsignedLong.valueOf(fromUser.getId()))
             .reason(reason)
             .fromUserId(UnsignedLong.valueOf(fromUser.getId()))
             .toUserId(UnsignedLong.valueOf(toUser.getId()))
@@ -211,6 +241,7 @@ class DefaultReportServiceTest {
         // given
         ReportCreateDto createDto = ReportCreateDto
             .builder()
+            .requestUserId(UnsignedLong.valueOf(fromUser.getId()))
             .reason(reason)
             .fromUserId(UnsignedLong.valueOf(fromUser.getId()))
             .toUserId(UnsignedLong.valueOf(toUser.getId()))

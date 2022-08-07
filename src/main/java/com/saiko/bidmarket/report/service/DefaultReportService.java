@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.report.service;
 
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -52,8 +53,8 @@ public class DefaultReportService implements ReportService {
   }
 
   private void validateProxyReport(UnsignedLong requestUserId, UnsignedLong fromUserId) {
-    if (requestUserId != fromUserId){
-      throw new IllegalArgumentException("다른 유저의 신고를 대신할 수 없습니다.");
+    if (!requestUserId.equals(fromUserId)) {
+      throw new AuthorizationServiceException("다른 유저의 신고를 대신할 수 없습니다.");
     }
   }
 
