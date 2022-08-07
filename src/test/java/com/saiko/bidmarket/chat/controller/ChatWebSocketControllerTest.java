@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.chat.controller;
 
+import static java.lang.Thread.*;
 import static java.util.concurrent.TimeUnit.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -11,14 +12,22 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -44,6 +53,9 @@ import com.saiko.bidmarket.user.entity.User;
 @ActiveProfiles("ws_test")
 @SpringBootTest(webEnvironment = DEFINED_PORT)
 class ChatWebSocketControllerTest {
+
+  @SpyBean
+  ChatWebSocketController chatWebSocketController;
 
   @MockBean
   ChatMessageService chatMessageService;
@@ -148,6 +160,62 @@ class ChatWebSocketControllerTest {
         ChatPublishMessage publishMessage = (ChatPublishMessage)blockingQueue.poll(1, SECONDS);
         assertNotNull(publishMessage);
       }
+    }
+
+    @Nested
+    @DisplayName("userId가 양수가 아닌 값이 전달되면")
+    class ContextWith {
+
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
+      @DisplayName("exception handler를 호출한다")
+      void ItCallExceptionHandler(long userId) throws InterruptedException {
+        //given
+        long roomId = 1L;
+
+        //when
+        String pubUrl = MessageFormat.format("/message/room/{0}", roomId);
+        session.send(pubUrl, new ChatSendMessage(userId, "Test content"));
+
+        //then
+        sleep(100);
+        verify(chatWebSocketController).handleException(any(RuntimeException.class));
+
+      }
+    }
+
+    @Nested
+    @DisplayName("content길이가 범위를 벗어나면")
+    class ContextWithOutOfRangeContentLength {
+
+      @ParameterizedTest
+      @ArgumentsSource(ContentSourceOutOfRange.class)
+      @DisplayName("에러 메시지를 전달한다")
+      void ItCallExceptionHandler(String content) throws InterruptedException {
+        //given
+        long roomId = 1L;
+
+        //when
+        String pubUrl = MessageFormat.format("/message/room/{0}", roomId);
+        session.send(pubUrl, new ChatSendMessage(1L, content));
+
+        //then
+        sleep(100);
+        verify(chatWebSocketController).handleException(any(RuntimeException.class));
+      }
+    }
+  }
+
+  static class ContentSourceOutOfRange implements ArgumentsProvider {
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+      return Stream.of(
+          Arguments.of((Object)null),
+          Arguments.of(""),
+          Arguments.of("\t"),
+          Arguments.of("\n"),
+          Arguments.of("a".repeat(2001))
+      );
     }
   }
 }
