@@ -21,6 +21,54 @@ public class BiddingsTest {
   class DescribeSelectWinner {
 
     @Nested
+    @DisplayName("입찰한 사람이 존재하지 않다면")
+    class ContextNotExistBidder {
+
+      @Test
+      @DisplayName("null을 반환한다.")
+      void ItResponseNull() {
+        //given
+        Biddings biddings = new Biddings(Collections.emptyList());
+
+        //when, then
+        assertThat(biddings.selectWinner()).isNull();
+      }
+    }
+
+    @Nested
+    @DisplayName("입찰한 사람이 존재한다면")
+    class ContextManyBidder {
+
+      @Test
+      @DisplayName("낙찰받은 유저를 반환한다.")
+      void ItResponseWinner() {
+        //given
+        User writer = writer();
+        Product product = product(writer);
+        User bidderOne = bidder();
+        User bidderTwo = bidder();
+        BiddingPrice biddingPriceOne = BiddingPrice.valueOf(10000L);
+        BiddingPrice biddingPriceTwo = BiddingPrice.valueOf(20000L);
+        Bidding biddingOne = bidding(biddingPriceOne, bidderOne, product);
+        Bidding biddingTwo = bidding(biddingPriceTwo, bidderTwo, product);
+        Biddings biddings = new Biddings(List.of(biddingTwo, biddingOne));
+
+        //when
+        User winner = biddings.selectWinner();
+
+        //then
+        assertThat(biddingTwo).extracting("won").isEqualTo(true);
+        assertThat(biddingOne).extracting("won").isEqualTo(false);
+        assertThat(winner).usingRecursiveComparison().isEqualTo(bidderTwo);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("selectWinningPrice 메소드는")
+  class DescribeSelectWinningPrice {
+
+    @Nested
     @DisplayName("minimumPrice가 음수면")
     class ContextNegativeMinimumPrice {
 
@@ -37,27 +85,8 @@ public class BiddingsTest {
         int minimumPrice = -1;
 
         //when, then
-        assertThatCode(() -> biddings.selectWinner(minimumPrice)).isInstanceOf(
+        assertThatCode(() -> biddings.selectWinningPrice(minimumPrice)).isInstanceOf(
             IllegalArgumentException.class);
-      }
-    }
-
-    @Nested
-    @DisplayName("비딩한 사람이 아무도 없다면")
-    class ContextNotExistBidder {
-
-      @Test
-      @DisplayName("null을 반환한다.")
-      void ItResponseNull() {
-        //given
-        Biddings biddings = new Biddings(Collections.emptyList());
-        int minimumPrice = 10000;
-
-        //when
-        Long winningPrice = biddings.selectWinner(minimumPrice);
-
-        //then
-        assertThat(winningPrice).isNull();
       }
     }
 
@@ -77,12 +106,8 @@ public class BiddingsTest {
         Biddings biddings = new Biddings(List.of(bidding));
         int minimumPrice = 10000;
 
-        //when
-        Long winningPrice = biddings.selectWinner(minimumPrice);
-
-        //then
-        assertThat(bidding).extracting("won").isEqualTo(true);
-        assertThat(winningPrice).isEqualTo(minimumPrice);
+        //when, then
+        assertThat(biddings.selectWinningPrice(minimumPrice)).isEqualTo(minimumPrice);
       }
     }
 
@@ -106,11 +131,9 @@ public class BiddingsTest {
         int minimumPrice = 10000;
 
         //when
-        Long winningPrice = biddings.selectWinner(minimumPrice);
+        Long winningPrice = biddings.selectWinningPrice(minimumPrice);
 
         //then
-        assertThat(biddingTwo).extracting("won").isEqualTo(true);
-        assertThat(biddingOne).extracting("won").isEqualTo(false);
         assertThat(winningPrice).isEqualTo(biddingOne.getBiddingPrice() + 1000L);
       }
     }
