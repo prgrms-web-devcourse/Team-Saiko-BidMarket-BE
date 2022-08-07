@@ -10,6 +10,8 @@ import lombok.Getter;
 @Getter
 public class ReportCreateDto {
 
+  private final UnsignedLong requestUserId;
+
   private final String reason;
 
   private final UnsignedLong fromUserId;
@@ -18,11 +20,13 @@ public class ReportCreateDto {
 
 
   @Builder
-  private ReportCreateDto(String reason, UnsignedLong fromUserId, UnsignedLong toUserId) {
+  private ReportCreateDto(UnsignedLong requestUserId, String reason, UnsignedLong fromUserId, UnsignedLong toUserId) {
+    Assert.notNull(requestUserId, "Request user id must be provided");
     Assert.hasText(reason, "Reason must contain contexts");
     Assert.notNull(fromUserId, "From user id must be provided");
     Assert.notNull(toUserId, "To userid  must be provided");
 
+    this.requestUserId = requestUserId;
     this.reason = reason;
     this.fromUserId = fromUserId;
     this.toUserId = toUserId;
