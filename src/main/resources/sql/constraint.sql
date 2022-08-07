@@ -122,3 +122,5 @@ ALTER TABLE `group_permission`
 ALTER TABLE `user`
     ADD UNIQUE unq_provider_and_id (provider, provider_id);
 
+ALTER TABLE `report`
+    ADD UNIQUE unq_from_user_id_to_user_id (from_user_id, to_user_id);
