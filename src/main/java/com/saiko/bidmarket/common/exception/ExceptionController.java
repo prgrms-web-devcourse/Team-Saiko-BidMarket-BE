@@ -2,6 +2,7 @@ package com.saiko.bidmarket.common.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanInstantiationException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,12 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleIllegalArgumentException(IllegalArgumentException e) {
     logger.warn("IllegalArgumentException : ", e);
+  }
+
+  @ExceptionHandler(BeanInstantiationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleBeanInstantiationException(BeanInstantiationException e) {
+    logger.warn("BeanInstantiationException : ", e);
   }
 
   @ExceptionHandler(InvalidDataAccessApiUsageException.class)
