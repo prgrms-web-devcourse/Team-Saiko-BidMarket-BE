@@ -7,6 +7,7 @@ import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -70,6 +71,12 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException e) {
     logger.warn("InvalidDataAccessApiUsageException : ", e);
+  }
+
+  @ExceptionHandler(AuthorizationServiceException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public void handleAuthorizationServiceException(AuthorizationServiceException e) {
+    logger.warn("AuthorizationServiceException : ", e);
   }
 
   @ExceptionHandler(NotFoundException.class)
