@@ -21,6 +21,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
@@ -334,8 +336,9 @@ class DefaultProductServiceTest {
       @Test
       @DisplayName("종료되는 경매의 로직을 처리한다")
       void ItResponseProductList() {
-        //when, then
+        //given
         User writer = new User("제로", "image", "google", "1234", new Group());
+        User bidder = new User("도킹", "image", "google", "1234", new Group());
         Product product = Product.builder()
                                  .title("세탁기 팔아요")
                                  .description("좋아요")
@@ -345,16 +348,17 @@ class DefaultProductServiceTest {
                                  .writer(writer)
                                  .images(null)
                                  .build();
+        Bidding bidding = Bidding.builder()
+                                 .biddingPrice(BiddingPrice.valueOf(200000L))
+                                 .bidder(bidder)
+                                 .product(product)
+                                 .build();
         ReflectionTestUtils.setField(product, "id", 1L);
-        given(biddingService.selectWinner(any(Product.class))).willReturn(10000L);
+        ReflectionTestUtils.setField(product, "biddings", List.of(bidding));
 
-        //when
-        productService.executeClosingProduct(List.of(product));
-
-        //then
-        verify(biddingService).selectWinner(any(Product.class));
-        assertThat(product).extracting("progressed").isEqualTo(false);
-        assertThat(product).extracting("winningPrice").isEqualTo(10000L);
+        //when, then
+        assertThatCode(() -> productService.executeClosingProduct(
+            List.of(product))).doesNotThrowAnyException();
       }
     }
   }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.bidding.entity.Biddings;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
@@ -92,8 +94,9 @@ public class DefaultProductService implements ProductService {
     }
 
     for (Product product : products) {
-      long winningPrice = biddingService.selectWinner(product);
-      product.finish(winningPrice);
+      Biddings biddings = new Biddings(product.getBiddings());
+      int minimumPrice = product.getMinimumPrice();
+      product.finish(biddings.selectWinner(minimumPrice));
     }
   }
 }
