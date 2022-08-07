@@ -17,9 +17,11 @@ import org.springframework.util.Assert;
 import com.saiko.bidmarket.common.entity.BaseTime;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "`user`")
+@EqualsAndHashCode(of = {"provider", "providerId"}, callSuper = false)
 public class User extends BaseTime {
 
   @Id
