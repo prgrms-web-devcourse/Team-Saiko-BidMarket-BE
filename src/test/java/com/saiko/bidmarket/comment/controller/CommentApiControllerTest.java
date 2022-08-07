@@ -266,7 +266,7 @@ class CommentApiControllerTest extends ControllerSetUp {
     }
 
     @Nested
-    @DisplayName("productId 가 null 이라")
+    @DisplayName("productId 가 null 이라면")
     class ContextNullProductId {
 
       @Test
