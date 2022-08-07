@@ -11,6 +11,8 @@ import org.springframework.util.Assert;
 import com.saiko.bidmarket.bidding.entity.Biddings;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.notification.NotificationType;
+import com.saiko.bidmarket.notification.service.NotificationService;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
@@ -31,13 +33,17 @@ public class DefaultProductService implements ProductService {
 
   private final BiddingService biddingService;
 
+  private final NotificationService notificationService;
+
   public DefaultProductService(
       ProductRepository productRepository,
       UserRepository userRepository,
-      BiddingService biddingService) {
+      BiddingService biddingService,
+      NotificationService notificationService) {
     this.userRepository = userRepository;
     this.productRepository = productRepository;
     this.biddingService = biddingService;
+    this.notificationService = notificationService;
   }
 
   @Override
@@ -90,8 +96,24 @@ public class DefaultProductService implements ProductService {
   public void executeClosingProduct(Product product) {
     Assert.notNull(product, "Product must be provided");
 
-    Biddings biddings = new Biddings(product.getBiddings());
-    int minimumPrice = product.getMinimumPrice();
-    product.finish(biddings.selectWinner(minimumPrice));
+    for (Product product : products) {
+      Biddings biddings = new Biddings(product.getBiddings());
+      User winner = biddings.selectWinner();
+      Long winningPrice =
+          winner == null ? null : biddings.selectWinningPrice(product.getMinimumPrice());
+      product.finish(winningPrice);
+
+      notificationService.create(product.getWriter(), NotificationType.END_PRODUCT_FOR_WRITER,
+                                 product);
+
+      if (winner != null) {
+        notificationService.create(winner, NotificationType.END_PRODUCT_FOR_WINNER, product);
+        biddings.getBiddersExceptWinner()
+                .stream()
+                .forEach(bidder -> notificationService.create(bidder,
+                                                              NotificationType.END_PRODUCT_FOR_BIDDER,
+                                                              product));
+      }
+    }
   }
 }
