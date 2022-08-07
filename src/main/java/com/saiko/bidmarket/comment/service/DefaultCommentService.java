@@ -1,10 +1,15 @@
 package com.saiko.bidmarket.comment.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.comment.controller.dto.CommentCreateRequest;
 import com.saiko.bidmarket.comment.controller.dto.CommentCreateResponse;
+import com.saiko.bidmarket.comment.controller.dto.CommentSelectRequest;
+import com.saiko.bidmarket.comment.controller.dto.CommentSelectResponse;
 import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.comment.repository.CommentRepository;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
@@ -17,6 +22,7 @@ import com.saiko.bidmarket.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 
 @Service
+@Transactional(readOnly = true)
 @AllArgsConstructor
 public class DefaultCommentService implements CommentService {
   private final CommentRepository commentRepository;
@@ -24,6 +30,7 @@ public class DefaultCommentService implements CommentService {
   private final ProductRepository productRepository;
 
   @Override
+  @Transactional
   public CommentCreateResponse create(UnsignedLong userId, CommentCreateRequest request) {
     Assert.notNull(userId, "UserId must be provided");
     Assert.notNull(request, "Request must be provided");
@@ -43,5 +50,10 @@ public class DefaultCommentService implements CommentService {
 
     Comment savedComment = commentRepository.save(comment);
     return new CommentCreateResponse(UnsignedLong.valueOf(savedComment.getId()));
+  }
+
+  @Override
+  public List<CommentSelectResponse> findAll(CommentSelectRequest request) {
+    return null;
   }
 }

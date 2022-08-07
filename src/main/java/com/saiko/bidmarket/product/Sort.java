@@ -6,7 +6,8 @@ public enum Sort {
   END_DATE_ASC("expireAt", Order.ASC),
   MINIMUM_PRICE_ASC("minimumPrice", Order.ASC),
   MINIMUM_PRICE_DESC("minimumPrice", Order.DESC),
-  CREATED_AT_DESC("createdAt", Order.DESC);
+  CREATED_AT_DESC("createdAt", Order.DESC),
+  CREATED_AT_ASC("createdAt", Order.ASC);
 
   private final String property;
   private final Order order;
