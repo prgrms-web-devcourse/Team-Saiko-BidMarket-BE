@@ -10,15 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.web.util.WebUtils;
+
+import com.saiko.bidmarket.common.util.CookieUtils;
 
 public class HttpCookieOAuth2AuthorizationRequestRepository implements
     AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
   private static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME =
       "OAUTH2_AUTHORIZATION_REQUEST";
+
+  public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
 
   private final String cookieName;
 
@@ -52,14 +57,25 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
 
     if (authorizationRequest == null) {
       getCookie(request).ifPresent(cookie -> clear(cookie, response));
-    } else {
-      String value = Base64.getUrlEncoder()
-                           .encodeToString(SerializationUtils.serialize(authorizationRequest));
-      Cookie cookie = new Cookie(cookieName, value);
-      cookie.setPath("/");
-      cookie.setHttpOnly(true);
-      cookie.setMaxAge(cookieExpireSeconds);
-      response.addCookie(cookie);
+      return;
+    }
+
+    CookieUtils.addCookie(
+        response,
+        cookieName,
+        CookieUtils.serialize(authorizationRequest),
+        cookieExpireSeconds
+    );
+
+    final String redirectUtiAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+
+    if (StringUtils.isNotBlank(redirectUtiAfterLogin)) {
+      CookieUtils.addCookie(
+          response,
+          REDIRECT_URI_PARAM_COOKIE_NAME,
+          redirectUtiAfterLogin,
+          cookieExpireSeconds
+      );
     }
   }
 
