@@ -161,6 +161,7 @@ public class WebSecurityConfig {
          */
         .oauth2Login()
         .authorizationEndpoint()
+        .baseUri("/oauth2/authorization")
         .authorizationRequestRepository(authorizationRequestRepository())
         .and()
         .successHandler(handler)
