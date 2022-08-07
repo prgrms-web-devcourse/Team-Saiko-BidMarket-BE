@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.chat.controller.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 import org.hibernate.validator.constraints.Length;
@@ -15,6 +16,7 @@ public class ChatSendMessage {
   @Positive
   private final long userId;
 
+  @NotBlank
   @Length(min = 1, max = 2000)
   private final String content;
 
