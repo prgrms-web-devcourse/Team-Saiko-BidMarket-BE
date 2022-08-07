@@ -40,17 +40,21 @@ class DefaultReportServiceTest {
 
   private static final String reason = "reason";
 
-  private static final User fromUser = new User("fromUser",
-                                                "imageUrl",
-                                                "provider",
-                                                "providerId",
-                                                new Group());
+  private static final User fromUser = User.builder()
+                                           .username("fromuUser")
+                                           .profileImage("imageUrl")
+                                           .provider("provider")
+                                           .providerId("providerId")
+                                           .group(new Group())
+                                           .build();
 
-  private static final User toUser = new User("toUser",
-                                              "imageUrl",
-                                              "provider",
-                                              "providerId",
-                                              new Group());
+  private static final User toUser = User.builder()
+                                         .username("toUser")
+                                         .profileImage("imageUrl")
+                                         .provider("provider2")
+                                         .providerId("providerId2")
+                                         .group(new Group())
+                                         .build();
 
   @BeforeAll
   static void setUpUsersId() {
@@ -167,7 +171,15 @@ class DefaultReportServiceTest {
       @DisplayName("IllegalArgumentException을 던진다.")
       void ItThrowsIllegalArgumentException() {
         // given
-        User toUser = fromUser;
+        User toUser = User.builder()
+                          .username(fromUser.getUsername())
+                          .profileImage(fromUser.getProfileImage())
+                          .provider("provider")
+                          .providerId("providerId")
+                          .group(fromUser.getGroup())
+                          .build();
+
+        ReflectionTestUtils.setField(toUser, "id", fromUser.getId());
 
         ReportCreateDto createDto = ReportCreateDto
             .builder()
