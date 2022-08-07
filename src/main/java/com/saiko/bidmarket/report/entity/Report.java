@@ -50,7 +50,7 @@ public class Report extends BaseTime {
   }
 
   private void validateUsers() {
-    if (fromUser == toUser) {
+    if (fromUser.equals(toUser)) {
       throw new IllegalArgumentException("신고자와 피신고자는 같을 수 없습니다");
     }
   }
