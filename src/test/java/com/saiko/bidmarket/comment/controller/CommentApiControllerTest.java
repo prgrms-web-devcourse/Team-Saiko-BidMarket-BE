@@ -68,7 +68,7 @@ class CommentApiControllerTest extends ControllerSetUp {
     @DisplayName("유효한 값이 전달되면")
     class ContextWithValidData {
       @Test
-      @DisplayName("상품을 저장하고 상품의 id 값을 반환한다")
+      @DisplayName("댓글을 저장하고 댓글의 id 값을 반환한다")
       void ItSaveCommentAndReturnId() throws Exception {
         //given
         HashMap<String, Object> requestMap = new HashMap<>();
