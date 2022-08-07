@@ -2,6 +2,8 @@ package com.saiko.bidmarket.chat.controller.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.util.Assert;
+
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 
 import lombok.AccessLevel;
@@ -23,6 +25,8 @@ public class ChatPublishMessage {
   private LocalDateTime createdAt;
 
   public static ChatPublishMessage of(ChatMessage chatMessage) {
+    Assert.notNull(chatMessage, "ChatMessage must be provided");
+
     return ChatPublishMessage.builder()
                              .userId(chatMessage.getSender().getId())
                              .content(chatMessage.getMessage())
