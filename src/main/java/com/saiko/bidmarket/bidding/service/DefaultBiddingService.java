@@ -1,6 +1,7 @@
 package com.saiko.bidmarket.bidding.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
@@ -29,6 +30,7 @@ public class DefaultBiddingService implements BiddingService {
     this.productRepository = productRepository;
   }
 
+  @Transactional
   @Override
   public UnsignedLong create(BiddingCreateDto createDto) {
     Assert.notNull(createDto, "createDto must be provided");
