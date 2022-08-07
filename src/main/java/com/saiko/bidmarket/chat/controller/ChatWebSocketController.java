@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -37,5 +38,10 @@ public class ChatWebSocketController {
     ChatMessageCreateParam param = ChatMessageCreateParam.of(id, chatSendMessage);
 
     return chatService.create(param);
+  }
+
+  @MessageExceptionHandler(RuntimeException.class)
+  public void handleException(RuntimeException e) {
+    log.info(e.getMessage());
   }
 }
