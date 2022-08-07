@@ -24,6 +24,7 @@ import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.notification.service.NotificationService;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
@@ -46,6 +47,9 @@ class DefaultProductServiceTest {
 
   @Mock
   BiddingService biddingService;
+
+  @Mock
+  NotificationService notificationService;
 
   @InjectMocks
   DefaultProductService productService;
