@@ -25,16 +25,14 @@ public class DefaultReportService implements ReportService {
   public UnsignedLong create(ReportCreateDto createDto) {
     Assert.notNull(createDto, "Report create dto must be provided");
 
+    validateProxyReport(createDto.getRequestUserId(), createDto.getFromUserId());
+
     User fromUser = userRepository.findById(createDto.getFromUserId().getValue())
                                   .orElseThrow(NotFoundException::new);
     User toUser = userRepository.findById(createDto.getToUserId().getValue())
                                 .orElseThrow(NotFoundException::new);
 
-    if (reportRepository.existsByFromUserAndToUser(fromUser, toUser)) {
-      throw new IllegalArgumentException("신고자(id: " + fromUser.getId() + ")는 "
-                                             + "피신고자(id: " + toUser.getId() + ")를 "
-                                             + "이미 신고하였습니다.");
-    }
+    validateSameUserWithFromAndTo(fromUser, toUser);
 
     Report report = Report.builder()
                           .reason(createDto.getReason())
@@ -43,6 +41,20 @@ public class DefaultReportService implements ReportService {
                           .build();
 
     return UnsignedLong.valueOf(reportRepository.save(report).getId());
+  }
+
+  private void validateSameUserWithFromAndTo(User fromUser, User toUser) {
+    if (reportRepository.existsByFromUserAndToUser(fromUser, toUser)) {
+      throw new IllegalArgumentException("신고자(id: " + fromUser.getId() + ")는 "
+                                             + "피신고자(id: " + toUser.getId() + ")를 "
+                                             + "이미 신고하였습니다.");
+    }
+  }
+
+  private void validateProxyReport(UnsignedLong requestUserId, UnsignedLong fromUserId) {
+    if (requestUserId != fromUserId){
+      throw new IllegalArgumentException("다른 유저의 신고를 대신할 수 없습니다.");
+    }
   }
 
 }
