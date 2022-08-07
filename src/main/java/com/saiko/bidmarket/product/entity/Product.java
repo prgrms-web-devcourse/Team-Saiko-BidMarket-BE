@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.user.entity.User;
@@ -73,6 +74,9 @@ public class Product extends BaseTime {
   @JoinColumn(name = "user_id")
   private User writer;
 
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Bidding> biddings = new ArrayList<>();
+
   protected Product() {
   }
 
@@ -118,6 +122,8 @@ public class Product extends BaseTime {
   }
 
   public void finish(Long winningPrice) {
+    Assert.notNull(winningPrice, "winningPrice must be provided");
+
     this.progressed = false;
     setWinningPrice(winningPrice);
   }
