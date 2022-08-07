@@ -127,6 +127,7 @@ public class WebSecurityConfig {
     http.authorizeRequests()
         .antMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("USER", "ADMIN")
         .antMatchers(HttpMethod.POST, "/api/v1/bidding").hasAnyRole("USER", "ADMIN")
+        // .antMatchers(HttpMethod.POST, "/api/v1/reports").hasAnyRole("USER", "ADMIN")
         .anyRequest().permitAll()
         .and()
         .cors()
