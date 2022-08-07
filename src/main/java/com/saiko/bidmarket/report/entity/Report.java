@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.AccessLevel;
@@ -46,5 +45,13 @@ public class Report extends BaseTime {
     this.reason = reason;
     this.fromUser = fromUser;
     this.toUser = toUser;
+
+    validateUsers();
+  }
+
+  private void validateUsers() {
+    if (fromUser == toUser) {
+      throw new IllegalArgumentException("신고자와 피신고자는 같을 수 없습니다");
+    }
   }
 }
