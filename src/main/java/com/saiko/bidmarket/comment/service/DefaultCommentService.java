@@ -14,20 +14,14 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class DefaultCommentService implements CommentService {
   private final CommentRepository commentRepository;
   private final UserRepository userRepository;
   private final ProductRepository productRepository;
-
-  public DefaultCommentService(
-      CommentRepository commentRepository,
-      UserRepository userRepository,
-      ProductRepository productRepository) {
-    this.commentRepository = commentRepository;
-    this.userRepository = userRepository;
-    this.productRepository = productRepository;
-  }
 
   @Override
   public CommentCreateResponse create(UnsignedLong userId, CommentCreateRequest request) {
