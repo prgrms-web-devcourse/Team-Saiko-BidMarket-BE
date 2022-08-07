@@ -31,7 +31,7 @@ public class Notification extends BaseTime {
 
   @NotNull
   @Column(length = 100)
-  private String message;
+  private String content;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id")
@@ -42,12 +42,12 @@ public class Notification extends BaseTime {
   private User user;
 
   @Builder
-  public Notification(String message, Product product, User user) {
-    Assert.hasText(message, "Message must be provided");
+  public Notification(String content, Product product, User user) {
+    Assert.hasText(content, "Content must be provided");
     Assert.notNull(product, "Product must be provided");
     Assert.notNull(user, "User must be provided");
 
-    this.message = message;
+    this.content = content;
     this.product = product;
     this.user = user;
   }
