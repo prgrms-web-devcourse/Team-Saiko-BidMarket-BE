@@ -50,6 +50,7 @@ public class Bidding extends BaseTime {
     this.bidder = bidder;
     this.product = product;
     this.won = false;
+    product.getBiddings().add(this);
 
     validateCreatedField();
   }
