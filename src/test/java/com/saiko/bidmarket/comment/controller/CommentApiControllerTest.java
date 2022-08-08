@@ -1,6 +1,6 @@
 package com.saiko.bidmarket.comment.controller;
 
-import static com.saiko.bidmarket.product.Sort.*;
+import static com.saiko.bidmarket.common.Sort.*;
 import static com.saiko.bidmarket.product.Category.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;

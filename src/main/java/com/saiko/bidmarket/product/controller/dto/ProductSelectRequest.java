@@ -6,7 +6,7 @@ import javax.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 
 import com.saiko.bidmarket.product.Category;
-import com.saiko.bidmarket.product.Sort;
+import com.saiko.bidmarket.common.Sort;
 
 public class ProductSelectRequest {
   @Length(max = 32)

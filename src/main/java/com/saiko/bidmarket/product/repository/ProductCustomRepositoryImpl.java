@@ -14,7 +14,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.product.Category;
-import com.saiko.bidmarket.product.Sort;
+import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
@@ -76,7 +76,7 @@ public class ProductCustomRepositoryImpl
     return product.title.contains(title);
   }
 
-  private OrderSpecifier getOrderSpecifier(com.saiko.bidmarket.product.Sort sort) {
+  private OrderSpecifier getOrderSpecifier(Sort sort) {
     for (Sort value : Sort.values()) {
       if (sort == value) {
         Path<Object> fieldPath = Expressions.path(Object.class, product,

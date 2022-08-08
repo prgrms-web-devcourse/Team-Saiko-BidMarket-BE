@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.product;
+package com.saiko.bidmarket.common;
 
 import com.querydsl.core.types.Order;
 

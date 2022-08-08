@@ -1,7 +1,7 @@
 package com.saiko.bidmarket.user.service;
 
 import static com.saiko.bidmarket.product.Category.*;
-import static com.saiko.bidmarket.product.Sort.*;
+import static com.saiko.bidmarket.common.Sort.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;

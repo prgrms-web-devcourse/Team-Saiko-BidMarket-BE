@@ -15,7 +15,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.comment.controller.dto.CommentSelectRequest;
 import com.saiko.bidmarket.comment.entity.Comment;
-import com.saiko.bidmarket.product.Sort;
+import com.saiko.bidmarket.common.Sort;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

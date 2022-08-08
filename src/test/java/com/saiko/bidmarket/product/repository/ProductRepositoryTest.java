@@ -1,6 +1,6 @@
 package com.saiko.bidmarket.product.repository;
 
-import static com.saiko.bidmarket.product.Sort.*;
+import static com.saiko.bidmarket.common.Sort.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.respository.BiddingRepository;
+import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
@@ -80,7 +81,7 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+                                                                             Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
@@ -125,7 +126,7 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "false", null, 0,
                                                                              2,
-                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+                                                                             Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
@@ -348,7 +349,7 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+                                                                             Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
@@ -392,7 +393,7 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+                                                                             Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
@@ -436,7 +437,7 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(
             null, "true", Category.DIGITAL_DEVICE, 0, 2,
-            com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+            Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
@@ -479,7 +480,7 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+                                                                             Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
@@ -523,7 +524,7 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(
             "노트북", "true", Category.DIGITAL_DEVICE, 0, 2,
-            com.saiko.bidmarket.product.Sort.END_DATE_ASC);
+            Sort.END_DATE_ASC);
         Group group = groupRepository.findById(1L).get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
