@@ -17,14 +17,15 @@ import com.saiko.bidmarket.comment.controller.dto.CommentSelectRequest;
 import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.product.Sort;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+
 @Repository
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+
 public class CommentCustomRepositoryImpl
     implements CommentCustomRepository {
   private final JPAQueryFactory jpaQueryFactory;
-
-  public CommentCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
-    this.jpaQueryFactory = jpaQueryFactory;
-  }
 
   @Override
   public List<Comment> findAllByProduct(CommentSelectRequest commentSelectRequest) {

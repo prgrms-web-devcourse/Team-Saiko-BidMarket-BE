@@ -22,14 +22,14 @@ import com.saiko.bidmarket.comment.service.CommentService;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @RequestMapping("api/v1/comments")
 public class CommentApiController {
   private final CommentService commentService;
-
-  public CommentApiController(CommentService commentService) {
-    this.commentService = commentService;
-  }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)

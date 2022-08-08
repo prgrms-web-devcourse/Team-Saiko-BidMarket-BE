@@ -20,11 +20,12 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional(readOnly = true)
-@AllArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class DefaultCommentService implements CommentService {
   private final CommentRepository commentRepository;
   private final UserRepository userRepository;
