@@ -20,6 +20,7 @@ import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
@@ -32,6 +33,9 @@ class DefaultChatRoomServiceTest {
 
   @Mock
   UserRepository userRepository;
+
+  @Mock
+  ProductRepository productRepository;
 
   @InjectMocks
   DefaultChatRoomService chatRoomService;
@@ -71,6 +75,9 @@ class DefaultChatRoomServiceTest {
 
         given(userRepository.findWinnerOfBiddingByProductId(anyLong()))
             .willReturn(Optional.of(getUser(winnerId)));
+
+        given(productRepository.findById(anyLong()))
+            .willReturn(Optional.of(getProduct(productId, sellerId)));
 
         given(chatRoomRepository.save(any(ChatRoom.class)))
             .willAnswer(methodInvokeMock -> {

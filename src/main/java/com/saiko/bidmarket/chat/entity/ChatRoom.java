@@ -10,10 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.AccessLevel;
@@ -36,16 +38,21 @@ public class ChatRoom extends BaseTime {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private User winner;
 
+  @OneToOne(fetch = FetchType.LAZY, optional = false)
+  private Product product;
+
   @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ChatMessage> chatMessage;
 
   @Builder
-  private ChatRoom(User seller, User winner) {
+  private ChatRoom(User seller, User winner, Product product) {
     Assert.notNull(seller, "Seller must be provided");
     Assert.notNull(winner, "Winner must be provided");
+    Assert.notNull(product, "Product must be provided");
 
     this.seller = seller;
     this.winner = winner;
+    this.product = product;
   }
 }
 
