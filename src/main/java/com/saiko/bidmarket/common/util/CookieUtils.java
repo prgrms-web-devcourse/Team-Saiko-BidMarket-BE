@@ -1,6 +1,7 @@
 package com.saiko.bidmarket.common.util;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -16,11 +17,9 @@ public class CookieUtils {
     Cookie[] cookies = request.getCookies();
 
     if (cookies != null && cookies.length > 0) {
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals(name)) {
-          return Optional.of(cookie);
-        }
-      }
+      return Arrays.stream(cookies)
+          .filter(cookie -> cookie.getName().equals(name))
+          .findFirst();
     }
 
     return Optional.empty();
