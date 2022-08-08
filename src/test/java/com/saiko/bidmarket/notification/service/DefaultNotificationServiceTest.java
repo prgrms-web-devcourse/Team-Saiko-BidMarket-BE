@@ -3,6 +3,7 @@ package com.saiko.bidmarket.notification.service;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +35,7 @@ public class DefaultNotificationServiceTest {
 
   private static Product product;
 
-  @BeforeEach
+  @BeforeAll
   void setUpDomain() {
     userOne = new User("testOne",
                       "imageURl",
