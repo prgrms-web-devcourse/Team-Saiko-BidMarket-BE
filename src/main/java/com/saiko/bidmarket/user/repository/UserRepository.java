@@ -15,4 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("select u from User u join fetch u.group g left join fetch g.permissions gp join fetch gp.permission where u.provider = :provider and u.providerId = :providerId")
   Optional<User> findByProviderAndProviderId(String provider, String providerId);
 
+  @Query("select b.bidder from Bidding b join b.product p where b.won = true and p.id = :productId")
+  Optional<User> findWinnerOfBiddingByProductId(long productId);
+
 }
