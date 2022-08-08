@@ -1,10 +1,10 @@
 package com.saiko.bidmarket.product.repository.dto;
 
-import static com.saiko.bidmarket.product.Sort.*;
+import static com.saiko.bidmarket.common.Sort.*;
 
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.product.Sort;
+import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 
 import lombok.Getter;

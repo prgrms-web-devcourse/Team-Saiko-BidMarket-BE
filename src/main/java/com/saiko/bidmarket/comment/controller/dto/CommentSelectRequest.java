@@ -2,7 +2,7 @@ package com.saiko.bidmarket.comment.controller.dto;
 
 import javax.validation.constraints.NotNull;
 
-import com.saiko.bidmarket.product.Sort;
+import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 
 import lombok.Getter;

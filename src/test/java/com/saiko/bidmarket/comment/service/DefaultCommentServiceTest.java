@@ -25,7 +25,7 @@ import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.comment.repository.CommentRepository;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.product.Sort;
+import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;

@@ -1,11 +1,11 @@
 package com.saiko.bidmarket.user.controller.dto;
 
-import static com.saiko.bidmarket.product.Sort.*;
+import static com.saiko.bidmarket.common.Sort.*;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import com.saiko.bidmarket.product.Sort;
+import com.saiko.bidmarket.common.Sort;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.saiko.bidmarket.bidding.respository;
 
 import static com.saiko.bidmarket.bidding.entity.QBidding.*;
-import static com.saiko.bidmarket.product.Sort.*;
+import static com.saiko.bidmarket.common.Sort.*;
 import static com.saiko.bidmarket.product.entity.QProduct.*;
 import static com.saiko.bidmarket.user.entity.QUser.*;
 
@@ -15,6 +15,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 
 @Repository
@@ -42,7 +43,7 @@ public class BiddingCustomRepositoryImpl
         .fetch();
   }
 
-  private OrderSpecifier getOrderSpecifier(com.saiko.bidmarket.product.Sort sort) {
+  private OrderSpecifier getOrderSpecifier(Sort sort) {
     if (sort == END_DATE_ASC) {
       Path<Object> fieldPath = Expressions.path(Object.class, product,
                                                 END_DATE_ASC.getProperty());

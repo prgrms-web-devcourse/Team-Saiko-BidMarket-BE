@@ -1,6 +1,6 @@
 package com.saiko.bidmarket.comment.repository;
 
-import static com.saiko.bidmarket.product.Sort.*;
+import static com.saiko.bidmarket.common.Sort.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
