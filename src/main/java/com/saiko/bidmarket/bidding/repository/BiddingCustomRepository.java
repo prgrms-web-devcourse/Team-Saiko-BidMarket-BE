@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 
 public interface BiddingCustomRepository {
