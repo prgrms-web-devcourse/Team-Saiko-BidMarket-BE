@@ -55,7 +55,7 @@ class DefaultChatMessageServiceTest {
 
   private ChatRoom getTestChatRoom(long roomId, long user1, long user2) {
     ChatRoom chatRoom = ChatRoom.builder()
-                                .buyer(getTestUser(user1))
+                                .winner(getTestUser(user1))
                                 .seller(getTestUser(user2))
                                 .build();
 

@@ -118,7 +118,7 @@ class ChatWebSocketControllerTest {
   private ChatRoom getChatRoom(long roomId) {
     ChatRoom chatRoom = ChatRoom.builder()
                                 .seller(getUser(1L))
-                                .buyer(getUser(2L))
+                                .winner(getUser(2L))
                                 .build();
     ReflectionTestUtils.setField(chatRoom, "id", roomId);
     return chatRoom;
