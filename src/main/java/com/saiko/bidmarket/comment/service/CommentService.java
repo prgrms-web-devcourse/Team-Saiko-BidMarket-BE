@@ -10,5 +10,6 @@ import com.saiko.bidmarket.common.entity.UnsignedLong;
 
 public interface CommentService {
   CommentCreateResponse create(UnsignedLong userId, CommentCreateRequest request);
-  List<CommentSelectResponse> findAll(CommentSelectRequest request);
+
+  List<CommentSelectResponse> findAllByProduct(CommentSelectRequest request);
 }

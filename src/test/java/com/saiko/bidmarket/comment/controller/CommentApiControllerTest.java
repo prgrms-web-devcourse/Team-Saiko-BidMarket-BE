@@ -227,7 +227,7 @@ class CommentApiControllerTest extends ControllerSetUp {
 
         ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.now());
 
-        given(commentService.findAll(any(CommentSelectRequest.class)))
+        given(commentService.findAllByProduct(any(CommentSelectRequest.class)))
             .willReturn(List.of(CommentSelectResponse.from(comment)));
 
         //when
@@ -240,7 +240,7 @@ class CommentApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(commentService).findAll(any(CommentSelectRequest.class));
+        verify(commentService).findAllByProduct(any(CommentSelectRequest.class));
         response.andExpect(status().isOk())
                 .andDo(document("Select comment", preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),

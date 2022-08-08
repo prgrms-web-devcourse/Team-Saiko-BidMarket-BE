@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -18,10 +19,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.comment.controller.dto.CommentCreateRequest;
 import com.saiko.bidmarket.comment.controller.dto.CommentCreateResponse;
+import com.saiko.bidmarket.comment.controller.dto.CommentSelectRequest;
+import com.saiko.bidmarket.comment.controller.dto.CommentSelectResponse;
 import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.comment.repository.CommentRepository;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;
@@ -160,6 +164,97 @@ class DefaultCommentServiceTest {
         assertThatThrownBy(
             () -> commentService.create(UnsignedLong.valueOf(1), commentCreateRequest))
             .isInstanceOf(NotFoundException.class);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findAllByProduct 메서드는")
+  class DescribeFindAllByProduct {
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidArg {
+
+      @Test
+      @DisplayName("상품의 전체 댓글을 조회하고 반환한다")
+      void ItResponseComment() {
+        //given
+        Product product = Product.builder()
+                                 .title("그림 그려드려요")
+                                 .description("잘 그려요")
+                                 .location("전주")
+                                 .category(HOBBY)
+                                 .minimumPrice(1000)
+                                 .images(Collections.emptyList())
+                                 .writer(new User("제로", "image", "google", "1234", new Group()))
+                                 .build();
+
+        User commentWriter = new User("레이", "image", "google", "1234", new Group());
+        ReflectionTestUtils.setField(commentWriter, "id", 1L);
+
+        Comment comment = Comment.builder()
+                                 .writer(commentWriter)
+                                 .product(product)
+                                 .content("연예인도 되나요?")
+                                 .build();
+        long commentId = 1l;
+        ReflectionTestUtils.setField(comment, "id", commentId);
+
+        CommentSelectRequest commentSelectRequest = new CommentSelectRequest(1,
+                                                                             Sort.CREATED_AT_ASC);
+
+        given(commentRepository.findAllByProduct(any(CommentSelectRequest.class)))
+            .willReturn(List.of(comment));
+
+        //when
+        List<CommentSelectResponse> result = commentService.findAllByProduct(
+            commentSelectRequest);
+
+        //then
+        verify(commentRepository).findAllByProduct(any(CommentSelectRequest.class));
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getUserId().getValue()).isEqualTo(commentWriter.getId());
+        assertThat(result.get(0).getUsername()).isEqualTo(commentWriter.getUsername());
+        assertThat(result.get(0).getProfileImage()).isEqualTo(commentWriter.getProfileImage());
+        assertThat(result.get(0).getContent()).isEqualTo(comment.getContent());
+        assertThat(result.get(0).getCreatedAt()).isEqualTo(comment.getCreatedAt());
+        assertThat(result.get(0).getUpdatedAt()).isEqualTo(comment.getUpdatedAt());
+      }
+    }
+
+    @Nested
+    @DisplayName("Request 값이 null이면")
+    class ContextWithNullRequest {
+
+      @Test
+      @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> commentService.findAllByProduct(null))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("댓글이 한건도 없다면")
+    class ContextWithEmptyCommentList {
+
+      @Test
+      @DisplayName("빈 리스트를 반환한다")
+      void ItReturnEmptyList() {
+        //given
+        CommentSelectRequest commentSelectRequest = new CommentSelectRequest(1l,
+                                                                             Sort.CREATED_AT_ASC);
+        given(commentRepository.findAllByProduct(any(CommentSelectRequest.class)))
+            .willReturn(Collections.EMPTY_LIST);
+
+        //when
+        List<CommentSelectResponse> result = commentService.findAllByProduct(
+            commentSelectRequest);
+
+        //then
+        assertThat(result.size()).isEqualTo(0);
       }
     }
   }
