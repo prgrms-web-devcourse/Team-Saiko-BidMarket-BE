@@ -6,6 +6,7 @@ import static com.saiko.bidmarket.product.entity.QProduct.*;
 import static com.saiko.bidmarket.user.entity.QUser.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
@@ -15,6 +16,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 
@@ -41,6 +43,18 @@ public class BiddingCustomRepositoryImpl
         .limit(request.getLimit())
         .orderBy(getOrderSpecifier(request.getSort()))
         .fetch();
+  }
+
+  @Override
+  public Optional<Bidding> findByBidderIdAndProductId(BiddingPriceFindingRepoDto findingRepoDto) {
+    Assert.notNull(findingRepoDto, "findingRepoDto id must be provided");
+
+    return Optional.ofNullable(
+        jpaQueryFactory
+            .selectFrom(bidding)
+            .where(bidding.bidder.id.eq(findingRepoDto.getBidderId().getValue()),
+                   bidding.product.id.eq(findingRepoDto.getProductId().getValue()))
+            .fetchFirst());
   }
 
   private OrderSpecifier getOrderSpecifier(Sort sort) {
