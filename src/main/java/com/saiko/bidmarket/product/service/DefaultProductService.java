@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.Biddings;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
@@ -88,15 +87,11 @@ public class DefaultProductService implements ProductService {
   }
 
   @Override
-  public void executeClosingProduct(List<Product> products) {
-    if (products.isEmpty()) {
-      throw new IllegalArgumentException("products must be provided");
-    }
+  public void executeClosingProduct(Product product) {
+    Assert.notNull(product, "Product must be provided");
 
-    for (Product product : products) {
-      Biddings biddings = new Biddings(product.getBiddings());
-      int minimumPrice = product.getMinimumPrice();
-      product.finish(biddings.selectWinner(minimumPrice));
-    }
+    Biddings biddings = new Biddings(product.getBiddings());
+    int minimumPrice = product.getMinimumPrice();
+    product.finish(biddings.selectWinner(minimumPrice));
   }
 }

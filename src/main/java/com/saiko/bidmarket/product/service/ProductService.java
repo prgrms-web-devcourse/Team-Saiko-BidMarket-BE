@@ -19,5 +19,5 @@ public interface ProductService {
 
   List<Product> findAllThatNeedToClose(LocalDateTime nowTime);
 
-  void executeClosingProduct(List<Product> productsInProgress);
+  void executeClosingProduct(Product product);
 }
