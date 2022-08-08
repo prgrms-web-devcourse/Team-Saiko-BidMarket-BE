@@ -29,8 +29,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.common.util.IdEncoder;
-import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
