@@ -1,6 +1,7 @@
 package com.saiko.bidmarket.comment.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,12 @@ public class DefaultCommentService implements CommentService {
   }
 
   @Override
-  public List<CommentSelectResponse> findAll(CommentSelectRequest request) {
-    return null;
+  public List<CommentSelectResponse> findAllByProduct(CommentSelectRequest request) {
+    Assert.notNull(request, "Request must be provided");
+
+    return commentRepository.findAllByProduct(request)
+                            .stream()
+                            .map((comment -> CommentSelectResponse.from(comment)))
+                            .collect(Collectors.toList());
   }
 }
