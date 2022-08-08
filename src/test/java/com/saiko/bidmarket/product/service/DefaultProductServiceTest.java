@@ -18,13 +18,16 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
-import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.notification.service.NotificationService;
+import com.saiko.bidmarket.notification.event.NotificationCreateHandler;
+import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
@@ -46,10 +49,7 @@ class DefaultProductServiceTest {
   UserRepository userRepository;
 
   @Mock
-  BiddingService biddingService;
-
-  @Mock
-  NotificationService notificationService;
+  ApplicationEventPublisher publisher;
 
   @InjectMocks
   DefaultProductService productService;
@@ -337,31 +337,55 @@ class DefaultProductServiceTest {
     class ContextWithValidArgument {
 
       @Test
-      @DisplayName("종료되는 경매의 로직을 처리한다")
-      void ItResponseProductList() {
+      @DisplayName("알림 생성 이벤트를 발생시킨다.")
+      void ItGenerateCreatingNotificationEvent() {
         //given
-        User writer = new User("제로", "image", "google", "1234", new Group());
-        User bidder = new User("도킹", "image", "google", "1234", new Group());
+        User writer = User.builder()
+                          .username("writer")
+                          .profileImage("imageURL")
+                          .provider("provider")
+                          .providerId("providerId")
+                          .group(new Group())
+                          .build();
+        User bidderOne = User.builder()
+                          .username("bidderOne")
+                          .profileImage("imageURL")
+                          .provider("provider")
+                          .providerId("providerId")
+                          .group(new Group())
+                          .build();
+        User bidderTwo = User.builder()
+                             .username("bidderTwo")
+                             .profileImage("imageURL")
+                             .provider("provider")
+                             .providerId("providerId")
+                             .group(new Group())
+                             .build();
         Product product = Product.builder()
-                                 .title("세탁기 팔아요")
-                                 .description("좋아요")
-                                 .minimumPrice(100000)
-                                 .category(HOUSEHOLD_APPLIANCE)
-                                 .location("수원")
+                                 .title("title")
+                                 .description("description")
+                                 .minimumPrice(10000)
                                  .writer(writer)
-                                 .images(null)
+                                 .category(Category.ETC)
                                  .build();
-        Bidding bidding = Bidding.builder()
-                                 .biddingPrice(BiddingPrice.valueOf(200000L))
-                                 .bidder(bidder)
-                                 .product(product)
-                                 .build();
+        Bidding biddingOne = Bidding.builder()
+                                    .biddingPrice(BiddingPrice.valueOf(20000L))
+                                    .bidder(bidderOne)
+                                    .product(product)
+                                    .build();
+        Bidding biddingTwo = Bidding.builder()
+                                    .biddingPrice(BiddingPrice.valueOf(30000L))
+                                    .bidder(bidderOne)
+                                    .product(product)
+                                    .build();
         ReflectionTestUtils.setField(product, "id", 1L);
-        ReflectionTestUtils.setField(product, "biddings", List.of(bidding));
+        ReflectionTestUtils.setField(product, "biddings", List.of(biddingTwo, biddingOne));
 
-        //when, then
-        assertThatCode(() -> productService.executeClosingProduct(product))
-            .doesNotThrowAnyException();
+        //when
+        productService.executeClosingProduct(product);
+
+        //then
+        verify(publisher, times(3)).publishEvent(any(Object.class));
       }
     }
   }
