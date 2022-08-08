@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.bidding.respository;
+package com.saiko.bidmarket.bidding.repository;
 
 import java.util.List;
 
