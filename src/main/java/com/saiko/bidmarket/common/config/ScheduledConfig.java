@@ -31,9 +31,8 @@ public class ScheduledConfig {
                                              now.getHour(), now.getMinute());
 
       List<Product> productsInProgress = productService.findAllThatNeedToClose(nowTime);
-      if (productsInProgress.size() != 0) {
-        productService.executeClosingProduct(productsInProgress);
-      }
+
+      productsInProgress.forEach(productService::executeClosingProduct);
     }
   }
 }

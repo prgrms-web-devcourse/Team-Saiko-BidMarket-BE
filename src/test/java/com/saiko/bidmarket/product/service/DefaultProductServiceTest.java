@@ -6,7 +6,6 @@ import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -317,14 +316,14 @@ class DefaultProductServiceTest {
   class DescribeExecuteClosingProduct {
 
     @Nested
-    @DisplayName("products 리스트가 비어있으면")
-    class ContextWithEmptyProducts {
+    @DisplayName("product 가 null 값이 전달되면")
+    class ContextWithEmptyProduct {
 
       @Test
       @DisplayName("IllegalArgumentException 예외를 던진다")
       void ItThrowsIllegalArgumentException() {
         //when, then
-        assertThatThrownBy(() -> productService.executeClosingProduct(Collections.emptyList()))
+        assertThatThrownBy(() -> productService.executeClosingProduct(null))
             .isInstanceOf(IllegalArgumentException.class);
       }
     }
@@ -357,8 +356,8 @@ class DefaultProductServiceTest {
         ReflectionTestUtils.setField(product, "biddings", List.of(bidding));
 
         //when, then
-        assertThatCode(() -> productService.executeClosingProduct(
-            List.of(product))).doesNotThrowAnyException();
+        assertThatCode(() -> productService.executeClosingProduct(product))
+            .doesNotThrowAnyException();
       }
     }
   }
