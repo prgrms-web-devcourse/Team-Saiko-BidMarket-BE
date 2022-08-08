@@ -1,18 +1,18 @@
 package com.saiko.bidmarket.product.service;
 
+import static com.saiko.bidmarket.notification.NotificationType.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.bidding.entity.Biddings;
-import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.notification.NotificationType;
-import com.saiko.bidmarket.notification.service.NotificationService;
+import com.saiko.bidmarket.notification.event.NotificationCreateEvent;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
@@ -23,28 +23,19 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+
 @Service
 @Transactional
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class DefaultProductService implements ProductService {
 
   private final ProductRepository productRepository;
 
   private final UserRepository userRepository;
 
-  private final BiddingService biddingService;
-
-  private final NotificationService notificationService;
-
-  public DefaultProductService(
-      ProductRepository productRepository,
-      UserRepository userRepository,
-      BiddingService biddingService,
-      NotificationService notificationService) {
-    this.userRepository = userRepository;
-    this.productRepository = productRepository;
-    this.biddingService = biddingService;
-    this.notificationService = notificationService;
-  }
+  private final ApplicationEventPublisher publisher;
 
   @Override
   public ProductCreateResponse create(ProductCreateRequest productCreateRequest, Long userId) {
@@ -96,24 +87,33 @@ public class DefaultProductService implements ProductService {
   public void executeClosingProduct(Product product) {
     Assert.notNull(product, "Product must be provided");
 
-    for (Product product : products) {
-      Biddings biddings = new Biddings(product.getBiddings());
-      User winner = biddings.selectWinner();
-      Long winningPrice =
-          winner == null ? null : biddings.selectWinningPrice(product.getMinimumPrice());
-      product.finish(winningPrice);
+    User winner = product.finish();
 
-      notificationService.create(product.getWriter(), NotificationType.END_PRODUCT_FOR_WRITER,
-                                 product);
+    if (winner == null) {
+      publisher.publishEvent(NotificationCreateEvent.builder()
+                                                    .user(product.getWriter())
+                                                    .notificationType(
+                                                        END_PRODUCT_FOR_WRITER_NOT_WITH_WINNER)
+                                                    .product(product));
+    } else {
+      publisher.publishEvent(NotificationCreateEvent.builder()
+                                                    .user(product.getWriter())
+                                                    .notificationType(
+                                                        END_PRODUCT_FOR_WRITER_WITH_WINNER)
+                                                    .product(product));
 
-      if (winner != null) {
-        notificationService.create(winner, NotificationType.END_PRODUCT_FOR_WINNER, product);
-        biddings.getBiddersExceptWinner()
-                .stream()
-                .forEach(bidder -> notificationService.create(bidder,
-                                                              NotificationType.END_PRODUCT_FOR_BIDDER,
-                                                              product));
-      }
+      publisher.publishEvent(NotificationCreateEvent.builder()
+                                                    .user(winner)
+                                                    .notificationType(
+                                                        END_PRODUCT_FOR_WINNER)
+                                                    .product(product));
+      product.getBiddersExceptWinner()
+             .forEach(bidder ->
+                          publisher.publishEvent(NotificationCreateEvent.builder()
+                                                                        .user(bidder)
+                                                                        .notificationType(
+                                                                            END_PRODUCT_FOR_BIDDER)
+                                                                        .product(product)));
     }
   }
 }

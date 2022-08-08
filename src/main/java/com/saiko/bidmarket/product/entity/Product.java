@@ -121,15 +121,40 @@ public class Product extends BaseTime {
     return imageUrls.get(0);
   }
 
-  public void finish(Long winningPrice) {
-    Assert.notNull(winningPrice, "winningPrice must be provided");
+  public User finish() {
+    User winner = selectWinner();
 
     this.progressed = false;
-    setWinningPrice(winningPrice);
+
+    return winner;
   }
 
-  private void setWinningPrice(Long winningPrice) {
-    this.winningPrice = winningPrice;
+  private User selectWinner() {
+    if (biddings.isEmpty()) {
+      return null;
+    }
+
+    Bidding wonBidding = biddings.get(0);
+    wonBidding.win();
+
+    setWinningPrice();
+
+    return wonBidding.getBidder();
+  }
+
+  private void setWinningPrice() {
+    this.winningPrice =
+        biddings.size() == 1 ? (long)minimumPrice : biddings.get(1).getBiddingPrice() + 1000L;
+  }
+
+  public List<User> getBiddersExceptWinner() {
+    List<User> bidders = biddings.stream()
+                                    .map(Bidding::getBidder)
+                                    .collect(Collectors.toList());
+
+    bidders.remove(0);
+
+    return bidders;
   }
 }
 
