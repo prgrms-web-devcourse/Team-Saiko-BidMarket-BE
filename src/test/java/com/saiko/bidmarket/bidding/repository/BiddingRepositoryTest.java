@@ -4,6 +4,7 @@ import static com.saiko.bidmarket.common.Sort.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,7 +21,9 @@ import org.springframework.test.context.ActiveProfiles;
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
+import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.common.config.QueryDslConfig;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -130,6 +133,105 @@ public class BiddingRepositoryTest {
         // then
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(bidding);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findByProductAndBidder 메소드는")
+  class DescribeFindByProductAndBidderMethod {
+
+    @Nested
+    @DisplayName("BiddingPriceFindingRepoDto 가 null 이라면")
+    class ContextNullBiddingPriceFindingRepoDto {
+
+      @Test
+      @DisplayName("InvalidDataAccessApiUsageException 에러를 발생시킨다")
+      void ItThrowsInvalidDataAccessApiUsageException() {
+        //when, then
+        assertThatThrownBy(() -> biddingRepository.findByBidderIdAndProductId(null))
+            .isInstanceOf(InvalidDataAccessApiUsageException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("조회 결과가 없는 Dto라면")
+    class ContextNotFoundDto {
+
+      @Test
+      @DisplayName("Optional.empty()를 반환한다")
+      void ItThrowsInvalidDataAccessApiUsageException() {
+        //given
+        biddingRepository.deleteAll();
+
+        BiddingPriceFindingRepoDto findingRepoDto = BiddingPriceFindingRepoDto
+            .builder()
+            .bidderId(UnsignedLong.valueOf(1L))
+            .productId(UnsignedLong.valueOf(1L))
+            .build();
+
+        //when
+        Optional<Bidding> actual = biddingRepository.findByBidderIdAndProductId(findingRepoDto);
+
+        // then
+        assertThat(actual).isEmpty();
+      }
+    }
+
+    @Nested
+    @DisplayName("올바른 정보가 넘어온다면")
+    class ContextWithValidData {
+
+      @Test
+      @DisplayName("Bidding이 포함된 Optional 객체를 반환한다.")
+      void itReturnBiddingWithOptional() {
+        // given
+        Group group = groupRepository.findById(1L).get();
+
+        User writer = userRepository.save(User.builder()
+                                              .username("제로")
+                                              .profileImage("image")
+                                              .provider("google")
+                                              .providerId("123")
+                                              .group(group)
+                                              .build());
+
+        User bidder = userRepository.save(User.builder()
+                                              .username("레이")
+                                              .profileImage("image")
+                                              .provider("google")
+                                              .providerId("321")
+                                              .group(group)
+                                              .build());
+
+        Product product = productRepository.save(Product.builder()
+                                                        .title("노트북 팝니다1")
+                                                        .description("싸요")
+                                                        .category(Category.DIGITAL_DEVICE)
+                                                        .minimumPrice(10000)
+                                                        .images(null)
+                                                        .location(null)
+                                                        .writer(writer)
+                                                        .build());
+
+        Bidding bidding = biddingRepository.save(Bidding.builder()
+                                                        .bidder(bidder)
+                                                        .product(product)
+                                                        .biddingPrice(BiddingPrice.valueOf(10000))
+                                                        .build());
+
+        BiddingPriceFindingRepoDto findingRepoDto = BiddingPriceFindingRepoDto
+            .builder()
+            .productId(UnsignedLong.valueOf(product.getId()))
+            .bidderId(UnsignedLong.valueOf(bidder.getId()))
+            .build();
+
+        // when
+        Optional<Bidding> actual = biddingRepository.findByBidderIdAndProductId(findingRepoDto);
+
+        // then
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.get()).isEqualTo(bidding);
       }
     }
   }
