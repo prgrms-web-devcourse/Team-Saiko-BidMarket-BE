@@ -1,4 +1,4 @@
-package com.saiko.bidmarket.bidding.respository;
+package com.saiko.bidmarket.bidding.repository;
 
 import static com.saiko.bidmarket.bidding.entity.QBidding.*;
 import static com.saiko.bidmarket.common.Sort.*;

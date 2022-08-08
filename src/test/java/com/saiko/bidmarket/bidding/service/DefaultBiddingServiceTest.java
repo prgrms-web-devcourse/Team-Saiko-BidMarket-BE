@@ -17,7 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
-import com.saiko.bidmarket.bidding.respository.BiddingRepository;
+import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
