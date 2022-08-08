@@ -102,7 +102,7 @@ class ChatWebSocketControllerTest {
     handshakeHeaders = new WebSocketHttpHeaders();
     connectHeaders = new StompHeaders();
     session = stompClient.connect(WS_URI, handshakeHeaders, connectHeaders,
-                                  getStompSessionHandlerAdapter()).get(1, SECONDS);
+                                  getStompSessionHandlerAdapter()).get(10, SECONDS);
   }
 
   private User getUser(long userId) {
@@ -171,7 +171,7 @@ class ChatWebSocketControllerTest {
         session.send(pubUrl, new ChatSendMessage(userId, "Test content"));
 
         //then
-        ChatPublishMessage publishMessage = (ChatPublishMessage)blockingQueue.poll(1, SECONDS);
+        ChatPublishMessage publishMessage = (ChatPublishMessage)blockingQueue.poll(10, SECONDS);
         assertNotNull(publishMessage);
       }
     }
@@ -192,7 +192,7 @@ class ChatWebSocketControllerTest {
         session.send(pubUrl, new ChatSendMessage(userId, "Test content"));
 
         //then
-        sleep(100);
+        sleep(1000);
         verify(chatWebSocketController).handleException(any(RuntimeException.class));
 
       }
@@ -214,7 +214,7 @@ class ChatWebSocketControllerTest {
         session.send(pubUrl, new ChatSendMessage(1L, content));
 
         //then
-        sleep(100);
+        sleep(1000);
         verify(chatWebSocketController).handleException(any(RuntimeException.class));
       }
     }
