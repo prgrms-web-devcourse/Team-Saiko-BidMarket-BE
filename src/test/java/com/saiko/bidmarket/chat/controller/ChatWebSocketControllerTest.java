@@ -9,6 +9,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -47,6 +48,8 @@ import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.service.ChatMessageService;
 import com.saiko.bidmarket.chat.service.dto.ChatMessageCreateParam;
+import com.saiko.bidmarket.product.Category;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 
@@ -115,10 +118,21 @@ class ChatWebSocketControllerTest {
     return user;
   }
 
+  private Product getProduct() {
+    return Product.builder()
+                  .title("test")
+                  .description("test")
+                  .images(Collections.emptyList())
+                  .writer(getUser(1L))
+                  .category(Category.BEAUTY)
+                  .build();
+  }
+
   private ChatRoom getChatRoom(long roomId) {
     ChatRoom chatRoom = ChatRoom.builder()
                                 .seller(getUser(1L))
                                 .winner(getUser(2L))
+                                .product(getProduct())
                                 .build();
     ReflectionTestUtils.setField(chatRoom, "id", roomId);
     return chatRoom;

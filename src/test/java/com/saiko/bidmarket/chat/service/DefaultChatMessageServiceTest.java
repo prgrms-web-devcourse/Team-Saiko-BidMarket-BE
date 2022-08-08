@@ -3,6 +3,7 @@ package com.saiko.bidmarket.chat.service;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,8 @@ import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatMessageRepository;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.chat.service.dto.ChatMessageCreateParam;
+import com.saiko.bidmarket.product.Category;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
@@ -53,14 +56,29 @@ class DefaultChatMessageServiceTest {
     return user;
   }
 
-  private ChatRoom getTestChatRoom(long roomId, long user1, long user2) {
+  private ChatRoom getTestChatRoom(long roomId, long user1, long user2, long productId) {
     ChatRoom chatRoom = ChatRoom.builder()
                                 .winner(getTestUser(user1))
                                 .seller(getTestUser(user2))
+                                .product(getTestProduct(productId, user2))
                                 .build();
 
     ReflectionTestUtils.setField(chatRoom, "id", roomId);
     return chatRoom;
+  }
+
+  private Product getTestProduct(long productId, long userId) {
+    Product product = Product.builder()
+                             .title("test")
+                             .images(Collections.emptyList())
+                             .writer(getTestUser(userId))
+                             .description("test")
+                             .minimumPrice(1000)
+                             .category(Category.BEAUTY)
+                             .build();
+
+    ReflectionTestUtils.setField(product, "id", productId);
+    return product;
   }
 
   @Nested
@@ -92,13 +110,14 @@ class DefaultChatMessageServiceTest {
         long roomId = 1L;
         long senderUserId = 1L;
         long receiverUserId = 2L;
+        long productId = 1L;
         String content = "Test content";
 
         ChatSendMessage chatSendMessage = new ChatSendMessage(senderUserId, content);
         ChatMessageCreateParam createParam = ChatMessageCreateParam.of(roomId, chatSendMessage);
 
         given(chatRoomRepository.findById(anyLong()))
-            .willReturn(Optional.of(getTestChatRoom(roomId, senderUserId, receiverUserId)));
+            .willReturn(Optional.of(getTestChatRoom(roomId, senderUserId, receiverUserId, productId)));
 
         given(userRepository.findById(anyLong()))
             .willReturn(Optional.of(getTestUser(senderUserId)));

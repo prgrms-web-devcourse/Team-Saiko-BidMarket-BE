@@ -15,7 +15,8 @@ create table `chat_room`
 (
     id         bigint not null,
     seller_id  bigint not null,
-    winner_id   bigint not null,
+    winner_id  bigint not null,
+    product_id bigint not null,
     created_at timestamp,
     updated_at timestamp
 );

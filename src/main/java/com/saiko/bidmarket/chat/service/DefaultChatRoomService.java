@@ -7,6 +7,8 @@ import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.entity.Product;
+import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultChatRoomService implements ChatRoomService {
 
   private final ChatRoomRepository chatRoomRepository;
+  private final ProductRepository productRepository;
   private final UserRepository userRepository;
 
   @Override
@@ -33,9 +36,14 @@ public class DefaultChatRoomService implements ChatRoomService {
                                 .orElseThrow(
                                     () -> new NotFoundException("Winner not exists"));
 
+    Product product = productRepository.findById(createParam.getProductId())
+                                       .orElseThrow(
+                                           () -> new NotFoundException("Product not exists"));
+
     ChatRoom chatRoom = ChatRoom.builder()
                                 .seller(seller)
                                 .winner(winner)
+                                .product(product)
                                 .build();
 
     return chatRoomRepository.save(chatRoom).getId();
