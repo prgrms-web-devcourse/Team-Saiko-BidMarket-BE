@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
+import com.saiko.bidmarket.bidding.service.dto.BiddingPriceFindingDto;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
@@ -47,5 +51,26 @@ public class BiddingApiController {
     UnsignedLong createdBiddingId = biddingService.create(createDto);
 
     return new BiddingCreateResponse(createdBiddingId);
+  }
+
+  @GetMapping("products/{productId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BiddingPriceResponse findBiddingPriceByUserIdAndProductId(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @PathVariable("productId") long pathProductId
+  ) {
+    UnsignedLong bidderId = UnsignedLong.valueOf(authentication.getUserId());
+    UnsignedLong productId = UnsignedLong.valueOf(pathProductId);
+
+    BiddingPriceFindingDto findingDto = BiddingPriceFindingDto.builder()
+                                                              .bidderId(bidderId)
+                                                              .productId(productId)
+                                                              .build();
+
+    BiddingPrice biddingPrice = biddingService.findBiddingPriceByProductIdAndUserId(findingDto);
+
+    return BiddingPriceResponse.builder()
+                               .biddingPrice(biddingPrice)
+                               .build();
   }
 }
