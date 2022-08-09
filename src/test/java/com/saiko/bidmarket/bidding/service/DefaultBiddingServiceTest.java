@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
+import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
+import com.saiko.bidmarket.bidding.service.dto.BiddingPriceFindingDto;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
@@ -42,32 +44,34 @@ class DefaultBiddingServiceTest {
   @Mock
   private ProductRepository productRepository;
 
-  private static User bidder;
+  private static User bidder = new User("test",
+                                        "imageURl",
+                                        "provider",
+                                        "providerId",
+                                        new Group());
+  private static long bidderId = 1L;
 
-  private static User writer;
+  private static User writer = new User("test",
+                                        "imageURl",
+                                        "provider",
+                                        "providerId",
+                                        new Group());
 
-  private static Product product;
+  private static long writerId = 1L;
 
+  private static Product product = Product.builder()
+                                          .title("title")
+                                          .description("description")
+                                          .writer(writer)
+                                          .build();
 
-  @BeforeEach
-  void setUpDomain() {
-    bidder = new User("test",
-                      "imageURl",
-                      "provider",
-                      "providerId",
-                      new Group());
+  private static long productId = 1L;
 
-    writer = new User("test",
-                      "imageURl",
-                      "provider",
-                      "providerId",
-                      new Group());
-
-    product = Product.builder()
-                     .title("title")
-                     .description("description")
-                     .writer(writer)
-                     .build();
+  @BeforeAll
+  static void setUpDomain() {
+    ReflectionTestUtils.setField(bidder, "id", bidderId);
+    ReflectionTestUtils.setField(writer, "id", writerId);
+    ReflectionTestUtils.setField(product, "id", productId);
   }
 
   @Nested
@@ -100,8 +104,8 @@ class DefaultBiddingServiceTest {
       void ItThrowsNotFoundException() {
         // given
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
-        UnsignedLong productId = UnsignedLong.valueOf(1);
-        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        UnsignedLong productId = UnsignedLong.valueOf(product.getId());
+        UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -120,15 +124,15 @@ class DefaultBiddingServiceTest {
 
     @Nested
     @DisplayName("해당 상품의 작성자와 비더가 같다면")
-    class ContextProductWriterAndBidderSame{
+    class ContextProductWriterAndBidderSame {
 
       @Test
       @DisplayName("IllegalArgumentException을 발생시킨다.")
       void ItThrowsIllegalArgumentException() {
         // given
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
-        UnsignedLong productId = UnsignedLong.valueOf(1);
-        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        UnsignedLong productId = UnsignedLong.valueOf(product.getId());
+        UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -156,8 +160,8 @@ class DefaultBiddingServiceTest {
       void ItThrowsIllegalArgumentException() {
         // given
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
-        UnsignedLong productId = UnsignedLong.valueOf(1);
-        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        UnsignedLong productId = UnsignedLong.valueOf(product.getId());
+        UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -186,8 +190,8 @@ class DefaultBiddingServiceTest {
         // given
         long priceValue = 1000L;
         BiddingPrice biddingPrice = BiddingPrice.valueOf(priceValue);
-        UnsignedLong productId = UnsignedLong.valueOf(1);
-        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        UnsignedLong productId = UnsignedLong.valueOf(product.getId());
+        UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -216,8 +220,8 @@ class DefaultBiddingServiceTest {
       void ItThrowsNotFoundException() {
         // given
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
-        UnsignedLong productId = UnsignedLong.valueOf(1);
-        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        UnsignedLong productId = UnsignedLong.valueOf(product.getId());
+        UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -242,8 +246,8 @@ class DefaultBiddingServiceTest {
       void ItThrowsNotFoundException() {
         // given
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
-        UnsignedLong productId = UnsignedLong.valueOf(1);
-        UnsignedLong bidderId = UnsignedLong.valueOf(1);
+        UnsignedLong productId = UnsignedLong.valueOf(product.getId());
+        UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
         BiddingCreateDto createDto = BiddingCreateDto.builder()
                                                      .biddingPrice(biddingPrice)
                                                      .bidderId(bidderId)
@@ -256,6 +260,7 @@ class DefaultBiddingServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
 
         Bidding bidding = new Bidding(biddingPrice, bidder, product);
+
         long expectBiddingId = 1L;
         ReflectionTestUtils.setField(bidding, "id", expectBiddingId);
 
@@ -271,5 +276,88 @@ class DefaultBiddingServiceTest {
 
     }
 
+  }
+
+  @Nested
+  @DisplayName("findBiddingPriceByProductIdAndUserId 메소드는")
+  class DescribeFindBiddingPriceByProductIdAndUserIdMethod {
+
+    @Nested
+    @DisplayName("Dto가 Null이라면")
+    class ContextNullDto {
+
+      @Test
+      @DisplayName("IllegalArgumentException을 던진다")
+      void ItThrowsIllegalArgumentException() {
+        // given
+        BiddingPriceFindingDto dto = null;
+
+        // when
+        // then
+        assertThatThrownBy(() -> biddingService.findBiddingPriceByProductIdAndUserId(dto))
+            .isInstanceOf(IllegalArgumentException.class);
+
+      }
+    }
+
+    @Nested
+    @DisplayName("bidding를 찾을 수 없다면")
+    class ContextNotFoundBidding {
+
+      @Test
+      @DisplayName("NotFoundException을 던진다")
+      void ItThrowsNotFoundException() {
+        // given
+        BiddingPriceFindingDto dto = BiddingPriceFindingDto.builder()
+                                                           .bidderId(UnsignedLong.valueOf(bidderId))
+                                                           .productId(
+                                                               UnsignedLong.valueOf(productId))
+                                                           .build();
+
+        given(biddingRepository.findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class)))
+            .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> biddingService.findBiddingPriceByProductIdAndUserId(dto))
+            .isInstanceOf(NotFoundException.class);
+
+      }
+    }
+
+    @Nested
+    @DisplayName("정상적인 요청이 들어오면")
+    class ContextValidRequest {
+
+      @Test
+      @DisplayName("BiddingPrice를 반환한다")
+      void ItReturn() {
+        // given
+        BiddingPriceFindingDto dto = BiddingPriceFindingDto.builder()
+                                                           .bidderId(UnsignedLong.valueOf(bidderId))
+                                                           .productId(
+                                                               UnsignedLong.valueOf(productId))
+                                                           .build();
+
+        BiddingPrice expectedBiddingPrice = BiddingPrice.valueOf(10000L);
+        Bidding bidding = Bidding.builder()
+                                 .product(product)
+                                 .bidder(bidder)
+                                 .biddingPrice(expectedBiddingPrice)
+                                 .build();
+        long biddingId = 1L;
+        ReflectionTestUtils.setField(bidding, "id", biddingId);
+
+        given(biddingRepository.findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class)))
+            .willReturn(Optional.of(bidding));
+
+        // when
+        BiddingPrice actualBiddingPrice = biddingService.findBiddingPriceByProductIdAndUserId(dto);
+
+        // then
+        assertThat(actualBiddingPrice).isEqualTo(expectedBiddingPrice);
+
+      }
+    }
   }
 }
