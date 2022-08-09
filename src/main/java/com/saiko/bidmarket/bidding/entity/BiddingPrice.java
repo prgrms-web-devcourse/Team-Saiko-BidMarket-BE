@@ -1,5 +1,7 @@
 package com.saiko.bidmarket.bidding.entity;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -11,6 +13,7 @@ public class BiddingPrice {
 
   private static final long UNIT_AMOUNT = 100L;
 
+  @JsonValue()
   private final long value;
 
   private BiddingPrice(long value) {
