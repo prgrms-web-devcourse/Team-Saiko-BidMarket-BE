@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepo
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -172,6 +173,7 @@ public class WebSecurityConfig {
          * 예외처리 핸들러
          */
         .exceptionHandling()
+        .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
         .accessDeniedHandler(accessDeniedHandler())
         .and()
         /**
