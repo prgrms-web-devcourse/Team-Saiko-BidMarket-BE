@@ -1,11 +1,15 @@
 package com.saiko.bidmarket.chat.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
+import com.saiko.bidmarket.chat.service.dto.ChatRoomSelectParam;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -47,5 +51,10 @@ public class DefaultChatRoomService implements ChatRoomService {
                                 .build();
 
     return chatRoomRepository.save(chatRoom).getId();
+  }
+
+  @Override
+  public List<ChatRoomSelectResponse> findAll(ChatRoomSelectParam selectParam) {
+    return null;
   }
 }
