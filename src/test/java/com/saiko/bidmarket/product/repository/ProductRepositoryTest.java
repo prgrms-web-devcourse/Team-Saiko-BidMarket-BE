@@ -17,8 +17,8 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
+import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
@@ -610,6 +610,46 @@ public class ProductRepositoryTest {
         //when, then
         assertThatThrownBy(() -> productRepository.findAllUserProduct(null))
             .isInstanceOf(InvalidDataAccessApiUsageException.class);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findByIdJoinWithUser 메서드는")
+  class DescribeFindByIdJoinWithUser {
+    @Nested
+    @DisplayName("정상적인 값이 들어오면")
+    class ContextValidData {
+
+      @Test
+      @DisplayName("아이디에 해당하는 상품을 유저와 조인하여 반환한다")
+      void itReturnProduct() {
+        // given
+
+        Group group = groupRepository.findById(1L).get();
+
+        User writer = new User("박동철", "image", "google", "1234", group);
+        writer = userRepository.save(writer);
+
+        Product product = productRepository.save(
+            Product.builder()
+                   .title("노트북 팝니다")
+                   .description("싸요")
+                   .category(Category.DIGITAL_DEVICE)
+                   .minimumPrice(10000)
+                   .images(null)
+                   .location(null)
+                   .writer(writer)
+                   .build()
+        );
+
+        // when
+        Product foundProduct = productRepository.findByIdJoinWithUser(
+            product.getId()).get();
+
+        // then
+        assertThat(foundProduct).isEqualTo(product);
+        assertThat(foundProduct.getWriter().getClass()).isEqualTo(User.class);
       }
     }
   }

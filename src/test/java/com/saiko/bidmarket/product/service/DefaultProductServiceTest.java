@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,16 +19,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
+import com.saiko.bidmarket.bidding.repository.BiddingRepository;
+import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
+import com.saiko.bidmarket.chat.entity.ChatRoom;
+import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.notification.event.NotificationCreateHandler;
 import com.saiko.bidmarket.product.Category;
+import com.saiko.bidmarket.product.Role;
+import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
@@ -46,13 +51,86 @@ class DefaultProductServiceTest {
   ProductRepository productRepository;
 
   @Mock
+  ChatRoomRepository chatRoomRepository;
+
+  @Mock
   UserRepository userRepository;
+
+  @Mock
+  BiddingRepository biddingRepository;
 
   @Mock
   ApplicationEventPublisher publisher;
 
   @InjectMocks
   DefaultProductService productService;
+
+  private static User writer = User.builder()
+                                   .username("레이")
+                                   .profileImage("image")
+                                   .provider("google")
+                                   .providerId("123")
+                                   .group(new Group())
+                                   .build();
+  private static Product product = Product.builder()
+                                          .title("책 팔아요")
+                                          .writer(writer)
+                                          .description("깨끗해요")
+                                          .images(List.of("image"))
+                                          .category(CHILDREN_BOOK)
+                                          .minimumPrice(10000)
+                                          .location("직거래 안해요")
+                                          .build();
+  private static User successfulBidder = User.builder()
+                                             .username("제로")
+                                             .profileImage("image")
+                                             .provider("google")
+                                             .providerId("123")
+                                             .group(new Group())
+                                             .build();
+  private static User failedBidder = User.builder()
+                                         .username("레이")
+                                         .profileImage("image")
+                                         .provider("google")
+                                         .providerId("1234")
+                                         .group(new Group())
+                                         .build();
+
+  private static Bidding successfulBidding = Bidding.builder()
+                                                    .bidder(successfulBidder)
+                                                    .product(product)
+                                                    .biddingPrice(BiddingPrice.valueOf(10100))
+                                                    .build();
+  private static Bidding failedBidding = Bidding.builder()
+                                                .bidder(failedBidder)
+                                                .product(product)
+                                                .biddingPrice(BiddingPrice.valueOf(10000))
+                                                .build();
+  private static ChatRoom chatRoom = ChatRoom.builder()
+                                             .winner(successfulBidder)
+                                             .seller(writer)
+                                             .product(product)
+                                             .build();
+
+  private static long writerId = 1;
+  private static long productId = 1;
+  private static long successfulBidderId = 2;
+  private static long failedBidderId = 3;
+  private static long successfulBiddingId = 1;
+  private static long failedBiddingId = 2;
+  private static long chatRoomId = 1;
+
+  @BeforeAll
+  static void setupDomain() {
+    ReflectionTestUtils.setField(writer, "id", writerId);
+    ReflectionTestUtils.setField(product, "id", productId);
+    ReflectionTestUtils.setField(successfulBidder, "id", successfulBidderId);
+    ReflectionTestUtils.setField(failedBidder, "id", failedBidderId);
+    ReflectionTestUtils.setField(successfulBidding, "id", successfulBiddingId);
+    ReflectionTestUtils.setField(failedBidding, "id", failedBiddingId);
+    ReflectionTestUtils.setField(chatRoom, "id", chatRoomId);
+    product.finish();
+  }
 
   @Nested
   @DisplayName("create 메서드는")
@@ -348,12 +426,12 @@ class DefaultProductServiceTest {
                           .group(new Group())
                           .build();
         User bidderOne = User.builder()
-                          .username("bidderOne")
-                          .profileImage("imageURL")
-                          .provider("provider")
-                          .providerId("providerId")
-                          .group(new Group())
-                          .build();
+                             .username("bidderOne")
+                             .profileImage("imageURL")
+                             .provider("provider")
+                             .providerId("providerId")
+                             .group(new Group())
+                             .build();
         User bidderTwo = User.builder()
                              .username("bidderTwo")
                              .profileImage("imageURL")
@@ -386,6 +464,230 @@ class DefaultProductServiceTest {
 
         //then
         verify(publisher, times(3)).publishEvent(any(Object.class));
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("getBiddingResult 메서드는")
+  class DescribeGetBiddingResult {
+
+    @Nested
+    @DisplayName("productId 가 null 이라면")
+    class ContextNullProductId {
+
+      @Test
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> productService.getBiddingResult(null, UnsignedLong.valueOf(1)))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("userId 가 null 이라면")
+    class ContextNullUserId {
+
+      @Test
+      @DisplayName("IllegalArgumentException 예외를 던진다")
+      void ItThrowsIllegalArgumentException() {
+        //when, then
+        assertThatThrownBy(() -> productService.getBiddingResult(UnsignedLong.valueOf(1), null))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("id에 해당하는 상품이 없다면")
+    class ContextNotFoundProductById {
+
+      @Test
+      @DisplayName("NotFoundException을 발생시킨다.")
+      void ItThrowsNotFoundException() {
+        // given
+        given(productRepository.findByIdJoinWithUser(1))
+            .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(
+            () -> productService.getBiddingResult(UnsignedLong.valueOf(1), UnsignedLong.valueOf(1)))
+            .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("채팅방을 찾을 수 없다면")
+    class ContextNotFoundChatRoom {
+
+      @Test
+      @DisplayName("NotFoundException을 발생시킨다.")
+      void ItThrowsNotFoundException() {
+        // given
+        given(productRepository.findByIdJoinWithUser(anyLong()))
+            .willReturn(Optional.of(product));
+        given(chatRoomRepository.findByProduct_IdAndSeller_Id(anyLong(), anyLong()))
+            .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(
+            () -> productService.getBiddingResult(UnsignedLong.valueOf(product.getId()),
+                                                  UnsignedLong.valueOf(writer.getId())))
+            .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("판매자이고 낙찰에 성공한다면")
+    class ContextSuccessfulSeller {
+
+      @Test
+      @DisplayName("비딩 결과를 반환한다")
+      void ItReturnBiddingResult() {
+        // given
+        given(productRepository.findByIdJoinWithUser(anyLong()))
+            .willReturn(Optional.of(product));
+        given(chatRoomRepository.findByProduct_IdAndSeller_Id(anyLong(), anyLong()))
+            .willReturn(Optional.of(chatRoom));
+
+        // when
+        BiddingResultResponse biddingResult = productService.getBiddingResult(
+            UnsignedLong.valueOf(product.getId()), UnsignedLong.valueOf(writer.getId()));
+
+        // then
+        verify(productRepository).findByIdJoinWithUser(anyLong());
+        verify(chatRoomRepository).findByProduct_IdAndSeller_Id(anyLong(), anyLong());
+        assertThat(biddingResult.isBiddingSucceed()).isEqualTo(true);
+        assertThat(biddingResult.getChatRoomId().getValue()).isEqualTo(chatRoom.getId());
+        assertThat(biddingResult.getRole()).isEqualTo(Role.SELLER);
+      }
+    }
+
+    @Nested
+    @DisplayName("판매자이고 상품이 낙찰에 실패한다면")
+    class ContextFailedSeller {
+
+      @Test
+      @DisplayName("비딩 결과를 반환한다")
+      void ItReturnBiddingResult() {
+        // given
+        User writer = User.builder()
+                          .username("레이")
+                          .profileImage("image")
+                          .provider("google")
+                          .providerId("123")
+                          .group(new Group())
+                          .build();
+        ReflectionTestUtils.setField(writer, "id", 1l);
+
+        Product product = Product.builder()
+                                 .title("책 팔아요")
+                                 .writer(writer)
+                                 .description("깨끗해요")
+                                 .images(List.of("image"))
+                                 .category(CHILDREN_BOOK)
+                                 .minimumPrice(10000)
+                                 .location("직거래 안해요")
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1l);
+
+        given(productRepository.findByIdJoinWithUser(anyLong()))
+            .willReturn(Optional.of(product));
+        given(chatRoomRepository.findByProduct_IdAndSeller_Id(anyLong(), anyLong()))
+            .willReturn(Optional.empty());
+
+        // when
+        BiddingResultResponse biddingResult = productService.getBiddingResult(UnsignedLong.valueOf(
+            product.getId()), UnsignedLong.valueOf(writer.getId()));
+
+        // then
+        assertThat(biddingResult.isBiddingSucceed()).isEqualTo(false);
+        assertThat(biddingResult.getChatRoomId()).isEqualTo(null);
+        assertThat(biddingResult.getRole()).isEqualTo(Role.SELLER);
+      }
+    }
+
+    @Nested
+    @DisplayName("입찰자이고 낙찰에 성공한다면")
+    class ContextSuccessfulBidder {
+
+      @Test
+      @DisplayName("비딩 결과를 반환한다")
+      void ItReturnBiddingResult() {
+        // given
+        given(productRepository.findByIdJoinWithUser(anyLong()))
+            .willReturn(Optional.of(product));
+        given(chatRoomRepository.findByProduct_IdAndSeller_Id(anyLong(), anyLong()))
+            .willReturn(Optional.of(chatRoom));
+        given(biddingRepository.findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class)))
+            .willReturn(Optional.of(successfulBidding));
+
+        // when
+        BiddingResultResponse biddingResult = productService.getBiddingResult(UnsignedLong.valueOf(
+                                                                                  product.getId()),
+                                                                              UnsignedLong.valueOf(
+                                                                                  successfulBidder.getId()));
+
+        // then
+        verify(productRepository).findByIdJoinWithUser(anyLong());
+        verify(chatRoomRepository).findByProduct_IdAndSeller_Id(anyLong(), anyLong());
+        verify(biddingRepository).findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class));
+        assertThat(biddingResult.isBiddingSucceed()).isEqualTo(true);
+        assertThat(biddingResult.getChatRoomId().getValue()).isEqualTo(chatRoom.getId());
+        assertThat(biddingResult.getRole()).isEqualTo(Role.BIDDER);
+      }
+    }
+
+    @Nested
+    @DisplayName("입찰자이고 낙찰에 실패한다면")
+    class ContextFailedBidder {
+
+      @Test
+      @DisplayName("비딩 결과를 반환한다")
+      void ItReturnBiddingResult() {
+        // given
+        given(productRepository.findByIdJoinWithUser(anyLong()))
+            .willReturn(Optional.of(product));
+        given(chatRoomRepository.findByProduct_IdAndSeller_Id(anyLong(), anyLong()))
+            .willReturn(Optional.of(chatRoom));
+        given(biddingRepository.findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class)))
+            .willReturn(Optional.of(failedBidding));
+
+        // when
+        BiddingResultResponse biddingResult = productService.getBiddingResult(
+            UnsignedLong.valueOf(product.getId()),
+            UnsignedLong.valueOf(
+                failedBidder.getId()));
+
+        // then
+        assertThat(biddingResult.isBiddingSucceed()).isEqualTo(false);
+        assertThat(biddingResult.getChatRoomId()).isEqualTo(null);
+        assertThat(biddingResult.getRole()).isEqualTo(Role.BIDDER);
+      }
+    }
+
+    @Nested
+    @DisplayName("입찰 한 적 없는 사용자라면")
+    class ContextNotBidder {
+      @Test
+      @DisplayName("NotFoundException을 발생시킨다.")
+      void ItThrowsNotFoundException() {
+        // given
+        given(productRepository.findByIdJoinWithUser(anyLong()))
+            .willReturn(Optional.of(product));
+        given(chatRoomRepository.findByProduct_IdAndSeller_Id(anyLong(), anyLong()))
+            .willReturn(Optional.empty());
+        given(biddingRepository.findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class)))
+            .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(
+            () -> productService.getBiddingResult(UnsignedLong.valueOf(product.getId()),
+                                                  UnsignedLong.valueOf(2)))
+            .isInstanceOf(NotFoundException.class);
       }
     }
   }
