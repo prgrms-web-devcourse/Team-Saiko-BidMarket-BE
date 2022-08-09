@@ -1,7 +1,8 @@
 package com.saiko.bidmarket.notification.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
+import com.saiko.bidmarket.notification.NotificationType;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
@@ -30,8 +32,8 @@ public class Notification extends BaseTime {
   private Long id;
 
   @NotNull
-  @Column(length = 100)
-  private String content;
+  @Enumerated(EnumType.STRING)
+  private NotificationType type;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id")
@@ -42,12 +44,12 @@ public class Notification extends BaseTime {
   private User user;
 
   @Builder
-  public Notification(String content, Product product, User user) {
-    Assert.hasText(content, "Content must be provided");
+  public Notification(NotificationType type, Product product, User user) {
+    Assert.notNull(type, "Type must be provided");
     Assert.notNull(product, "Product must be provided");
     Assert.notNull(user, "User must be provided");
 
-    this.content = content;
+    this.type = type;
     this.product = product;
     this.user = user;
   }
