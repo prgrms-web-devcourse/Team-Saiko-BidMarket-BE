@@ -100,7 +100,7 @@ public class Product extends BaseTime {
   }
 
   public boolean hasWinner() {
-    return this.winningPrice == null ? false : true;
+    return this.winningPrice != null;
   }
 
   public boolean isProductOfUser(long userId) {
