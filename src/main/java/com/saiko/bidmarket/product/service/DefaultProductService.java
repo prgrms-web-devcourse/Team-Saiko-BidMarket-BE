@@ -4,6 +4,7 @@ import static com.saiko.bidmarket.notification.NotificationType.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -11,6 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.bidding.repository.BiddingRepository;
+import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
+import com.saiko.bidmarket.chat.entity.ChatRoom;
+import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.notification.event.NotificationCreateEvent;
@@ -36,6 +42,10 @@ public class DefaultProductService implements ProductService {
   private final ProductRepository productRepository;
 
   private final UserRepository userRepository;
+
+  private final BiddingRepository biddingRepository;
+
+  private final ChatRoomRepository chatRoomRepository;
 
   private final ApplicationEventPublisher publisher;
 
@@ -121,6 +131,62 @@ public class DefaultProductService implements ProductService {
 
   @Override
   public BiddingResultResponse getBiddingResult(UnsignedLong productId, UnsignedLong userId) {
-    return null;
+    Assert.notNull(productId, "ProductId must be provided");
+    Assert.notNull(userId, "UserId must be provided");
+
+    Product product = productRepository.findByIdJoinWithUser(productId.getValue())
+                                       .orElseThrow(() -> new NotFoundException(
+                                           "Product not exist"));
+
+    Optional<ChatRoom> chatRoom = chatRoomRepository.findByProduct_IdAndSeller_Id(
+        product.getId(),
+        product.getWriter()
+               .getId());
+
+    if (isSeller(product, userId.getValue())) {
+      return generateResponseForSeller(product, chatRoom);
+    }
+
+    return generateResponseForBidder(productId, userId, chatRoom);
+  }
+
+  private boolean isSeller(Product product, long userId) {
+    return product.isProductOfUser(userId);
+  }
+
+  private BiddingResultResponse generateResponseForSeller(Product product,
+                                                          Optional<ChatRoom> optionalChatRoom) {
+    if (product.hasWinner()) {
+      ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
+      return BiddingResultResponse.responseForSuccessfulSeller(
+          UnsignedLong.valueOf(chatRoom.getId()));
+    }
+    return BiddingResultResponse.responseForFailedSeller();
+  }
+
+  private BiddingResultResponse generateResponseForBidder(UnsignedLong productId,
+                                                          UnsignedLong userId,
+                                                          Optional<ChatRoom> optionalChatRoom) {
+    Bidding biddingOfUser = findBiddingOfUser(productId, userId);
+    if (biddingOfUser.isWon()) {
+      ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
+      return BiddingResultResponse.responseForSuccessfulBidder(
+          UnsignedLong.valueOf(chatRoom.getId()));
+    }
+    return BiddingResultResponse.responseForFailedBidder();
+  }
+
+  private Bidding findBiddingOfUser(UnsignedLong productId, UnsignedLong userId) {
+    BiddingPriceFindingRepoDto request = BiddingPriceFindingRepoDto.builder()
+                                                                   .bidderId(userId)
+                                                                   .productId(productId)
+                                                                   .build();
+    return biddingRepository.findByBidderIdAndProductId(request)
+                            .orElseThrow(() -> new NotFoundException("Bidding not exist"));
+  }
+
+  private ChatRoom verifyChatRoom(Optional<ChatRoom> optionalChatRoom) {
+    return optionalChatRoom.orElseThrow(
+        () -> new NotFoundException("ChatRoom not exist"));
   }
 }

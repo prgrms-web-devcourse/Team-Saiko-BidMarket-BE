@@ -33,7 +33,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@EqualsAndHashCode(of = { "id" }, callSuper = false)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class Product extends BaseTime {
   public static final int PROGRESSION_PERIOD_OF_BIDDING = 7;
 
@@ -99,6 +99,14 @@ public class Product extends BaseTime {
     this.progressed = true;
   }
 
+  public boolean hasWinner() {
+    return this.winningPrice == null ? false : true;
+  }
+
+  public boolean isProductOfUser(long userId) {
+    return this.writer.isSameUser(userId);
+  }
+
   private List<Image> createImages(List<String> imageUrls) {
     if (imageUrls == null) {
       return new ArrayList<>();
@@ -149,8 +157,8 @@ public class Product extends BaseTime {
 
   public List<User> getBiddersExceptWinner() {
     List<User> bidders = biddings.stream()
-                                    .map(Bidding::getBidder)
-                                    .collect(Collectors.toList());
+                                 .map(Bidding::getBidder)
+                                 .collect(Collectors.toList());
 
     bidders.remove(0);
 

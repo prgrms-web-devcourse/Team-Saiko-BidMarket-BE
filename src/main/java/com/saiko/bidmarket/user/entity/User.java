@@ -66,6 +66,13 @@ public class User extends BaseTime {
     this.group = group;
   }
 
+  public boolean isSameUser(long id) {
+    if (this.id == id) {
+      return true;
+    }
+    return false;
+  }
+
   public void update(String username, String profileImage) {
     Assert.notNull(username, "username must be provide");
     Assert.notNull(profileImage, "profileImage must be provide");
