@@ -129,7 +129,7 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.POST, "/api/v1/bidding").hasAnyRole("USER", "ADMIN")
         .antMatchers(HttpMethod.POST, "/api/v1/reports").hasAnyRole("USER", "ADMIN")
         .antMatchers(HttpMethod.POST, "/api/v1/comments").hasAnyRole("USER", "ADMIN")
-        .antMatchers(HttpMethod.GET, "/api/v1/comments").hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.GET, "/api/v1/products/{productId}/users/{userId}").hasAnyRole("USER", "ADMIN")
         .anyRequest().permitAll()
         .and()
         .cors()
