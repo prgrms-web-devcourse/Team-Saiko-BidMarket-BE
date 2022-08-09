@@ -44,8 +44,10 @@ public class ChatRoomSelectResponse {
   @Builder(access = PRIVATE)
   @RequiredArgsConstructor(access = PRIVATE)
   private static class ProductInfo {
+
     @Positive
     private final long productId;
+
     @NotBlank
     private final String thumbnailImg;
   }
@@ -55,8 +57,10 @@ public class ChatRoomSelectResponse {
   @Builder(access = PRIVATE)
   @RequiredArgsConstructor(access = PRIVATE)
   private static class OpponentUserInfo {
-    @Positive
-    private final long userId;
+
+    @NotBlank
+    private final String username;
+
     @NotBlank
     private final String profileImg;
   }
@@ -76,7 +80,7 @@ public class ChatRoomSelectResponse {
                                          .build();
 
     OpponentUserInfo opponentUserInfo = OpponentUserInfo.builder()
-                                                        .userId(opponent.getId())
+                                                        .username(opponent.getUsername())
                                                         .profileImg(opponent.getProfileImage())
                                                         .build();
 

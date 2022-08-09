@@ -100,8 +100,8 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
                                         .type(JsonFieldType.NUMBER).description("상품 번호"),
                                     fieldWithPath("[].productInfo.thumbnailImg")
                                         .type(JsonFieldType.STRING).description("상품 이미지"),
-                                    fieldWithPath("[].opponentUserInfo.userId")
-                                        .type(JsonFieldType.NUMBER).description("상대방 유저 아이디"),
+                                    fieldWithPath("[].opponentUserInfo.username")
+                                        .type(JsonFieldType.STRING).description("상대방 유저명"),
                                     fieldWithPath("[].opponentUserInfo.profileImg")
                                         .type(JsonFieldType.STRING).description("상대방 유저 프로필"),
                                     fieldWithPath("[].lastMessage")
