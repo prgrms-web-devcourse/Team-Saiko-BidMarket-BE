@@ -27,6 +27,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
@@ -59,6 +60,18 @@ class BiddingApiControllerTest extends ControllerSetUp {
           Arguments.of(0),
           Arguments.of(MIN_AMOUNT - 1),
           Arguments.of(MIN_AMOUNT + (UNIT_AMOUNT / 2))
+      );
+    }
+  }
+
+  static class IdSourceOutOfRange implements ArgumentsProvider {
+
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+      return Stream.of(
+          Arguments.of(Long.MIN_VALUE),
+          Arguments.of(-1),
+          Arguments.of(0)
       );
     }
   }
@@ -168,6 +181,85 @@ class BiddingApiControllerTest extends ControllerSetUp {
                                     fieldWithPath("id")
                                         .type(JsonFieldType.NUMBER)
                                         .description("생성된 비딩의 식별자")
+                                )
+                ));
+
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findBiddingPriceByUserIdAndProductId 함수는")
+  @WithMockCustomLoginUser
+  class DescribeFindBiddingPriceByUserIdAndProductId {
+    private final static String API_PATH = "/products/{productId}";
+
+    @Nested
+    @DisplayName("잘못된 상품 id가 들어올 경우")
+    class ContextInvalidProductId {
+
+      @ParameterizedTest
+      @ArgumentsSource(IdSourceOutOfRange.class)
+      @DisplayName("BadRequest로 응답한다.")
+      void ItResponseWithBadRequest(long productId) throws Exception {
+        // given
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(BASE_URL + API_PATH, productId));
+
+        // then
+        response.andExpect(status().isBadRequest());
+
+      }
+    }
+
+    @Nested
+    @DisplayName("요청자가 비더가 아니라면")
+    class ContextWithNotBidder {
+
+      @Test
+      @DisplayName("NotFound으로 응답한다.")
+      void ItResponseWithNotFound() throws Exception {
+        // given
+        long productId = 1L;
+        given(biddingService.findBiddingPriceByProductIdAndUserId(any()))
+            .willThrow(NotFoundException.class);
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(BASE_URL + API_PATH, productId));
+
+        // then
+        response.andExpect(status().isNotFound());
+
+      }
+    }
+
+    @Nested
+    @DisplayName("정상적인 요청된 경우")
+    class ContextValidRequest {
+
+      @Test
+      @DisplayName("OK와 Bidding price를 응답한다.")
+      void ItResponseWithBiddingPrice() throws Exception {
+        // given
+        long productId = 1L;
+
+        given(biddingService.findBiddingPriceByProductIdAndUserId(any()))
+            .willReturn(BiddingPrice.valueOf(10000L));
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(BASE_URL + API_PATH, productId));
+
+        // then
+        response.andExpect(status().isOk())
+                .andDo(document("find bidding price by product id and bidder Id",
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                    fieldWithPath("biddingPrice")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("요청자가 해당 상품에비딩한 금액")
                                 )
                 ));
 
