@@ -5,8 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
+import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
+import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
+import com.saiko.bidmarket.bidding.service.dto.BiddingPriceFindingDto;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
@@ -46,5 +49,22 @@ public class DefaultBiddingService implements BiddingService {
     Bidding createdBidding = biddingRepository.save(bidding);
 
     return UnsignedLong.valueOf(createdBidding.getId());
+  }
+
+  @Override
+  public BiddingPrice findBiddingPriceByProductIdAndUserId(
+      BiddingPriceFindingDto findingDto
+  ) {
+    Assert.notNull(findingDto, "findingDto must be provided");
+    BiddingPriceFindingRepoDto findingRepoDto = BiddingPriceFindingRepoDto
+        .builder()
+        .bidderId(findingDto.getBidderId())
+        .productId(findingDto.getProductId())
+        .build();
+
+    Bidding bidding = biddingRepository.findByBidderIdAndProductId(findingRepoDto)
+                                       .orElseThrow(NotFoundException::new);
+
+    return BiddingPrice.valueOf(bidding.getBiddingPrice());
   }
 }
