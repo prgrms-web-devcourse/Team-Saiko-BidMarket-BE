@@ -67,10 +67,7 @@ public class User extends BaseTime {
   }
 
   public boolean isSameUser(long id) {
-    if (this.id == id) {
-      return true;
-    }
-    return false;
+    return this.id == id;
   }
 
   public void update(String username, String profileImage) {
