@@ -134,6 +134,25 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
     }
 
     @Nested
+    @DisplayName("offset 이 숫자가 아닐 경우")
+    class ContextWithNonNumberOffset {
+
+      @Test
+      @DisplayName("404를 응답한다")
+      void ItResponse404() throws Exception {
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(REQUEST_URI)
+            .queryParam("offset", "test")
+            .queryParam("limit", "1");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
     @DisplayName("limit 양수가 아닐 경우")
     class ContextWithNonPositiveLimit {
 
@@ -154,6 +173,24 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
       }
     }
 
+    @Nested
+    @DisplayName("limit 이 숫자가 아닐 경우")
+    class ContextWithNonNumberLimit {
+
+      @Test
+      @DisplayName("404를 응답한다")
+      void ItResponse404() throws Exception {
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(REQUEST_URI)
+            .queryParam("offset", "1")
+            .queryParam("limit", "test");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response.andExpect(status().isBadRequest());
+      }
+    }
   }
 
   private User getUser(long userId) {
