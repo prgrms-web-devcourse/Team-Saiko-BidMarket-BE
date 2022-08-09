@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.notification.event.NotificationCreateEvent;
+import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
@@ -115,5 +117,10 @@ public class DefaultProductService implements ProductService {
                                                                             END_PRODUCT_FOR_BIDDER)
                                                                         .product(product)));
     }
+  }
+
+  @Override
+  public BiddingResultResponse getBiddingResult(UnsignedLong productId, UnsignedLong userId) {
+    return null;
   }
 }

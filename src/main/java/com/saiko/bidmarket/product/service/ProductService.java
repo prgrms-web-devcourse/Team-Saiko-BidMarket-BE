@@ -3,6 +3,8 @@ package com.saiko.bidmarket.product.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.saiko.bidmarket.common.entity.UnsignedLong;
+import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
@@ -20,4 +22,6 @@ public interface ProductService {
   List<Product> findAllThatNeedToClose(LocalDateTime nowTime);
 
   void executeClosingProduct(Product product);
+
+  BiddingResultResponse getBiddingResult(UnsignedLong productId, UnsignedLong userId);
 }
