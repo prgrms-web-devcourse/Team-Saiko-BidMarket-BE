@@ -17,34 +17,38 @@ public class BiddingResultResponse {
   private final UnsignedLong chatRoomId;
 
   public static BiddingResultResponse responseForSuccessfulSeller(UnsignedLong chatRoomId) {
-    return BiddingResultResponse.builder()
-                                .role(Role.SELLER)
-                                .biddingSucceed(true)
-                                .chatRoomId(chatRoomId)
-                                .build();
+    return BiddingResultResponse
+        .builder()
+        .role(Role.SELLER)
+        .biddingSucceed(true)
+        .chatRoomId(chatRoomId)
+        .build();
   }
 
   public static BiddingResultResponse responseForFailedSeller() {
-    return BiddingResultResponse.builder()
-                                .role(Role.SELLER)
-                                .biddingSucceed(false)
-                                .chatRoomId(null)
-                                .build();
+    return BiddingResultResponse
+        .builder()
+        .role(Role.SELLER)
+        .biddingSucceed(false)
+        .chatRoomId(null)
+        .build();
   }
 
   public static BiddingResultResponse responseForSuccessfulBidder(UnsignedLong chatRoomId) {
-    return BiddingResultResponse.builder()
-                                .role(Role.BIDDER)
-                                .biddingSucceed(true)
-                                .chatRoomId(chatRoomId)
-                                .build();
+    return BiddingResultResponse
+        .builder()
+        .role(Role.BIDDER)
+        .biddingSucceed(true)
+        .chatRoomId(chatRoomId)
+        .build();
   }
 
   public static BiddingResultResponse responseForFailedBidder() {
-    return BiddingResultResponse.builder()
-                                .role(Role.BIDDER)
-                                .biddingSucceed(false)
-                                .chatRoomId(null)
-                                .build();
+    return BiddingResultResponse
+        .builder()
+        .role(Role.BIDDER)
+        .biddingSucceed(false)
+        .chatRoomId(null)
+        .build();
   }
 }

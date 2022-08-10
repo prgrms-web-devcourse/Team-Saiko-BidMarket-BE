@@ -10,7 +10,10 @@ public class JwtAuthentication {
 
   private final Long userId;
 
-  public JwtAuthentication(String token, Long userId) {
+  public JwtAuthentication(
+      String token,
+      Long userId
+  ) {
     Assert.hasText(token, "token must be provided");
     Assert.isTrue(userId > 0, "userId must be provided");
 

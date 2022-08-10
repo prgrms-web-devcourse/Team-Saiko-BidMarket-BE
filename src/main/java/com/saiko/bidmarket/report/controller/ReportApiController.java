@@ -33,13 +33,14 @@ public class ReportApiController {
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody @Valid ReportCreateRequest createRequest
   ) {
-    ReportCreateDto createDto = ReportCreateDto.builder()
-                                               .requestUserId(
-                                                   UnsignedLong.valueOf(authentication.getUserId()))
-                                               .reason(createRequest.getReason())
-                                               .fromUserId(createRequest.getFromUserId())
-                                               .toUserId(createRequest.getToUserId())
-                                               .build();
+    ReportCreateDto createDto = ReportCreateDto
+        .builder()
+        .requestUserId(
+            UnsignedLong.valueOf(authentication.getUserId()))
+        .reason(createRequest.getReason())
+        .fromUserId(createRequest.getFromUserId())
+        .toUserId(createRequest.getToUserId())
+        .build();
 
     return new ReportCreateResponse(reportService.create(createDto));
   }

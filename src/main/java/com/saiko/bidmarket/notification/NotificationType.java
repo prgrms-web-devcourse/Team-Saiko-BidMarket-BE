@@ -9,7 +9,10 @@ public enum NotificationType {
   private final String type;
   private final String message;
 
-  NotificationType(String type, String message) {
+  NotificationType(
+      String type,
+      String message
+  ) {
     this.type = type;
     this.message = message;
   }

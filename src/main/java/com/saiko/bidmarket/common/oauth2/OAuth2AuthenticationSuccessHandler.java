@@ -31,7 +31,10 @@ public class OAuth2AuthenticationSuccessHandler extends
 
   private final UserService userService;
 
-  public OAuth2AuthenticationSuccessHandler(Jwt jwt, UserService userService) {
+  public OAuth2AuthenticationSuccessHandler(
+      Jwt jwt,
+      UserService userService
+  ) {
 
     this.jwt = jwt;
     this.userService = userService;
@@ -41,7 +44,8 @@ public class OAuth2AuthenticationSuccessHandler extends
   public void onAuthenticationSuccess(
       HttpServletRequest request,
       HttpServletResponse response,
-      Authentication authentication)
+      Authentication authentication
+  )
       throws
       IOException {
 
@@ -52,11 +56,14 @@ public class OAuth2AuthenticationSuccessHandler extends
     }
   }
 
-  protected String determineTargetUrl(HttpServletRequest request,
-                                      HttpServletResponse response,
-                                      Authentication authentication) {
-    Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                                              .map(Cookie::getValue);
+  protected String determineTargetUrl(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      Authentication authentication
+  ) {
+    Optional<String> redirectUri = CookieUtils
+        .getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        .map(Cookie::getValue);
 
     OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken)authentication;
     OAuth2User principal = oauth2Token.getPrincipal();
@@ -68,12 +75,17 @@ public class OAuth2AuthenticationSuccessHandler extends
 
     String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-    return UriComponentsBuilder.fromUriString(targetUrl)
-                               .queryParam(loginSuccessJson)
-                               .build().toUriString();
+    return UriComponentsBuilder
+        .fromUriString(targetUrl)
+        .queryParam(loginSuccessJson)
+        .build()
+        .toUriString();
   }
 
-  private User processUserOAuth2UserJoin(OAuth2User oAuth2User, String registrationId) {
+  private User processUserOAuth2UserJoin(
+      OAuth2User oAuth2User,
+      String registrationId
+  ) {
     return userService.join(oAuth2User, registrationId);
   }
 

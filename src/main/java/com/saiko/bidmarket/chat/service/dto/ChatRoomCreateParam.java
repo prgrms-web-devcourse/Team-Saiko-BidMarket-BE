@@ -21,9 +21,12 @@ public class ChatRoomCreateParam {
   private final long sellerId;
 
   public static ChatRoomCreateParam from(Product product) {
-    return ChatRoomCreateParam.builder()
-                              .productId(product.getId())
-                              .sellerId(product.getWriter().getId())
-                              .build();
+    return ChatRoomCreateParam
+        .builder()
+        .productId(product.getId())
+        .sellerId(product
+                      .getWriter()
+                      .getId())
+        .build();
   }
 }

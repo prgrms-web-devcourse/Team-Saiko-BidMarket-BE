@@ -29,7 +29,8 @@ public class UserBiddingSelectResponse {
     return new UserBiddingSelectResponse(product.getId(), product.getTitle(),
                                          product.getThumbnailImage(),
                                          product.getMinimumPrice(), product.getExpireAt(),
-                                         product.getCreatedAt(), product.getUpdatedAt());
+                                         product.getCreatedAt(), product.getUpdatedAt()
+    );
   }
 
 }

@@ -8,7 +8,10 @@ import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 
 public interface BiddingCustomRepository {
-  List<Bidding> findAllUserBidding(long userId, UserBiddingSelectRequest request);
+  List<Bidding> findAllUserBidding(
+      long userId,
+      UserBiddingSelectRequest request
+  );
 
   Optional<Bidding> findByBidderIdAndProductId(BiddingPriceFindingRepoDto findingRepoDto);
 }

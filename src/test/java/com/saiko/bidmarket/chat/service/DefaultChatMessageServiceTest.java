@@ -44,38 +44,49 @@ class DefaultChatMessageServiceTest {
   DefaultChatMessageService defaultChatMessageService;
 
   private User getTestUser(long userId) {
-    User user = User.builder()
-                    .username("test")
-                    .profileImage("test")
-                    .provider("test")
-                    .providerId("test")
-                    .group(new Group())
-                    .build();
+    User user = User
+        .builder()
+        .username("test")
+        .profileImage("test")
+        .provider("test")
+        .providerId("test")
+        .group(new Group())
+        .build();
 
     ReflectionTestUtils.setField(user, "id", userId);
     return user;
   }
 
-  private ChatRoom getTestChatRoom(long roomId, long user1, long user2, long productId) {
-    ChatRoom chatRoom = ChatRoom.builder()
-                                .winner(getTestUser(user1))
-                                .seller(getTestUser(user2))
-                                .product(getTestProduct(productId, user2))
-                                .build();
+  private ChatRoom getTestChatRoom(
+      long roomId,
+      long user1,
+      long user2,
+      long productId
+  ) {
+    ChatRoom chatRoom = ChatRoom
+        .builder()
+        .winner(getTestUser(user1))
+        .seller(getTestUser(user2))
+        .product(getTestProduct(productId, user2))
+        .build();
 
     ReflectionTestUtils.setField(chatRoom, "id", roomId);
     return chatRoom;
   }
 
-  private Product getTestProduct(long productId, long userId) {
-    Product product = Product.builder()
-                             .title("test")
-                             .images(Collections.emptyList())
-                             .writer(getTestUser(userId))
-                             .description("test")
-                             .minimumPrice(1000)
-                             .category(Category.BEAUTY)
-                             .build();
+  private Product getTestProduct(
+      long productId,
+      long userId
+  ) {
+    Product product = Product
+        .builder()
+        .title("test")
+        .images(Collections.emptyList())
+        .writer(getTestUser(userId))
+        .description("test")
+        .minimumPrice(1000)
+        .category(Category.BEAUTY)
+        .build();
 
     ReflectionTestUtils.setField(product, "id", productId);
     return product;
@@ -117,14 +128,18 @@ class DefaultChatMessageServiceTest {
         ChatMessageCreateParam createParam = ChatMessageCreateParam.of(roomId, chatSendMessage);
 
         given(chatRoomRepository.findById(anyLong()))
-            .willReturn(Optional.of(getTestChatRoom(roomId, senderUserId, receiverUserId, productId)));
+            .willReturn(Optional.of(getTestChatRoom(
+                roomId,
+                senderUserId,
+                receiverUserId,
+                productId
+            )));
 
         given(userRepository.findById(anyLong()))
             .willReturn(Optional.of(getTestUser(senderUserId)));
 
         given(chatMessageRepository.save(any(ChatMessage.class)))
             .willAnswer(methodInvocationMock -> methodInvocationMock.getArguments()[0]);
-
 
         //when
         ChatPublishMessage chatPublishMessage = defaultChatMessageService.create(createParam);

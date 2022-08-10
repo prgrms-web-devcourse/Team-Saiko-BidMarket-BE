@@ -42,11 +42,12 @@ public class BiddingApiController {
     UnsignedLong productId = biddingCreateRequest.getProductId();
     UnsignedLong bidderId = UnsignedLong.valueOf(authentication.getUserId());
 
-    BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                 .biddingPrice(biddingPrice)
-                                                 .productId(productId)
-                                                 .bidderId(bidderId)
-                                                 .build();
+    BiddingCreateDto createDto = BiddingCreateDto
+        .builder()
+        .biddingPrice(biddingPrice)
+        .productId(productId)
+        .bidderId(bidderId)
+        .build();
 
     UnsignedLong createdBiddingId = biddingService.create(createDto);
 
@@ -62,15 +63,17 @@ public class BiddingApiController {
     UnsignedLong bidderId = UnsignedLong.valueOf(authentication.getUserId());
     UnsignedLong productId = UnsignedLong.valueOf(pathProductId);
 
-    BiddingPriceFindingDto findingDto = BiddingPriceFindingDto.builder()
-                                                              .bidderId(bidderId)
-                                                              .productId(productId)
-                                                              .build();
+    BiddingPriceFindingDto findingDto = BiddingPriceFindingDto
+        .builder()
+        .bidderId(bidderId)
+        .productId(productId)
+        .build();
 
     BiddingPrice biddingPrice = biddingService.findBiddingPriceByProductIdAndUserId(findingDto);
 
-    return BiddingPriceResponse.builder()
-                               .biddingPrice(biddingPrice)
-                               .build();
+    return BiddingPriceResponse
+        .builder()
+        .biddingPrice(biddingPrice)
+        .build();
   }
 }

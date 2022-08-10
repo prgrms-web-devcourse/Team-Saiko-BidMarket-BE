@@ -31,20 +31,26 @@ public class CommentCustomRepositoryImpl
   public List<Comment> findAllByProduct(CommentSelectRequest commentSelectRequest) {
     Assert.notNull(commentSelectRequest, "CommentSelectRequest must be provided");
 
-    return jpaQueryFactory.selectFrom(comment)
-                          .join(comment.product, product).fetchJoin()
-                          .join(comment.writer, user).fetchJoin()
-                          .where(
-                              comment.product.id.eq(commentSelectRequest.getProductId().getValue()))
-                          .orderBy(getOrderSpecifier(commentSelectRequest.getSort()))
-                          .fetch();
+    return jpaQueryFactory
+        .selectFrom(comment)
+        .join(comment.product, product)
+        .fetchJoin()
+        .join(comment.writer, user)
+        .fetchJoin()
+        .where(
+            comment.product.id.eq(commentSelectRequest
+                                      .getProductId()
+                                      .getValue()))
+        .orderBy(getOrderSpecifier(commentSelectRequest.getSort()))
+        .fetch();
   }
 
   private OrderSpecifier getOrderSpecifier(Sort sort) {
     for (Sort value : Sort.values()) {
       if (sort == value) {
         Path<Object> fieldPath = Expressions.path(Object.class, product,
-                                                  value.getProperty());
+                                                  value.getProperty()
+        );
         return new OrderSpecifier(value.getOrder(), fieldPath);
       }
     }

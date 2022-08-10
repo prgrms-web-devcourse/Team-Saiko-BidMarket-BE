@@ -44,7 +44,11 @@ public class Notification extends BaseTime {
   private User user;
 
   @Builder
-  public Notification(NotificationType type, Product product, User user) {
+  public Notification(
+      NotificationType type,
+      Product product,
+      User user
+  ) {
     Assert.notNull(type, "Type must be provided");
     Assert.notNull(product, "Product must be provided");
     Assert.notNull(user, "User must be provided");

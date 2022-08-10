@@ -36,8 +36,12 @@ public class ProductTest {
         User winner = product.finish();
 
         //then
-        assertThat(product).extracting("progressed").isEqualTo(false);
-        assertThat(product).extracting("winningPrice").isNull();
+        assertThat(product)
+            .extracting("progressed")
+            .isEqualTo(false);
+        assertThat(product)
+            .extracting("winningPrice")
+            .isNull();
         assertThat(winner).isNull();
       }
     }
@@ -61,10 +65,18 @@ public class ProductTest {
         User winner = product.finish();
 
         //then
-        assertThat(product).extracting("progressed").isEqualTo(false);
-        assertThat(product).extracting("winningPrice").isEqualTo((long)minimumPrice);
-        assertThat(bidding).extracting("won").isEqualTo(true);
-        assertThat(winner).usingRecursiveComparison().isEqualTo(bidder);
+        assertThat(product)
+            .extracting("progressed")
+            .isEqualTo(false);
+        assertThat(product)
+            .extracting("winningPrice")
+            .isEqualTo((long)minimumPrice);
+        assertThat(bidding)
+            .extracting("won")
+            .isEqualTo(true);
+        assertThat(winner)
+            .usingRecursiveComparison()
+            .isEqualTo(bidder);
       }
     }
 
@@ -89,40 +101,60 @@ public class ProductTest {
         User winner = product.finish();
 
         //then
-        assertThat(product).extracting("progressed").isEqualTo(false);
-        assertThat(product).extracting("winningPrice").isEqualTo(11000L);
-        assertThat(biddingTwo).extracting("won").isEqualTo(true);
-        assertThat(biddingOne).extracting("won").isEqualTo(false);
-        assertThat(winner).usingRecursiveComparison().isEqualTo(bidderTwo);
+        assertThat(product)
+            .extracting("progressed")
+            .isEqualTo(false);
+        assertThat(product)
+            .extracting("winningPrice")
+            .isEqualTo(11000L);
+        assertThat(biddingTwo)
+            .extracting("won")
+            .isEqualTo(true);
+        assertThat(biddingOne)
+            .extracting("won")
+            .isEqualTo(false);
+        assertThat(winner)
+            .usingRecursiveComparison()
+            .isEqualTo(bidderTwo);
       }
     }
   }
 
   private User user(String name) {
-    return User.builder()
-               .username(name)
-               .profileImage("imageURL")
-               .provider("provider")
-               .providerId("providerId")
-               .group(new Group())
-               .build();
+    return User
+        .builder()
+        .username(name)
+        .profileImage("imageURL")
+        .provider("provider")
+        .providerId("providerId")
+        .group(new Group())
+        .build();
   }
 
-  private Product product(User writer, int minimumPrice) {
-    return Product.builder()
-                  .title("title")
-                  .description("description")
-                  .minimumPrice(minimumPrice)
-                  .writer(writer)
-                  .category(Category.ETC)
-                  .build();
+  private Product product(
+      User writer,
+      int minimumPrice
+  ) {
+    return Product
+        .builder()
+        .title("title")
+        .description("description")
+        .minimumPrice(minimumPrice)
+        .writer(writer)
+        .category(Category.ETC)
+        .build();
   }
 
-  private Bidding bidding(BiddingPrice biddingPrice, User bidder, Product product) {
-    return Bidding.builder()
-                  .biddingPrice(biddingPrice)
-                  .bidder(bidder)
-                  .product(product)
-                  .build();
+  private Bidding bidding(
+      BiddingPrice biddingPrice,
+      User bidder,
+      Product product
+  ) {
+    return Bidding
+        .builder()
+        .biddingPrice(biddingPrice)
+        .bidder(bidder)
+        .product(product)
+        .build();
   }
 }

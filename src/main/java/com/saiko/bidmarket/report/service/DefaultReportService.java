@@ -28,23 +28,35 @@ public class DefaultReportService implements ReportService {
 
     validateProxyReport(createDto.getRequestUserId(), createDto.getFromUserId());
 
-    User fromUser = userRepository.findById(createDto.getFromUserId().getValue())
-                                  .orElseThrow(NotFoundException::new);
-    User toUser = userRepository.findById(createDto.getToUserId().getValue())
-                                .orElseThrow(NotFoundException::new);
+    User fromUser = userRepository
+        .findById(createDto
+                      .getFromUserId()
+                      .getValue())
+        .orElseThrow(NotFoundException::new);
+    User toUser = userRepository
+        .findById(createDto
+                      .getToUserId()
+                      .getValue())
+        .orElseThrow(NotFoundException::new);
 
     validateSameUserWithFromAndTo(fromUser, toUser);
 
-    Report report = Report.builder()
-                          .reason(createDto.getReason())
-                          .fromUser(fromUser)
-                          .toUser(toUser)
-                          .build();
+    Report report = Report
+        .builder()
+        .reason(createDto.getReason())
+        .fromUser(fromUser)
+        .toUser(toUser)
+        .build();
 
-    return UnsignedLong.valueOf(reportRepository.save(report).getId());
+    return UnsignedLong.valueOf(reportRepository
+                                    .save(report)
+                                    .getId());
   }
 
-  private void validateSameUserWithFromAndTo(User fromUser, User toUser) {
+  private void validateSameUserWithFromAndTo(
+      User fromUser,
+      User toUser
+  ) {
     if (reportRepository.existsByFromUserAndToUser(fromUser, toUser)) {
       throw new IllegalArgumentException("신고자(id: " + fromUser.getId() + ")는 "
                                              + "피신고자(id: " + toUser.getId() + ")를 "
@@ -52,7 +64,10 @@ public class DefaultReportService implements ReportService {
     }
   }
 
-  private void validateProxyReport(UnsignedLong requestUserId, UnsignedLong fromUserId) {
+  private void validateProxyReport(
+      UnsignedLong requestUserId,
+      UnsignedLong fromUserId
+  ) {
     if (!requestUserId.equals(fromUserId)) {
       throw new AuthorizationServiceException("다른 유저의 신고를 대신할 수 없습니다.");
     }

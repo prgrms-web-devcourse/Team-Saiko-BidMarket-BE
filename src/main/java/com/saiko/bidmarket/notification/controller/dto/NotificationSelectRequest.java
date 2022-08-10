@@ -13,7 +13,10 @@ public class NotificationSelectRequest {
   @Positive
   private final int limit;
 
-  public NotificationSelectRequest(long offset, int limit) {
+  public NotificationSelectRequest(
+      long offset,
+      int limit
+  ) {
     this.offset = offset;
     this.limit = limit;
   }

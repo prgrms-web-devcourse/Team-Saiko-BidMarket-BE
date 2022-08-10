@@ -2,7 +2,6 @@ package com.saiko.bidmarket.user.controller.dto;
 
 import java.time.LocalDateTime;
 
-import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 
 import lombok.AccessLevel;
@@ -29,8 +28,9 @@ public class UserProductSelectResponse {
 
   public static UserProductSelectResponse from(Product product) {
     return new UserProductSelectResponse(product.getId(), product.getTitle(),
-                                     product.getThumbnailImage(),
-                                     product.getMinimumPrice(), product.getExpireAt(),
-                                     product.getCreatedAt(), product.getUpdatedAt());
+                                         product.getThumbnailImage(),
+                                         product.getMinimumPrice(), product.getExpireAt(),
+                                         product.getCreatedAt(), product.getUpdatedAt()
+    );
   }
 }

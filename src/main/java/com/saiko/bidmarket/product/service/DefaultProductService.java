@@ -50,42 +50,52 @@ public class DefaultProductService implements ProductService {
   private final ApplicationEventPublisher publisher;
 
   @Override
-  public ProductCreateResponse create(ProductCreateRequest productCreateRequest, Long userId) {
+  public ProductCreateResponse create(
+      ProductCreateRequest productCreateRequest,
+      Long userId
+  ) {
     Assert.notNull(productCreateRequest, "Request must be provided");
     Assert.isTrue(userId > 0, "User id must be positive");
 
-    final User writer = userRepository.findById(userId)
-                                      .orElseThrow(
-                                          () -> new NotFoundException("Product not exist"));
+    final User writer = userRepository
+        .findById(userId)
+        .orElseThrow(
+            () -> new NotFoundException("Product not exist"));
 
-    final Product product = Product.builder()
-                                   .title(productCreateRequest.getTitle())
-                                   .description(productCreateRequest.getDescription())
-                                   .location(productCreateRequest.getLocation())
-                                   .category(productCreateRequest.getCategory())
-                                   .minimumPrice(productCreateRequest.getMinimumPrice())
-                                   .images(productCreateRequest.getImages())
-                                   .writer(writer)
-                                   .build();
+    final Product product = Product
+        .builder()
+        .title(productCreateRequest.getTitle())
+        .description(productCreateRequest.getDescription())
+        .location(productCreateRequest.getLocation())
+        .category(productCreateRequest.getCategory())
+        .minimumPrice(productCreateRequest.getMinimumPrice())
+        .images(productCreateRequest.getImages())
+        .writer(writer)
+        .build();
 
-    return ProductCreateResponse.from(productRepository.save(product).getId());
+    return ProductCreateResponse.from(productRepository
+                                          .save(product)
+                                          .getId());
   }
 
   @Override
   public List<ProductSelectResponse> findAll(ProductSelectRequest productSelectRequest) {
     Assert.notNull(productSelectRequest, "ProductSelectRequest must be provided");
-    return productRepository.findAllProduct(productSelectRequest).stream()
-                            .map(ProductSelectResponse::from)
-                            .collect(Collectors.toList());
+    return productRepository
+        .findAllProduct(productSelectRequest)
+        .stream()
+        .map(ProductSelectResponse::from)
+        .collect(Collectors.toList());
   }
 
   @Override
   public ProductDetailResponse findById(long id) {
     Assert.isTrue(id > 0, "Id must be positive");
 
-    return ProductDetailResponse.from(productRepository.findById(id)
-                                                       .orElseThrow(() -> new NotFoundException(
-                                                           "Product not exist")));
+    return ProductDetailResponse.from(productRepository
+                                          .findById(id)
+                                          .orElseThrow(() -> new NotFoundException(
+                                              "Product not exist")));
   }
 
   @Override
@@ -102,46 +112,57 @@ public class DefaultProductService implements ProductService {
     User winner = product.finish();
 
     if (winner == null) {
-      publisher.publishEvent(NotificationCreateEvent.builder()
-                                                    .user(product.getWriter())
-                                                    .notificationType(
-                                                        END_PRODUCT_FOR_WRITER_NOT_WITH_WINNER)
-                                                    .product(product));
+      publisher.publishEvent(NotificationCreateEvent
+                                 .builder()
+                                 .user(product.getWriter())
+                                 .notificationType(
+                                     END_PRODUCT_FOR_WRITER_NOT_WITH_WINNER)
+                                 .product(product));
     } else {
-      publisher.publishEvent(NotificationCreateEvent.builder()
-                                                    .user(product.getWriter())
-                                                    .notificationType(
-                                                        END_PRODUCT_FOR_WRITER_WITH_WINNER)
-                                                    .product(product));
+      publisher.publishEvent(NotificationCreateEvent
+                                 .builder()
+                                 .user(product.getWriter())
+                                 .notificationType(
+                                     END_PRODUCT_FOR_WRITER_WITH_WINNER)
+                                 .product(product));
 
-      publisher.publishEvent(NotificationCreateEvent.builder()
-                                                    .user(winner)
-                                                    .notificationType(
-                                                        END_PRODUCT_FOR_WINNER)
-                                                    .product(product));
-      product.getBiddersExceptWinner()
-             .forEach(bidder ->
-                          publisher.publishEvent(NotificationCreateEvent.builder()
-                                                                        .user(bidder)
-                                                                        .notificationType(
-                                                                            END_PRODUCT_FOR_BIDDER)
-                                                                        .product(product)));
+      publisher.publishEvent(NotificationCreateEvent
+                                 .builder()
+                                 .user(winner)
+                                 .notificationType(
+                                     END_PRODUCT_FOR_WINNER)
+                                 .product(product));
+      product
+          .getBiddersExceptWinner()
+          .forEach(bidder ->
+                       publisher.publishEvent(NotificationCreateEvent
+                                                  .builder()
+                                                  .user(bidder)
+                                                  .notificationType(
+                                                      END_PRODUCT_FOR_BIDDER)
+                                                  .product(product)));
     }
   }
 
   @Override
-  public BiddingResultResponse getBiddingResult(UnsignedLong productId, UnsignedLong userId) {
+  public BiddingResultResponse getBiddingResult(
+      UnsignedLong productId,
+      UnsignedLong userId
+  ) {
     Assert.notNull(productId, "ProductId must be provided");
     Assert.notNull(userId, "UserId must be provided");
 
-    Product product = productRepository.findByIdJoinWithUser(productId.getValue())
-                                       .orElseThrow(() -> new NotFoundException(
-                                           "Product not exist"));
+    Product product = productRepository
+        .findByIdJoinWithUser(productId.getValue())
+        .orElseThrow(() -> new NotFoundException(
+            "Product not exist"));
 
     Optional<ChatRoom> chatRoom = chatRoomRepository.findByProduct_IdAndSeller_Id(
         product.getId(),
-        product.getWriter()
-               .getId());
+        product
+            .getWriter()
+            .getId()
+    );
 
     if (isSeller(product, userId.getValue())) {
       return generateResponseForSeller(product, chatRoom);
@@ -150,12 +171,17 @@ public class DefaultProductService implements ProductService {
     return generateResponseForBidder(productId, userId, chatRoom);
   }
 
-  private boolean isSeller(Product product, long userId) {
+  private boolean isSeller(
+      Product product,
+      long userId
+  ) {
     return product.isProductOfUser(userId);
   }
 
-  private BiddingResultResponse generateResponseForSeller(Product product,
-                                                          Optional<ChatRoom> optionalChatRoom) {
+  private BiddingResultResponse generateResponseForSeller(
+      Product product,
+      Optional<ChatRoom> optionalChatRoom
+  ) {
     if (product.hasWinner()) {
       ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
       return BiddingResultResponse.responseForSuccessfulSeller(
@@ -164,9 +190,11 @@ public class DefaultProductService implements ProductService {
     return BiddingResultResponse.responseForFailedSeller();
   }
 
-  private BiddingResultResponse generateResponseForBidder(UnsignedLong productId,
-                                                          UnsignedLong userId,
-                                                          Optional<ChatRoom> optionalChatRoom) {
+  private BiddingResultResponse generateResponseForBidder(
+      UnsignedLong productId,
+      UnsignedLong userId,
+      Optional<ChatRoom> optionalChatRoom
+  ) {
     Bidding biddingOfUser = findBiddingOfUser(productId, userId);
     if (biddingOfUser.isWon()) {
       ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
@@ -176,13 +204,18 @@ public class DefaultProductService implements ProductService {
     return BiddingResultResponse.responseForFailedBidder();
   }
 
-  private Bidding findBiddingOfUser(UnsignedLong productId, UnsignedLong userId) {
-    BiddingPriceFindingRepoDto request = BiddingPriceFindingRepoDto.builder()
-                                                                   .bidderId(userId)
-                                                                   .productId(productId)
-                                                                   .build();
-    return biddingRepository.findByBidderIdAndProductId(request)
-                            .orElseThrow(() -> new NotFoundException("Bidding not exist"));
+  private Bidding findBiddingOfUser(
+      UnsignedLong productId,
+      UnsignedLong userId
+  ) {
+    BiddingPriceFindingRepoDto request = BiddingPriceFindingRepoDto
+        .builder()
+        .bidderId(userId)
+        .productId(productId)
+        .build();
+    return biddingRepository
+        .findByBidderIdAndProductId(request)
+        .orElseThrow(() -> new NotFoundException("Bidding not exist"));
   }
 
   private ChatRoom verifyChatRoom(Optional<ChatRoom> optionalChatRoom) {

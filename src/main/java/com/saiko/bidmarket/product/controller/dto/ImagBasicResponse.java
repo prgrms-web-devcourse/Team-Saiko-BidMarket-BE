@@ -6,7 +6,10 @@ public class ImagBasicResponse {
   private final String url;
   private final int order;
 
-  private ImagBasicResponse(String url, int order) {
+  private ImagBasicResponse(
+      String url,
+      int order
+  ) {
     this.url = url;
     this.order = order;
   }

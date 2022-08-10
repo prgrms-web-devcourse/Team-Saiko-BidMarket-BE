@@ -45,7 +45,11 @@ public class ChatRoom extends BaseTime {
   private List<ChatMessage> chatMessage;
 
   @Builder
-  private ChatRoom(User seller, User winner, Product product) {
+  private ChatRoom(
+      User seller,
+      User winner,
+      Product product
+  ) {
     Assert.notNull(seller, "Seller must be provided");
     Assert.notNull(winner, "Winner must be provided");
     Assert.notNull(product, "Product must be provided");
@@ -55,4 +59,3 @@ public class ChatRoom extends BaseTime {
     this.product = product;
   }
 }
-

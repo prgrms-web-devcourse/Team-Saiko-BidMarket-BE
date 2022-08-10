@@ -25,7 +25,8 @@ public class WithMockCustomLoginUserSecurityContextFactory
 
     JwtAuthenticationToken authentication =
         new JwtAuthenticationToken(new JwtAuthentication(token, userId), null,
-                                   authorities);
+                                   authorities
+        );
 
     securityContext.setAuthentication(authentication);
 

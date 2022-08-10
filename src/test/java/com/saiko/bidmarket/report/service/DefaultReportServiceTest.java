@@ -41,22 +41,23 @@ class DefaultReportServiceTest {
 
   private static final String reason = "reason";
 
-  private static final User fromUser = User.builder()
-                                           .username("fromuUser")
-                                           .profileImage("imageUrl")
-                                           .provider("provider")
-                                           .providerId("providerId")
-                                           .group(new Group())
-                                           .build();
+  private static final User fromUser = User
+      .builder()
+      .username("fromuUser")
+      .profileImage("imageUrl")
+      .provider("provider")
+      .providerId("providerId")
+      .group(new Group())
+      .build();
 
-  private static final User toUser = User.builder()
-                                         .username("toUser")
-                                         .profileImage("imageUrl")
-                                         .provider("provider2")
-                                         .providerId("providerId2")
-                                         .group(new Group())
-                                         .build();
-
+  private static final User toUser = User
+      .builder()
+      .username("toUser")
+      .profileImage("imageUrl")
+      .provider("provider2")
+      .providerId("providerId2")
+      .group(new Group())
+      .build();
 
   @BeforeAll
   static void setUpUsersId() {
@@ -109,7 +110,7 @@ class DefaultReportServiceTest {
 
       }
     }
-    
+
     @Nested
     @DisplayName("fromUser를 찾을 수 없는 경우")
     class ContextNotFoundFromUser {
@@ -200,13 +201,14 @@ class DefaultReportServiceTest {
       @DisplayName("IllegalArgumentException을 던진다.")
       void ItThrowsIllegalArgumentException() {
         // given
-        User toUser = User.builder()
-                          .username(fromUser.getUsername())
-                          .profileImage(fromUser.getProfileImage())
-                          .provider("provider")
-                          .providerId("providerId")
-                          .group(fromUser.getGroup())
-                          .build();
+        User toUser = User
+            .builder()
+            .username(fromUser.getUsername())
+            .profileImage(fromUser.getProfileImage())
+            .provider("provider")
+            .providerId("providerId")
+            .group(fromUser.getGroup())
+            .build();
 
         ReflectionTestUtils.setField(toUser, "id", fromUser.getId());
 
@@ -248,11 +250,12 @@ class DefaultReportServiceTest {
             .build();
         UnsignedLong expected = UnsignedLong.valueOf(1L);
 
-        Report createdReport = Report.builder()
-                                     .reason(reason)
-                                     .fromUser(fromUser)
-                                     .toUser(toUser)
-                                     .build();
+        Report createdReport = Report
+            .builder()
+            .reason(reason)
+            .fromUser(fromUser)
+            .toUser(toUser)
+            .build();
         ReflectionTestUtils.setField(createdReport, "id", expected.getValue());
 
         given(userRepository.findById(fromUser.getId())).willReturn(Optional.of(fromUser));

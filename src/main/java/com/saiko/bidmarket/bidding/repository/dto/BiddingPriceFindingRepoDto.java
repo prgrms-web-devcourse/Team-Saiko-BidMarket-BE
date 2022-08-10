@@ -15,7 +15,10 @@ public class BiddingPriceFindingRepoDto {
   private final UnsignedLong productId;
 
   @Builder
-  private BiddingPriceFindingRepoDto(UnsignedLong bidderId, UnsignedLong productId) {
+  private BiddingPriceFindingRepoDto(
+      UnsignedLong bidderId,
+      UnsignedLong productId
+  ) {
     Assert.notNull(bidderId, "Bidder id must be provided");
     Assert.notNull(productId, "Product id must be provided");
 

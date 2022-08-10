@@ -1,7 +1,7 @@
 package com.saiko.bidmarket.user.service;
 
-import static com.saiko.bidmarket.product.Category.*;
 import static com.saiko.bidmarket.common.Sort.*;
+import static com.saiko.bidmarket.product.Category.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -79,8 +79,10 @@ class DefaultUserServiceTest {
       @ValueSource(strings = {"\n", "\t"})
       @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
       void ItThrowsIllegalArgumentException(String src) {
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.findByProviderAndProviderId(src, "123"));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultUserService.findByProviderAndProviderId(src, "123")
+        );
       }
     }
 
@@ -93,8 +95,10 @@ class DefaultUserServiceTest {
       @ValueSource(strings = {"\n", "\t"})
       @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
       void ItThrowsIllegalArgumentException(String src) {
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.findByProviderAndProviderId("123", src));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultUserService.findByProviderAndProviderId("123", src)
+        );
 
       }
     }
@@ -112,8 +116,10 @@ class DefaultUserServiceTest {
       @Test
       @DisplayName("IllegalArgumentException")
       void ItIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.join(null, "123"));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultUserService.join(null, "123")
+        );
       }
     }
 
@@ -126,12 +132,16 @@ class DefaultUserServiceTest {
       @ValueSource(strings = {"\t", "\n"})
       @DisplayName("IllegalArgumentException 에러를 발생 시킨다")
       void ItThrowsIllegalArgumentException(String src) {
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(),
-                                                      Map.of("1", "1"),
-                                                      "1");
+        OAuth2User oAuth2User = new DefaultOAuth2User(
+            Collections.emptyList(),
+            Map.of("1", "1"),
+            "1"
+        );
 
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.join(oAuth2User, src));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultUserService.join(oAuth2User, src)
+        );
       }
     }
 
@@ -147,7 +157,8 @@ class DefaultUserServiceTest {
         String providerId = "testProviderId";
         User user = new User("username", "test", provider, providerId, new Group());
         OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(),
-                                                      Map.of("name", providerId), "name");
+                                                      Map.of("name", providerId), "name"
+        );
         given(userRepository.findByProviderAndProviderId(anyString(), anyString())).willReturn(
             Optional.of(user));
         //when
@@ -155,8 +166,10 @@ class DefaultUserServiceTest {
 
         //then
         String joinedUserProvider = (String)ReflectionTestUtils.getField(joinedUser, "provider");
-        String joinedUserProviderId = (String)ReflectionTestUtils.getField(joinedUser,
-                                                                           "providerId");
+        String joinedUserProviderId = (String)ReflectionTestUtils.getField(
+            joinedUser,
+            "providerId"
+        );
         assertAll(
             () -> assertEquals(provider, joinedUserProvider),
             () -> assertEquals(providerId, joinedUserProviderId)
@@ -188,9 +201,11 @@ class DefaultUserServiceTest {
 
         //then
         String savedUserUsername = (String)ReflectionTestUtils.getField(user, User.class,
-                                                                        "username");
+                                                                        "username"
+        );
         String savedUserProfileImg = (String)ReflectionTestUtils.getField(user, User.class,
-                                                                          "profileImage");
+                                                                          "profileImage"
+        );
 
         assertAll(
             () -> assertEquals("test", savedUserUsername),
@@ -260,9 +275,12 @@ class DefaultUserServiceTest {
         final UserSelectResponse actualUser = defaultUserService.findById(existUserId);
 
         //then
-        Assertions.assertThat(actualUser.getUsername()).isEqualTo(expected.getUsername());
-        Assertions.assertThat(actualUser.getProfileImage())
-                  .isEqualTo(expected.getProfileImage());
+        Assertions
+            .assertThat(actualUser.getUsername())
+            .isEqualTo(expected.getUsername());
+        Assertions
+            .assertThat(actualUser.getProfileImage())
+            .isEqualTo(expected.getProfileImage());
       }
     }
   }
@@ -318,11 +336,13 @@ class DefaultUserServiceTest {
         //given
         final long userId = 1;
         final UserUpdateRequest request = new UserUpdateRequest("update", "update");
-        final User targetUser = new User("before",
-                                         "before",
-                                         "provider",
-                                         "providerId",
-                                         new Group());
+        final User targetUser = new User(
+            "before",
+            "before",
+            "provider",
+            "providerId",
+            new Group()
+        );
 
         ReflectionTestUtils.setField(targetUser, "id", 1L);
 
@@ -336,8 +356,12 @@ class DefaultUserServiceTest {
         final String actualProfileImage = targetUser.getProfileImage();
 
         //then
-        Assertions.assertThat(actualUsername).isEqualTo(expected);
-        Assertions.assertThat(actualProfileImage).isEqualTo(expected);
+        Assertions
+            .assertThat(actualUsername)
+            .isEqualTo(expected);
+        Assertions
+            .assertThat(actualProfileImage)
+            .isEqualTo(expected);
       }
     }
   }
@@ -386,15 +410,16 @@ class DefaultUserServiceTest {
 
         UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
 
-        Product product = Product.builder()
-                                 .title("감자 팜")
-                                 .description("zz")
-                                 .location("강원도")
-                                 .category(ETC)
-                                 .minimumPrice(15000)
-                                 .images(List.of("testUrl"))
-                                 .writer(writer)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("감자 팜")
+            .description("zz")
+            .location("강원도")
+            .category(ETC)
+            .minimumPrice(15000)
+            .images(List.of("testUrl"))
+            .writer(writer)
+            .build();
         long productId = 1L;
         ReflectionTestUtils.setField(product, "id", productId);
 
@@ -407,7 +432,9 @@ class DefaultUserServiceTest {
 
         //then
         assertThat(allUserProducts.size()).isEqualTo(1);
-        assertThat(allUserProducts.get(0).getId()).isEqualTo(productId);
+        assertThat(allUserProducts
+                       .get(0)
+                       .getId()).isEqualTo(productId);
       }
     }
   }
@@ -456,15 +483,16 @@ class DefaultUserServiceTest {
 
         UserBiddingSelectRequest request = new UserBiddingSelectRequest(0, 1, END_DATE_ASC);
 
-        Product product = Product.builder()
-                                 .title("감자 팜")
-                                 .description("zz")
-                                 .location("강원도")
-                                 .category(ETC)
-                                 .minimumPrice(15000)
-                                 .images(List.of("testUrl"))
-                                 .writer(writer)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("감자 팜")
+            .description("zz")
+            .location("강원도")
+            .category(ETC)
+            .minimumPrice(15000)
+            .images(List.of("testUrl"))
+            .writer(writer)
+            .build();
         long productId = 1L;
         ReflectionTestUtils.setField(product, "id", productId);
 
@@ -472,22 +500,27 @@ class DefaultUserServiceTest {
         long userId = 1L;
         ReflectionTestUtils.setField(bidder, "id", userId);
 
-        Bidding bidding = Bidding.builder()
-                                 .product(product)
-                                 .bidder(bidder)
-                                 .biddingPrice(BiddingPrice.valueOf(20000))
-                                 .build();
+        Bidding bidding = Bidding
+            .builder()
+            .product(product)
+            .bidder(bidder)
+            .biddingPrice(BiddingPrice.valueOf(20000))
+            .build();
 
         given(biddingRepository.findAllUserBidding(anyLong(), any(UserBiddingSelectRequest.class)))
             .willReturn(List.of(bidding));
 
         //when
-        List<UserBiddingSelectResponse> result = defaultUserService.findAllUserBiddings(1,
-                                                                                        request);
+        List<UserBiddingSelectResponse> result = defaultUserService.findAllUserBiddings(
+            1,
+            request
+        );
 
         //then
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getId()).isEqualTo(productId);
+        assertThat(result
+                       .get(0)
+                       .getId()).isEqualTo(productId);
       }
     }
   }

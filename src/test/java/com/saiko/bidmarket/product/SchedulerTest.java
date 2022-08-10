@@ -48,19 +48,24 @@ public class SchedulerTest {
         // given
         User writer = new User("제로", "image", "google", "1234", new Group());
         ReflectionTestUtils.setField(writer, "id", 1L);
-        Product product = Product.builder()
-                                 .title("텀블러 팝니다")
-                                 .description("깨끗해요")
-                                 .location("강남")
-                                 .category(ETC)
-                                 .minimumPrice(15000)
-                                 .images(Arrays.asList("image1",
-                                                       "image2"))
-                                 .writer(writer)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("텀블러 팝니다")
+            .description("깨끗해요")
+            .location("강남")
+            .category(ETC)
+            .minimumPrice(15000)
+            .images(Arrays.asList(
+                "image1",
+                "image2"
+            ))
+            .writer(writer)
+            .build();
         ReflectionTestUtils.setField(product, "id", 1L);
 
-        BDDMockito.given(productService.findAllThatNeedToClose(any())).willReturn(List.of(product));
+        BDDMockito
+            .given(productService.findAllThatNeedToClose(any()))
+            .willReturn(List.of(product));
 
         // when, then
         await()
@@ -81,8 +86,10 @@ public class SchedulerTest {
       @DisplayName("경매 종료 로직을 실행하지 않는다.")
       void ItDoesNotExecuteClosingProduct() {
         // given
-        BDDMockito.given(productService.findAllThatNeedToClose(any())).willReturn(
-            Collections.emptyList());
+        BDDMockito
+            .given(productService.findAllThatNeedToClose(any()))
+            .willReturn(
+                Collections.emptyList());
 
         // when, then
         await()

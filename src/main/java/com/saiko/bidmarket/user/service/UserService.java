@@ -13,17 +13,30 @@ import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.User;
 
 public interface UserService {
-  User findByProviderAndProviderId(String provider, String providerId);
+  User findByProviderAndProviderId(
+      String provider,
+      String providerId
+  );
 
-  User join(OAuth2User oAuth2User, String authorizedClientRegistrationId);
+  User join(
+      OAuth2User oAuth2User,
+      String authorizedClientRegistrationId
+  );
 
   UserSelectResponse findById(long id);
 
-  void updateUser(long id, UserUpdateRequest request);
+  void updateUser(
+      long id,
+      UserUpdateRequest request
+  );
 
-  List<UserProductSelectResponse> findAllUserProducts(long userId,
-                                                      UserProductSelectRequest request);
+  List<UserProductSelectResponse> findAllUserProducts(
+      long userId,
+      UserProductSelectRequest request
+  );
 
-  List<UserBiddingSelectResponse> findAllUserBiddings(long userId,
-                                                      UserBiddingSelectRequest request);
+  List<UserBiddingSelectResponse> findAllUserBiddings(
+      long userId,
+      UserBiddingSelectRequest request
+  );
 }

@@ -14,7 +14,7 @@ VALUES ('SK매직 전자레인지',
         0, '2022-07-28T15:00:00', '2022-07-21T14:42:00', 2, 30000)
 ;
 INSERT INTO `product`(title, `description`, minimum_price, category, location, thumbnail_image,
-                  progressed, expire_at, created_at, user_id)
+                      progressed, expire_at, created_at, user_id)
 VALUES ('신화월드 워터파크2매',
         '2장있습니다
 장당가격이에요',
@@ -156,6 +156,3 @@ VALUES ('신화월드 워터파크2매',
         'https://user-images.githubusercontent.com/61923768/182780891-4f142cf5-f130-4ee7-9159-d88736717ae4.png',
         1, '2022-08-11T16:00:00', '2022-08-04T15:43:00', 2)
 ;
-
-
-

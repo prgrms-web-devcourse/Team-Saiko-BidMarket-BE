@@ -16,7 +16,8 @@ public class NotificationCreateHandler {
 
   @EventListener
   public void create(NotificationCreateEvent event) {
-    notificationRepository.save(Notification.builder()
+    notificationRepository.save(Notification
+                                    .builder()
                                     .type(event.getNotificationType())
                                     .product(event.getProduct())
                                     .user(event.getUser())

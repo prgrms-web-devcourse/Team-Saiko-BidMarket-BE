@@ -23,16 +23,20 @@ public class Jwt {
   private final Algorithm algorithm;
   private final JWTVerifier jwtVerifier;
 
-  public Jwt(String issuer, String clientSecret,
-             int expirySeconds) {
+  public Jwt(
+      String issuer,
+      String clientSecret,
+      int expirySeconds
+  ) {
 
     this.issuer = issuer;
     this.clientSecret = clientSecret;
     this.expirySecond = expirySeconds;
     this.algorithm = Algorithm.HMAC512(clientSecret);
-    this.jwtVerifier = com.auth0.jwt.JWT.require(algorithm)
-                                        .withIssuer(issuer)
-                                        .build();
+    this.jwtVerifier = com.auth0.jwt.JWT
+        .require(algorithm)
+        .withIssuer(issuer)
+        .build();
   }
 
   public String sign(Claims claims) {
@@ -92,8 +96,9 @@ public class Jwt {
     Claims(DecodedJWT decodedJWT) {
 
       Claim userId = decodedJWT.getClaim("userId");
-      if (!userId.isNull())
+      if (!userId.isNull()) {
         this.userId = userId.asLong();
+      }
       Claim roles = decodedJWT.getClaim("roles");
       if (!roles.isNull()) {
         this.roles = roles.asArray(String.class);
@@ -102,7 +107,10 @@ public class Jwt {
       this.exp = decodedJWT.getExpiresAt();
     }
 
-    public static Claims from(Long userId, String[] roles) {
+    public static Claims from(
+        Long userId,
+        String[] roles
+    ) {
 
       Claims claims = new Claims();
       claims.userId = userId;

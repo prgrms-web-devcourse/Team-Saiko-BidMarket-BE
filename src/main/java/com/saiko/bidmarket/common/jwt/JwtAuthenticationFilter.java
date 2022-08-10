@@ -33,21 +33,30 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
   private final Jwt jwt;
 
-  public JwtAuthenticationFilter(String headerKey, Jwt jwt) {
+  public JwtAuthenticationFilter(
+      String headerKey,
+      Jwt jwt
+  ) {
 
     this.headerKey = headerKey;
     this.jwt = jwt;
   }
 
   @Override
-  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws
+  public void doFilter(
+      ServletRequest req,
+      ServletResponse res,
+      FilterChain chain
+  ) throws
       IOException,
       ServletException {
 
     HttpServletRequest request = (HttpServletRequest)req;
     HttpServletResponse response = (HttpServletResponse)res;
 
-    if (SecurityContextHolder.getContext().getAuthentication() == null) {
+    if (SecurityContextHolder
+        .getContext()
+        .getAuthentication() == null) {
       String token = getToken(request);
       if (token != null) {
         try {
@@ -60,9 +69,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
           if (userId > 0 && authorities.size() > 0) {
             JwtAuthenticationToken authentication =
                 new JwtAuthenticationToken(new JwtAuthentication(token, userId), null,
-                                           authorities);
+                                           authorities
+                );
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder
+                .getContext()
+                .setAuthentication(authentication);
           }
         } catch (Exception e) {
           log.warn("Jwt processing failed: {}", e.getMessage());
@@ -71,7 +83,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     } else {
       log.debug(
           "SecurityContextHolder not populated with security token, as it already contained: '{}'",
-          SecurityContextHolder.getContext().getAuthentication());
+          SecurityContextHolder
+              .getContext()
+              .getAuthentication()
+      );
     }
 
     chain.doFilter(request, response);
@@ -99,6 +114,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     String[] roles = claims.roles;
     return roles == null || roles.length == 0 ?
         emptyList() :
-        Arrays.stream(roles).map(SimpleGrantedAuthority::new).collect(toList());
+        Arrays
+            .stream(roles)
+            .map(SimpleGrantedAuthority::new)
+            .collect(toList());
   }
 }

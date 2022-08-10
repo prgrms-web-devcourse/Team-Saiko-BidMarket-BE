@@ -11,7 +11,10 @@ import com.saiko.bidmarket.product.entity.Product;
 
 public interface ProductRepository extends ProductCustomRepository, JpaRepository<Product, Long> {
 
-  List<Product> findAllByProgressedAndExpireAtLessThan(boolean progressed, LocalDateTime nowTime);
+  List<Product> findAllByProgressedAndExpireAtLessThan(
+      boolean progressed,
+      LocalDateTime nowTime
+  );
 
   @Query("select p from Product p join fetch p.writer where p.id = :id")
   Optional<Product> findByIdJoinWithUser(long id);

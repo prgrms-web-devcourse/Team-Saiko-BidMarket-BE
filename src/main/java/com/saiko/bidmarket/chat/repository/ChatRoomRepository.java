@@ -9,5 +9,8 @@ import com.saiko.bidmarket.chat.entity.ChatRoom;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-  Optional<ChatRoom> findByProduct_IdAndSeller_Id(long productId, long sellerId);
+  Optional<ChatRoom> findByProduct_IdAndSeller_Id(
+      long productId,
+      long sellerId
+  );
 }

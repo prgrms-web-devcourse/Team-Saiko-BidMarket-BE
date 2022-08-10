@@ -39,9 +39,12 @@ public class Bidding extends BaseTime {
   @ManyToOne(fetch = FetchType.LAZY)
   private Product product;
 
-
   @Builder
-  public Bidding(BiddingPrice biddingPrice, User bidder, Product product) {
+  public Bidding(
+      BiddingPrice biddingPrice,
+      User bidder,
+      Product product
+  ) {
     Assert.notNull(biddingPrice, "Bidding price must be provided");
     Assert.notNull(bidder, "Bidder must be provided");
     Assert.notNull(product, "Product must be provided");
@@ -50,7 +53,9 @@ public class Bidding extends BaseTime {
     this.bidder = bidder;
     this.product = product;
     this.won = false;
-    product.getBiddings().add(this);
+    product
+        .getBiddings()
+        .add(this);
 
     validateCreatedField();
   }

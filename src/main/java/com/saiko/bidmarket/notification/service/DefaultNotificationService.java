@@ -21,14 +21,17 @@ public class DefaultNotificationService implements NotificationService {
   private final NotificationRepository notificationRepository;
 
   @Override
-  public List<NotificationSelectResponse> findAllNotifications(UnsignedLong userId,
-                                                               NotificationSelectRequest request) {
+  public List<NotificationSelectResponse> findAllNotifications(
+      UnsignedLong userId,
+      NotificationSelectRequest request
+  ) {
     Assert.notNull(userId, "UserId must be provided");
     Assert.notNull(request, "Request must be provided");
 
-    return notificationRepository.findAllNotification(userId, request)
-                            .stream()
-                            .map((NotificationSelectResponse::from))
-                            .collect(Collectors.toList());
+    return notificationRepository
+        .findAllNotification(userId, request)
+        .stream()
+        .map((NotificationSelectResponse::from))
+        .collect(Collectors.toList());
   }
 }

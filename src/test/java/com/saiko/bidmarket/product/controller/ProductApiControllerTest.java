@@ -133,30 +133,40 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         //then
         verify(productService).create(any(ProductCreateRequest.class), any(Long.class));
-        response.andExpect(status().isCreated())
-                .andDo(document("Create product",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestFields(
-                                    fieldWithPath("title").type(JsonFieldType.STRING)
-                                                          .description("제목"),
-                                    fieldWithPath("description").type(JsonFieldType.STRING)
-                                                                .description("설명"),
-                                    fieldWithPath("images").type(JsonFieldType.ARRAY)
-                                                           .description("상품 이미지")
-                                                           .optional(),
-                                    fieldWithPath("category").type(JsonFieldType.STRING)
-                                                             .description("카테고리"),
-                                    fieldWithPath("minimumPrice").type(JsonFieldType.NUMBER)
-                                                                 .description("최소 가격"),
-                                    fieldWithPath("location").type(JsonFieldType.STRING)
-                                                             .description("희망 거래 장소")
-                                                             .optional()),
-                                responseFields(
-                                    fieldWithPath("id")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("상품 아이디")
-                                )));
+        response
+            .andExpect(status().isCreated())
+            .andDo(document(
+                "Create product",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("title")
+                        .type(JsonFieldType.STRING)
+                        .description("제목"),
+                    fieldWithPath("description")
+                        .type(JsonFieldType.STRING)
+                        .description("설명"),
+                    fieldWithPath("images")
+                        .type(JsonFieldType.ARRAY)
+                        .description("상품 이미지")
+                        .optional(),
+                    fieldWithPath("category")
+                        .type(JsonFieldType.STRING)
+                        .description("카테고리"),
+                    fieldWithPath("minimumPrice")
+                        .type(JsonFieldType.NUMBER)
+                        .description("최소 가격"),
+                    fieldWithPath("location")
+                        .type(JsonFieldType.STRING)
+                        .description("희망 거래 장소")
+                        .optional()
+                ),
+                responseFields(
+                    fieldWithPath("id")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상품 아이디")
+                )
+            ));
       }
     }
 
@@ -270,12 +280,14 @@ class ProductApiControllerTest extends ControllerSetUp {
         requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
-        requestMap.put("images", Arrays.asList("imageUrl1",
-                                               "imageUrl2",
-                                               "imageUrl3",
-                                               "imageUrl4",
-                                               "imageUrl5",
-                                               "imageUrl6"));
+        requestMap.put("images", Arrays.asList(
+            "imageUrl1",
+            "imageUrl2",
+            "imageUrl3",
+            "imageUrl4",
+            "imageUrl5",
+            "imageUrl6"
+        ));
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
@@ -503,29 +515,32 @@ class ProductApiControllerTest extends ControllerSetUp {
         User writer = new User("제로", "image", "google", "123", new Group());
         ReflectionTestUtils.setField(writer, "id", 1L);
 
-        Product foundProduct = Product.builder()
-                                      .title("귤 팔아요")
-                                      .description("맛있어요")
-                                      .category(FOOD)
-                                      .images(Collections.emptyList())
-                                      .location("제주도")
-                                      .minimumPrice(1000)
-                                      .writer(writer)
-                                      .build();
+        Product foundProduct = Product
+            .builder()
+            .title("귤 팔아요")
+            .description("맛있어요")
+            .category(FOOD)
+            .images(Collections.emptyList())
+            .location("제주도")
+            .minimumPrice(1000)
+            .writer(writer)
+            .build();
 
         ReflectionTestUtils.setField(foundProduct, "id", inputId);
         ReflectionTestUtils.setField(foundProduct, "createdAt", LocalDateTime.now());
 
-        Image image1 = Image.builder()
-                            .product(foundProduct)
-                            .url("image url1")
-                            .order(1)
-                            .build();
-        Image image2 = Image.builder()
-                            .product(foundProduct)
-                            .url("image url2")
-                            .order(2)
-                            .build();
+        Image image1 = Image
+            .builder()
+            .product(foundProduct)
+            .url("image url1")
+            .order(1)
+            .build();
+        Image image2 = Image
+            .builder()
+            .product(foundProduct)
+            .url("image url2")
+            .order(2)
+            .build();
         List<Image> images = List.of(image1, image2);
         ReflectionTestUtils.setField(foundProduct, "images", images);
 
@@ -538,41 +553,58 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         // then
         verify(productService, atLeastOnce()).findById(anyLong());
-        response.andExpect(status().isOk())
-                .andDo(
-                    document(
-                        "Find Product by id", preprocessResponse(prettyPrint()),
-                        responseFields(
-                            fieldWithPath("id")
-                                .type(JsonFieldType.NUMBER).description("상품 식별자"),
-                            fieldWithPath("title")
-                                .type(JsonFieldType.STRING).description("상품 제목"),
-                            fieldWithPath("description")
-                                .type(JsonFieldType.STRING).description("상품 소개"),
-                            fieldWithPath("minimumPrice")
-                                .type(JsonFieldType.NUMBER).description("최소주문금액"),
-                            fieldWithPath("category")
-                                .type(JsonFieldType.STRING).description("카테고리 이름"),
-                            fieldWithPath("location")
-                                .type(JsonFieldType.STRING).description("거래 위치").optional(),
-                            fieldWithPath("expireAt")
-                                .type(JsonFieldType.STRING).description("비딩 종료 시간"),
-                            fieldWithPath("createdAt")
-                                .type(JsonFieldType.STRING).description("생성 시간"),
-                            fieldWithPath("updatedAt")
-                                .type(JsonFieldType.STRING).description("수정 시간").optional(),
-                            fieldWithPath("writer.id")
-                                .type(JsonFieldType.NUMBER).description("작성자 식별자"),
-                            fieldWithPath("writer.username")
-                                .type(JsonFieldType.STRING).description("작성자 이름"),
-                            fieldWithPath("writer.profileImage")
-                                .type(JsonFieldType.STRING).description("작성자 이미지 주소"),
-                            fieldWithPath("images[].url")
-                                .type(JsonFieldType.STRING).description("이미지 주소"),
-                            fieldWithPath("images[].order")
-                                .type(JsonFieldType.NUMBER).description("이미지 순서")
-                        )
-                    ));
+        response
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "Find Product by id", preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("상품 식별자"),
+                        fieldWithPath("title")
+                            .type(JsonFieldType.STRING)
+                            .description("상품 제목"),
+                        fieldWithPath("description")
+                            .type(JsonFieldType.STRING)
+                            .description("상품 소개"),
+                        fieldWithPath("minimumPrice")
+                            .type(JsonFieldType.NUMBER)
+                            .description("최소주문금액"),
+                        fieldWithPath("category")
+                            .type(JsonFieldType.STRING)
+                            .description("카테고리 이름"),
+                        fieldWithPath("location")
+                            .type(JsonFieldType.STRING)
+                            .description("거래 위치")
+                            .optional(),
+                        fieldWithPath("expireAt")
+                            .type(JsonFieldType.STRING)
+                            .description("비딩 종료 시간"),
+                        fieldWithPath("createdAt")
+                            .type(JsonFieldType.STRING)
+                            .description("생성 시간"),
+                        fieldWithPath("updatedAt")
+                            .type(JsonFieldType.STRING)
+                            .description("수정 시간")
+                            .optional(),
+                        fieldWithPath("writer.id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("작성자 식별자"),
+                        fieldWithPath("writer.username")
+                            .type(JsonFieldType.STRING)
+                            .description("작성자 이름"),
+                        fieldWithPath("writer.profileImage")
+                            .type(JsonFieldType.STRING)
+                            .description("작성자 이미지 주소"),
+                        fieldWithPath("images[].url")
+                            .type(JsonFieldType.STRING)
+                            .description("이미지 주소"),
+                        fieldWithPath("images[].order")
+                            .type(JsonFieldType.NUMBER)
+                            .description("이미지 순서")
+                    )
+                ));
       }
     }
   }
@@ -588,15 +620,16 @@ class ProductApiControllerTest extends ControllerSetUp {
       @DisplayName("상품을 조회하고 결과를 반환한다")
       void ItReturnProductList() throws Exception {
         //given
-        Product product = Product.builder()
-                                 .title("귤 팔아요")
-                                 .description("맛있어요")
-                                 .category(FOOD)
-                                 .images(List.of("image1"))
-                                 .location("제주도")
-                                 .minimumPrice(1000)
-                                 .writer(new User("제로", "image", "google", "123", new Group()))
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("귤 팔아요")
+            .description("맛있어요")
+            .category(FOOD)
+            .images(List.of("image1"))
+            .location("제주도")
+            .minimumPrice(1000)
+            .writer(new User("제로", "image", "google", "123", new Group()))
+            .build();
         ReflectionTestUtils.setField(product, "id", 1L);
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
 
@@ -617,33 +650,48 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         //then
         verify(productService).findAll(any(ProductSelectRequest.class));
-        response.andExpect(status().isOk())
-                .andDo(document("Select product", preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestParameters(
-                                    parameterWithName("title").description("상품 제목").optional(),
-                                    parameterWithName("progressed").description("상품 입찰 진행 여부")
-                                                                   .optional(),
-                                    parameterWithName("offset").description("상품 조회 시작 번호"),
-                                    parameterWithName("limit").description("상품 조회 개수"),
-                                    parameterWithName("sort").description("상품 정렬 기준").optional()),
-                                responseFields(
-                                    fieldWithPath("[].id").type(JsonFieldType.NUMBER)
-                                                          .description("상품 식별자"),
-                                    fieldWithPath("[].title").type(JsonFieldType.STRING)
-                                                             .description("상품 제목"),
-                                    fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
-                                                                      .description("상품 썸네일 이미지"),
-                                    fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
-                                                                    .description("최소주문금액"),
-                                    fieldWithPath("[].expireAt").type(JsonFieldType.STRING)
-                                                                .description("비딩 종료 시간"),
-                                    fieldWithPath("[].createdAt").type(JsonFieldType.STRING)
-                                                                 .description("생성 시간"),
-                                    fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                                 .description("수정 시간")
-                                                                 .optional()
-                                )));
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Select product", preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
+                            requestParameters(
+                                parameterWithName("title")
+                                    .description("상품 제목")
+                                    .optional(),
+                                parameterWithName("progressed")
+                                    .description("상품 입찰 진행 여부")
+                                    .optional(),
+                                parameterWithName("offset").description("상품 조회 시작 번호"),
+                                parameterWithName("limit").description("상품 조회 개수"),
+                                parameterWithName("sort")
+                                    .description("상품 정렬 기준")
+                                    .optional()
+                            ),
+                            responseFields(
+                                fieldWithPath("[].id")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("상품 식별자"),
+                                fieldWithPath("[].title")
+                                    .type(JsonFieldType.STRING)
+                                    .description("상품 제목"),
+                                fieldWithPath("[].thumbnailImage")
+                                    .type(JsonFieldType.STRING)
+                                    .description("상품 썸네일 이미지"),
+                                fieldWithPath("[].minimumPrice")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("최소주문금액"),
+                                fieldWithPath("[].expireAt")
+                                    .type(JsonFieldType.STRING)
+                                    .description("비딩 종료 시간"),
+                                fieldWithPath("[].createdAt")
+                                    .type(JsonFieldType.STRING)
+                                    .description("생성 시간"),
+                                fieldWithPath("[].updatedAt")
+                                    .type(JsonFieldType.STRING)
+                                    .description("수정 시간")
+                                    .optional()
+                            )
+            ));
       }
     }
 
@@ -659,7 +707,9 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL).param("progressed", progressed));
+            RestDocumentationRequestBuilders
+                .get(BASE_URL)
+                .param("progressed", progressed));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -678,7 +728,9 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL).param("offset", offset));
+            RestDocumentationRequestBuilders
+                .get(BASE_URL)
+                .param("offset", offset));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -696,7 +748,9 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL).param("offset", "-1"));
+            RestDocumentationRequestBuilders
+                .get(BASE_URL)
+                .param("offset", "-1"));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -714,11 +768,16 @@ class ProductApiControllerTest extends ControllerSetUp {
         String limit = "NotNumber";
 
         // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.get(BASE_URL)
-                                                                                 .param("offset",
-                                                                                        "1")
-                                                                                 .param("limit",
-                                                                                        limit));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .param(
+                                                         "offset",
+                                                         "1"
+                                                     )
+                                                     .param(
+                                                         "limit",
+                                                         limit
+                                                     ));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -735,11 +794,16 @@ class ProductApiControllerTest extends ControllerSetUp {
       void itResponseBadRequest(String limit) throws Exception {
         // given
         // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.get(BASE_URL)
-                                                                                 .param("offset",
-                                                                                        "1")
-                                                                                 .param("limit",
-                                                                                        limit));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .param(
+                                                         "offset",
+                                                         "1"
+                                                     )
+                                                     .param(
+                                                         "limit",
+                                                         limit
+                                                     ));
         // then
         response.andExpect(status().isBadRequest());
       }
@@ -754,13 +818,20 @@ class ProductApiControllerTest extends ControllerSetUp {
       void itResponseBadRequest() throws Exception {
         // given
         // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.get(BASE_URL)
-                                                                                 .param("title",
-                                                                                        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-                                                                                 .param("offset",
-                                                                                        "1")
-                                                                                 .param("limit",
-                                                                                        "1"));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .param(
+                                                         "title",
+                                                         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                                                     )
+                                                     .param(
+                                                         "offset",
+                                                         "1"
+                                                     )
+                                                     .param(
+                                                         "limit",
+                                                         "1"
+                                                     ));
         // then
         response.andExpect(status().isBadRequest());
       }
@@ -795,21 +866,26 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         //then
         verify(productService).getBiddingResult(any(UnsignedLong.class), any(UnsignedLong.class));
-        response.andExpect(status().isOk())
-                .andDo(document("Select bidding result", preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                pathParameters(
-                                    parameterWithName("productId").description("상품 아이디")
-                                ),
-                                responseFields(
-                                    fieldWithPath("role").type(JsonFieldType.STRING)
-                                                         .description("유저 역할"),
-                                    fieldWithPath("biddingSucceed").type(JsonFieldType.BOOLEAN)
-                                                                   .description("비딩 성공 여부"),
-                                    fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
-                                                               .description("채팅방 아이디")
-                                                               .optional()
-                                )));
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Select bidding result", preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
+                            pathParameters(
+                                parameterWithName("productId").description("상품 아이디")
+                            ),
+                            responseFields(
+                                fieldWithPath("role")
+                                    .type(JsonFieldType.STRING)
+                                    .description("유저 역할"),
+                                fieldWithPath("biddingSucceed")
+                                    .type(JsonFieldType.BOOLEAN)
+                                    .description("비딩 성공 여부"),
+                                fieldWithPath("chatRoomId")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("채팅방 아이디")
+                                    .optional()
+                            )
+            ));
       }
     }
 

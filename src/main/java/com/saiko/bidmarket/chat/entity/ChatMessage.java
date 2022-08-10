@@ -39,7 +39,11 @@ public class ChatMessage extends BaseTime {
   private String message;
 
   @Builder(access = AccessLevel.PUBLIC)
-  private ChatMessage(User sender, ChatRoom chatRoom, String message) {
+  private ChatMessage(
+      User sender,
+      ChatRoom chatRoom,
+      String message
+  ) {
     Assert.notNull(sender, "Sender must be provided");
     Assert.notNull(chatRoom, "ChatRoom must be provided");
     Assert.hasText(message, "Message must be provided");

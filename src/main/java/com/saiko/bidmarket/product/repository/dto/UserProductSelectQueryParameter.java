@@ -20,7 +20,12 @@ public class UserProductSelectQueryParameter {
 
   private final Sort sort;
 
-  private UserProductSelectQueryParameter(long userId, long offset, int limit, Sort sort) {
+  private UserProductSelectQueryParameter(
+      long userId,
+      long offset,
+      int limit,
+      Sort sort
+  ) {
     Assert.isTrue(userId > 0, "User id must be positive");
     Assert.isTrue(offset >= 0, "offset must not be negative");
     Assert.isTrue(limit > 0, "limit must be positive");
@@ -31,7 +36,10 @@ public class UserProductSelectQueryParameter {
     this.sort = sort != null ? sort : END_DATE_ASC;
   }
 
-  public static UserProductSelectQueryParameter of(long userId, UserProductSelectRequest request) {
+  public static UserProductSelectQueryParameter of(
+      long userId,
+      UserProductSelectRequest request
+  ) {
     return new UserProductSelectQueryParameter(
         userId,
         request.getOffset(),

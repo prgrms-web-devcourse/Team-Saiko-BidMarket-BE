@@ -25,8 +25,9 @@ public class DefaultGroupService implements GroupService {
   public Group findByName(String name) {
     Assert.isTrue(isNotBlank(name), "Name must be provided");
 
-    return groupRepository.findByName(name)
-                          .orElseThrow(() -> new NotFoundException("Group does not exist"));
+    return groupRepository
+        .findByName(name)
+        .orElseThrow(() -> new NotFoundException("Group does not exist"));
 
   }
 

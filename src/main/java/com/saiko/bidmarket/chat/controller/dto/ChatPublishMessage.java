@@ -27,11 +27,13 @@ public class ChatPublishMessage {
   public static ChatPublishMessage of(ChatMessage chatMessage) {
     Assert.notNull(chatMessage, "ChatMessage must be provided");
 
-    return ChatPublishMessage.builder()
-                             .userId(chatMessage.getSender().getId())
-                             .content(chatMessage.getMessage())
-                             .createdAt(chatMessage.getCreatedAt())
-                             .build();
+    return ChatPublishMessage
+        .builder()
+        .userId(chatMessage
+                    .getSender()
+                    .getId())
+        .content(chatMessage.getMessage())
+        .createdAt(chatMessage.getCreatedAt())
+        .build();
   }
 }
-

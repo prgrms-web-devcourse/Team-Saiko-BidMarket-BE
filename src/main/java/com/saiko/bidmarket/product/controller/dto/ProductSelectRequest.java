@@ -19,9 +19,14 @@ public class ProductSelectRequest {
   private final int limit;
   private final Sort sort;
 
-  public ProductSelectRequest(String title, String progressed, Category category, long offset,
-                              int limit,
-                              Sort sort) {
+  public ProductSelectRequest(
+      String title,
+      String progressed,
+      Category category,
+      long offset,
+      int limit,
+      Sort sort
+  ) {
     this.title = title;
     this.progressed = progressed;
     this.category = category;

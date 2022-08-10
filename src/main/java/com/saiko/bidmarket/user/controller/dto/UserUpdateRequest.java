@@ -13,7 +13,10 @@ public class UserUpdateRequest {
   @NotBlank
   private final String profileImage;
 
-  public UserUpdateRequest(String username, String profileImage) {
+  public UserUpdateRequest(
+      String username,
+      String profileImage
+  ) {
 
     this.username = username;
     this.profileImage = profileImage;

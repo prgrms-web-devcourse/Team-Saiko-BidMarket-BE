@@ -45,8 +45,10 @@ class DefaultGroupServiceTest {
       @ValueSource(strings = {"\n", "\t"})
       @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
       void ItThrowsIllegalArgumentException(String src) {
-        Assertions.assertThrows(IllegalArgumentException.class,
-                                () -> defaultGroupService.findByName(src));
+        Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultGroupService.findByName(src)
+        );
       }
     }
 

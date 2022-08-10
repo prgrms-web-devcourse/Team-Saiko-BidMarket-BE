@@ -18,9 +18,13 @@ public class ReportCreateDto {
 
   private final UnsignedLong toUserId;
 
-
   @Builder
-  private ReportCreateDto(UnsignedLong requestUserId, String reason, UnsignedLong fromUserId, UnsignedLong toUserId) {
+  private ReportCreateDto(
+      UnsignedLong requestUserId,
+      String reason,
+      UnsignedLong fromUserId,
+      UnsignedLong toUserId
+  ) {
     Assert.notNull(requestUserId, "Request user id must be provided");
     Assert.hasText(reason, "Reason must contain contexts");
     Assert.notNull(fromUserId, "From user id must be provided");
@@ -32,5 +36,3 @@ public class ReportCreateDto {
     this.toUserId = toUserId;
   }
 }
-
-

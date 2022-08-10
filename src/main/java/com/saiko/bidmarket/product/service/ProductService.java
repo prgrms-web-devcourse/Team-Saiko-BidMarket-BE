@@ -5,15 +5,18 @@ import java.util.List;
 
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
-import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
+import com.saiko.bidmarket.product.controller.dto.ProductDetailResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 
 public interface ProductService {
-  ProductCreateResponse create(ProductCreateRequest productCreateRequest, Long userId);
+  ProductCreateResponse create(
+      ProductCreateRequest productCreateRequest,
+      Long userId
+  );
 
   List<ProductSelectResponse> findAll(ProductSelectRequest productSelectRequest);
 
@@ -23,5 +26,8 @@ public interface ProductService {
 
   void executeClosingProduct(Product product);
 
-  BiddingResultResponse getBiddingResult(UnsignedLong productId, UnsignedLong userId);
+  BiddingResultResponse getBiddingResult(
+      UnsignedLong productId,
+      UnsignedLong userId
+  );
 }

@@ -25,11 +25,15 @@ public class ChatMessageCreateParam {
   @Length(min = 1, max = 2000)
   private final String content;
 
-  public static ChatMessageCreateParam of(long roomId, ChatSendMessage sendMessage) {
-    return ChatMessageCreateParam.builder()
-                                 .roomId(roomId)
-                                 .userId(sendMessage.getUserId())
-                                 .content(sendMessage.getContent())
-                                 .build();
+  public static ChatMessageCreateParam of(
+      long roomId,
+      ChatSendMessage sendMessage
+  ) {
+    return ChatMessageCreateParam
+        .builder()
+        .roomId(roomId)
+        .userId(sendMessage.getUserId())
+        .content(sendMessage.getContent())
+        .build();
   }
 }

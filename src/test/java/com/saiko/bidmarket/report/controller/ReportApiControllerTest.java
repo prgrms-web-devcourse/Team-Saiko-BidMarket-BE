@@ -182,11 +182,20 @@ class ReportApiControllerTest extends ControllerSetUp {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     requestFields(
-                        fieldWithPath("reason").type(JsonFieldType.STRING).description("신고 이유"),
-                        fieldWithPath("fromUserId").type(JsonFieldType.NUMBER).description("신고자 식별자"),
-                        fieldWithPath("toUserId").type(JsonFieldType.NUMBER).description("피신고자 식별자")),
+                        fieldWithPath("reason")
+                            .type(JsonFieldType.STRING)
+                            .description("신고 이유"),
+                        fieldWithPath("fromUserId")
+                            .type(JsonFieldType.NUMBER)
+                            .description("신고자 식별자"),
+                        fieldWithPath("toUserId")
+                            .type(JsonFieldType.NUMBER)
+                            .description("피신고자 식별자")
+                    ),
                     responseFields(
-                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("신고 식별자"))
+                        fieldWithPath("id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("신고 식별자"))
                 )
             );
 

@@ -21,7 +21,11 @@ public class ReportCreateRequest {
   private final UnsignedLong toUserId;
 
   @JsonCreator
-  public ReportCreateRequest(String reason, long fromUserId, long toUserId) {
+  public ReportCreateRequest(
+      String reason,
+      long fromUserId,
+      long toUserId
+  ) {
     this.reason = reason;
     this.fromUserId = UnsignedLong.valueOf(fromUserId);
     this.toUserId = UnsignedLong.valueOf(toUserId);

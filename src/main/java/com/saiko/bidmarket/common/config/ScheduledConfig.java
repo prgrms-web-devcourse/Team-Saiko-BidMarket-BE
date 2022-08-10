@@ -30,7 +30,8 @@ public class ScheduledConfig {
     public void closeProduct() {
       LocalDateTime now = LocalDateTime.now();
       LocalDateTime nowTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                                             now.getHour(), now.getMinute());
+                                               now.getHour(), now.getMinute()
+      );
 
       List<Product> productsInProgress = productService.findAllThatNeedToClose(nowTime);
 

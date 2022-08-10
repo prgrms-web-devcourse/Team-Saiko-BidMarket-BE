@@ -45,32 +45,45 @@ class UserRepositoryTest {
   @Autowired
   GroupRepository groupRepository;
 
-  private User getUser(String name, Group group, String providerId) {
-    return User.builder()
-               .username(name)
-               .provider("test")
-               .providerId(providerId)
-               .profileImage("test")
-               .group(group)
-               .build();
+  private User getUser(
+      String name,
+      Group group,
+      String providerId
+  ) {
+    return User
+        .builder()
+        .username(name)
+        .provider("test")
+        .providerId(providerId)
+        .profileImage("test")
+        .group(group)
+        .build();
   }
 
-  private Product getProduct(String title, User writer) {
-    return Product.builder()
-                  .title(title)
-                  .description("test")
-                  .images(List.of("image"))
-                  .writer(writer)
-                  .category(Category.BEAUTY)
-                  .build();
+  private Product getProduct(
+      String title,
+      User writer
+  ) {
+    return Product
+        .builder()
+        .title(title)
+        .description("test")
+        .images(List.of("image"))
+        .writer(writer)
+        .category(Category.BEAUTY)
+        .build();
   }
 
-  private Bidding getBidding(User bidder, Product product) {
-    return Bidding.builder()
-                  .biddingPrice(BiddingPrice.valueOf(10000))
-                  .bidder(bidder)
-                  .product(product)
-                  .build();
+  private Bidding getBidding(
+      User bidder,
+      Product product
+  ) {
+    return Bidding
+        .builder()
+        .biddingPrice(BiddingPrice.valueOf(10000))
+        .bidder(bidder)
+        .product(product)
+        .build();
   }
 
   @Test
@@ -79,7 +92,9 @@ class UserRepositoryTest {
 
     String bidderName = "testWinner";
 
-    Group userGroup = groupRepository.findByName("USER_GROUP").get();
+    Group userGroup = groupRepository
+        .findByName("USER_GROUP")
+        .get();
 
     User user1 = getUser("test1", userGroup, "test1");
     User user2 = getUser(bidderName, userGroup, "test2");
@@ -94,7 +109,9 @@ class UserRepositoryTest {
 
     savedBidding.win();
 
-    User user = userRepository.findWinnerOfBiddingByProductId(product.getId()).get();
+    User user = userRepository
+        .findWinnerOfBiddingByProductId(product.getId())
+        .get();
 
     assertThat(user.getUsername()).isEqualTo(bidderName);
   }

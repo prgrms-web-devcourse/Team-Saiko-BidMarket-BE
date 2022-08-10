@@ -50,14 +50,22 @@ public class WebSecurityConfig {
   public AccessDeniedHandler accessDeniedHandler() {
 
     return (request, response, e) -> {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      Authentication authentication = SecurityContextHolder
+          .getContext()
+          .getAuthentication();
       Object principal = authentication != null ? authentication.getPrincipal() : null;
       log.warn("{} is denied", principal, e);
       response.setStatus(HttpServletResponse.SC_FORBIDDEN);
       response.setContentType("text/plain;charset=UTF-8");
-      response.getWriter().write("ACCESS DENIED");
-      response.getWriter().flush();
-      response.getWriter().close();
+      response
+          .getWriter()
+          .write("ACCESS DENIED");
+      response
+          .getWriter()
+          .flush();
+      response
+          .getWriter()
+          .close();
     };
   }
 
@@ -93,14 +101,17 @@ public class WebSecurityConfig {
 
   @Bean
   public OAuth2AuthorizedClientRepository authorizedClientRepository(
-      OAuth2AuthorizedClientService authorizedClientService) {
+      OAuth2AuthorizedClientService authorizedClientService
+  ) {
 
     return new AuthenticatedPrincipalOAuth2AuthorizedClientRepository(authorizedClientService);
   }
 
   @Bean
-  public OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(Jwt jwt,
-                                                                               UserService userService) {
+  public OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(
+      Jwt jwt,
+      UserService userService
+  ) {
 
     return new OAuth2AuthenticationSuccessHandler(jwt, userService);
   }
@@ -119,21 +130,31 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(Jwt jwt,
-                                         HttpSecurity http,
-                                         OAuth2AuthorizedClientRepository repository,
-                                         OAuth2AuthenticationSuccessHandler handler
+  public SecurityFilterChain filterChain(
+      Jwt jwt,
+      HttpSecurity http,
+      OAuth2AuthorizedClientRepository repository,
+      OAuth2AuthenticationSuccessHandler handler
   ) throws Exception {
 
-    http.authorizeRequests()
-        .antMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("USER", "ADMIN")
-        .antMatchers(HttpMethod.POST, "/api/v1/bidding").hasAnyRole("USER", "ADMIN")
-        .antMatchers(HttpMethod.POST, "/api/v1/reports").hasAnyRole("USER", "ADMIN")
-        .antMatchers(HttpMethod.POST, "/api/v1/comments").hasAnyRole("USER", "ADMIN")
-        .antMatchers(HttpMethod.GET, "/api/v1/products/{productId}/result").hasAnyRole("USER", "ADMIN")
-        .antMatchers(HttpMethod.GET, "/api/v1/biddings/products/{productId}").hasAnyRole("USER", "ADMIN")
-        .antMatchers(HttpMethod.GET, "/api/v1/chatRooms").hasAnyRole("USER", "ADMIN")
-        .anyRequest().permitAll()
+    http
+        .authorizeRequests()
+        .antMatchers(HttpMethod.POST, "/api/v1/products")
+        .hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.POST, "/api/v1/bidding")
+        .hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.POST, "/api/v1/reports")
+        .hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.POST, "/api/v1/comments")
+        .hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.GET, "/api/v1/products/{productId}/result")
+        .hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.GET, "/api/v1/biddings/products/{productId}")
+        .hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.GET, "/api/v1/chatRooms")
+        .hasAnyRole("USER", "ADMIN")
+        .anyRequest()
+        .permitAll()
         .and()
         .cors()
         .configurationSource(corsConfigurationSource())

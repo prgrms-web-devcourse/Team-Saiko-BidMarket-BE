@@ -13,8 +13,10 @@ public class CommentSelectRequest {
   private final UnsignedLong productId;
   private final Sort sort;
 
-  public CommentSelectRequest(long productId,
-                              Sort sort) {
+  public CommentSelectRequest(
+      long productId,
+      Sort sort
+  ) {
     this.productId = UnsignedLong.valueOf(productId);
     this.sort = sort == null ? Sort.CREATED_AT_ASC : sort;
   }

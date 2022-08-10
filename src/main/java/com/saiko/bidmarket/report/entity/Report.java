@@ -37,7 +37,11 @@ public class Report extends BaseTime {
   private User toUser;
 
   @Builder
-  private Report(String reason, User fromUser, User toUser) {
+  private Report(
+      String reason,
+      User fromUser,
+      User toUser
+  ) {
     Assert.hasText(reason, "Reason must contain contexts");
     Assert.notNull(fromUser, "From user must be provided");
     Assert.notNull(toUser, "To user must be provided");

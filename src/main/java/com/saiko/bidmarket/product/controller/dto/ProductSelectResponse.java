@@ -13,9 +13,15 @@ public class ProductSelectResponse {
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
-  public ProductSelectResponse(long id, String title, String thumbnailImage, int minimumPrice,
-                               LocalDateTime expireAt, LocalDateTime createdAt,
-                               LocalDateTime updatedAt) {
+  public ProductSelectResponse(
+      long id,
+      String title,
+      String thumbnailImage,
+      int minimumPrice,
+      LocalDateTime expireAt,
+      LocalDateTime createdAt,
+      LocalDateTime updatedAt
+  ) {
     this.id = id;
     this.title = title;
     this.thumbnailImage = thumbnailImage;
@@ -29,7 +35,8 @@ public class ProductSelectResponse {
     return new ProductSelectResponse(product.getId(), product.getTitle(),
                                      product.getThumbnailImage(),
                                      product.getMinimumPrice(), product.getExpireAt(),
-                                     product.getCreatedAt(), product.getUpdatedAt());
+                                     product.getCreatedAt(), product.getUpdatedAt()
+    );
   }
 
   public long getId() {
@@ -60,4 +67,3 @@ public class ProductSelectResponse {
     return updatedAt;
   }
 }
-

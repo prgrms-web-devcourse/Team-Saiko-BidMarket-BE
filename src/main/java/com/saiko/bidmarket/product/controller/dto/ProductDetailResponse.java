@@ -49,10 +49,11 @@ public class ProductDetailResponse {
     this.createdAt = product.getCreatedAt();
     this.updatedAt = product.getUpdatedAt();
     this.writer = UserSelectResponse.from(product.getWriter());
-    this.images = product.getImages()
-                         .stream()
-                         .map(ImagBasicResponse::from)
-                         .collect(Collectors.toList());
+    this.images = product
+        .getImages()
+        .stream()
+        .map(ImagBasicResponse::from)
+        .collect(Collectors.toList());
   }
 
   public static ProductDetailResponse from(Product product) {

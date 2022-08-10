@@ -13,7 +13,11 @@ public class UserSelectResponse {
 
   private final String profileImage;
 
-  public UserSelectResponse(long id, String username, String profileImage) {
+  public UserSelectResponse(
+      long id,
+      String username,
+      String profileImage
+  ) {
     Assert.notNull(username, "User name must be provided");
     Assert.notNull(profileImage, "User name must be provided");
 

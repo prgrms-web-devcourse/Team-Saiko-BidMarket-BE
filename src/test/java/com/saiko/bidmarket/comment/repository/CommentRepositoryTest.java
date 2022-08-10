@@ -68,45 +68,53 @@ public class CommentRepositoryTest {
       @DisplayName("등록순으로 정렬된 상품 목록 리스트를 반환한다")
       void itReturnCreatedAtAscProductList() {
         // given
-        Group group = groupRepository.findById(1L).get();
+        Group group = groupRepository
+            .findById(1L)
+            .get();
 
-        User writer = User.builder()
-                          .username("제로")
-                          .profileImage("image")
-                          .provider("google")
-                          .providerId("123")
-                          .group(group)
-                          .build();
+        User writer = User
+            .builder()
+            .username("제로")
+            .profileImage("image")
+            .provider("google")
+            .providerId("123")
+            .group(group)
+            .build();
         writer = userRepository.save(writer);
-        Product product = productRepository.save(Product.builder()
-                                                        .title("노트북 팝니다1")
-                                                        .description("싸요")
-                                                        .category(Category.DIGITAL_DEVICE)
-                                                        .minimumPrice(10000)
-                                                        .images(List.of("image"))
-                                                        .location(null)
-                                                        .writer(writer)
-                                                        .build());
+        Product product = productRepository.save(Product
+                                                     .builder()
+                                                     .title("노트북 팝니다1")
+                                                     .description("싸요")
+                                                     .category(Category.DIGITAL_DEVICE)
+                                                     .minimumPrice(10000)
+                                                     .images(List.of("image"))
+                                                     .location(null)
+                                                     .writer(writer)
+                                                     .build());
 
-        User commentWriter = User.builder()
-                                 .username("레이")
-                                 .profileImage("image")
-                                 .provider("google")
-                                 .providerId("1234")
-                                 .group(group)
-                                 .build();
+        User commentWriter = User
+            .builder()
+            .username("레이")
+            .profileImage("image")
+            .provider("google")
+            .providerId("1234")
+            .group(group)
+            .build();
 
         commentWriter = userRepository.save(commentWriter);
 
-        Comment comment = Comment.builder()
-                                 .writer(commentWriter)
-                                 .product(product)
-                                 .content("안녕하세요~")
-                                 .build();
+        Comment comment = Comment
+            .builder()
+            .writer(commentWriter)
+            .product(product)
+            .content("안녕하세요~")
+            .build();
         comment = commentRepository.save(comment);
 
-        CommentSelectRequest commentSelectRequest = new CommentSelectRequest(product.getId(),
-                                                                             CREATED_AT_ASC);
+        CommentSelectRequest commentSelectRequest = new CommentSelectRequest(
+            product.getId(),
+            CREATED_AT_ASC
+        );
 
         // when
         List<Comment> result = commentRepository.findAllByProduct(commentSelectRequest);

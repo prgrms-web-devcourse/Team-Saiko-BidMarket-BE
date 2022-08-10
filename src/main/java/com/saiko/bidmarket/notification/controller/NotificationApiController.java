@@ -33,7 +33,7 @@ public class NotificationApiController {
   public List<NotificationSelectResponse> getAllNotification(
       @AuthenticationPrincipal JwtAuthentication authentication,
       @ModelAttribute @Valid NotificationSelectRequest request
-      ) {
+  ) {
     UnsignedLong userId = UnsignedLong.valueOf(authentication.getUserId());
     return notificationService.findAllNotifications(userId, request);
   }

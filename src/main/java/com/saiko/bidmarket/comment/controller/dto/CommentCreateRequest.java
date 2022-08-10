@@ -17,7 +17,10 @@ public class CommentCreateRequest {
   @Length(max = 500)
   private String content;
 
-  public CommentCreateRequest(long productId, String content) {
+  public CommentCreateRequest(
+      long productId,
+      String content
+  ) {
     this.productId = UnsignedLong.valueOf(productId);
     this.content = content;
   }

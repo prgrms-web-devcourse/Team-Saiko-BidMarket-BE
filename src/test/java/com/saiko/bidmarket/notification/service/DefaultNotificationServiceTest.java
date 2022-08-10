@@ -2,7 +2,7 @@ package com.saiko.bidmarket.notification.service;
 
 import static com.saiko.bidmarket.notification.NotificationType.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.List;
@@ -78,48 +78,55 @@ public class DefaultNotificationServiceTest {
       @DisplayName("UserBiddingSelectResponse 를 반환한다")
       void ItResponseNotificationSelectResponseList() {
         //given
-        User user = User.builder()
-                        .username("제로")
-                        .profileImage("image")
-                        .provider("google")
-                        .providerId("123")
-                        .group(new Group())
-                        .build();
+        User user = User
+            .builder()
+            .username("제로")
+            .profileImage("image")
+            .provider("google")
+            .providerId("123")
+            .group(new Group())
+            .build();
         ReflectionTestUtils.setField(user, "id", 1L);
 
-        Product product = Product.builder()
-                                 .title("노트북 팝니다1")
-                                 .description("싸요")
-                                 .category(Category.DIGITAL_DEVICE)
-                                 .minimumPrice(10000)
-                                 .images(List.of("thumbnailImage"))
-                                 .location(null)
-                                 .writer(user)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("노트북 팝니다1")
+            .description("싸요")
+            .category(Category.DIGITAL_DEVICE)
+            .minimumPrice(10000)
+            .images(List.of("thumbnailImage"))
+            .location(null)
+            .writer(user)
+            .build();
         ReflectionTestUtils.setField(product, "id", 1L);
 
-        Notification notification = Notification.builder()
-                                                .user(user)
-                                                .product(product)
-                                                .type(
-                                                    END_PRODUCT_FOR_WRITER_WITH_WINNER)
-                                                .build();
+        Notification notification = Notification
+            .builder()
+            .user(user)
+            .product(product)
+            .type(
+                END_PRODUCT_FOR_WRITER_WITH_WINNER)
+            .build();
         ReflectionTestUtils.setField(notification, "id", 1L);
 
-        NotificationRepoDto notificationRepoDto = new NotificationRepoDto(notification.getId(),
-                                                                          product.getId(),
-                                                                          product.getTitle(),
-                                                                          product.getThumbnailImage(),
-                                                                          notification.getType(),
-                                                                          notification.getCreatedAt(),
-                                                                          notification.getUpdatedAt());
+        NotificationRepoDto notificationRepoDto = new NotificationRepoDto(
+            notification.getId(),
+            product.getId(),
+            product.getTitle(),
+            product.getThumbnailImage(),
+            notification.getType(),
+            notification.getCreatedAt(),
+            notification.getUpdatedAt()
+        );
         NotificationSelectResponse notificationSelectResponse = NotificationSelectResponse.from(
             notificationRepoDto);
 
         NotificationSelectRequest request = new NotificationSelectRequest(0, 1);
 
-        given(notificationRepository.findAllNotification(any(UnsignedLong.class),
-                                                         any(NotificationSelectRequest.class)))
+        given(notificationRepository.findAllNotification(
+            any(UnsignedLong.class),
+            any(NotificationSelectRequest.class)
+        ))
             .willReturn(List.of(notificationRepoDto));
 
         //when
@@ -128,17 +135,29 @@ public class DefaultNotificationServiceTest {
 
         //then
         assertThat(notificationSelectResponses.size()).isEqualTo(1);
-        assertThat(notificationSelectResponses.get(0).getId()).isEqualTo(
+        assertThat(notificationSelectResponses
+                       .get(0)
+                       .getId()).isEqualTo(
             notificationSelectResponse.getId());
-        assertThat(notificationSelectResponses.get(0).getProductId()).isEqualTo(
+        assertThat(notificationSelectResponses
+                       .get(0)
+                       .getProductId()).isEqualTo(
             notificationSelectResponse.getProductId());
-        assertThat(notificationSelectResponses.get(0).getTitle()).isEqualTo(
+        assertThat(notificationSelectResponses
+                       .get(0)
+                       .getTitle()).isEqualTo(
             notificationSelectResponse.getTitle());
-        assertThat(notificationSelectResponses.get(0).getThumbnailImage()).isEqualTo(
+        assertThat(notificationSelectResponses
+                       .get(0)
+                       .getThumbnailImage()).isEqualTo(
             notificationSelectResponse.getThumbnailImage());
-        assertThat(notificationSelectResponses.get(0).getType()).isEqualTo(
+        assertThat(notificationSelectResponses
+                       .get(0)
+                       .getType()).isEqualTo(
             notificationSelectResponse.getType());
-        assertThat(notificationSelectResponses.get(0).getContent()).isEqualTo(
+        assertThat(notificationSelectResponses
+                       .get(0)
+                       .getContent()).isEqualTo(
             notificationSelectResponse.getContent());
       }
     }

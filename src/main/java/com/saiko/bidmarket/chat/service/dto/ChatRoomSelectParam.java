@@ -25,12 +25,16 @@ public class ChatRoomSelectParam {
   @Positive
   private final int limit;
 
-  public static ChatRoomSelectParam of(long userId, ChatRoomSelectRequest request) {
-    return ChatRoomSelectParam.builder()
-                              .limit(request.getLimit())
-                              .offset(request.getOffset())
-                              .userId(userId)
-                              .build();
+  public static ChatRoomSelectParam of(
+      long userId,
+      ChatRoomSelectRequest request
+  ) {
+    return ChatRoomSelectParam
+        .builder()
+        .limit(request.getLimit())
+        .offset(request.getOffset())
+        .userId(userId)
+        .build();
   }
 
 }

@@ -98,9 +98,10 @@ class BiddingApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.post(BASE_URL)
-                                            .contentType(MediaType.APPLICATION_JSON)
-                                            .content(requestBody));
+            RestDocumentationRequestBuilders
+                .post(BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -166,23 +167,25 @@ class BiddingApiControllerTest extends ControllerSetUp {
                                                      .content(requestBody));
 
         // then
-        response.andExpect(status().isCreated())
-                .andDo(document("create bidding",
-                                preprocessResponse(prettyPrint()),
-                                requestFields(
-                                    fieldWithPath("productId")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("비딩할 상품 식별자"),
-                                    fieldWithPath("biddingPrice")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("비딩하려는 금액")
-                                ),
-                                responseFields(
-                                    fieldWithPath("id")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("생성된 비딩의 식별자")
-                                )
-                ));
+        response
+            .andExpect(status().isCreated())
+            .andDo(document(
+                "create bidding",
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("productId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("비딩할 상품 식별자"),
+                    fieldWithPath("biddingPrice")
+                        .type(JsonFieldType.NUMBER)
+                        .description("비딩하려는 금액")
+                ),
+                responseFields(
+                    fieldWithPath("id")
+                        .type(JsonFieldType.NUMBER)
+                        .description("생성된 비딩의 식별자")
+                )
+            ));
 
       }
     }
@@ -253,15 +256,17 @@ class BiddingApiControllerTest extends ControllerSetUp {
             RestDocumentationRequestBuilders.get(BASE_URL + API_PATH, productId));
 
         // then
-        response.andExpect(status().isOk())
-                .andDo(document("find bidding price by product id and bidder Id",
-                                preprocessResponse(prettyPrint()),
-                                responseFields(
-                                    fieldWithPath("biddingPrice")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("요청자가 해당 상품에비딩한 금액")
-                                )
-                ));
+        response
+            .andExpect(status().isOk())
+            .andDo(document(
+                "find bidding price by product id and bidder Id",
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                    fieldWithPath("biddingPrice")
+                        .type(JsonFieldType.NUMBER)
+                        .description("요청자가 해당 상품에비딩한 금액")
+                )
+            ));
 
       }
     }

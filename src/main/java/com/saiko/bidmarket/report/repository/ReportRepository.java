@@ -9,5 +9,8 @@ import com.saiko.bidmarket.user.entity.User;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, UnsignedLong> {
-  boolean existsByFromUserAndToUser(User fromUser, User toUser);
+  boolean existsByFromUserAndToUser(
+      User fromUser,
+      User toUser
+  );
 }

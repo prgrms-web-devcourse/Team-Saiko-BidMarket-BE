@@ -84,8 +84,15 @@ public class Product extends BaseTime {
   }
 
   @Builder
-  private Product(String title, String description, int minimumPrice, Category category,
-                  String location, List<String> images, User writer) {
+  private Product(
+      String title,
+      String description,
+      int minimumPrice,
+      Category category,
+      String location,
+      List<String> images,
+      User writer
+  ) {
     Assert.hasText(title, "Title must be provided");
     Assert.hasText(description, "Description must be provided");
     Assert.notNull(writer, "Writer must be provided");
@@ -95,7 +102,9 @@ public class Product extends BaseTime {
     this.minimumPrice = minimumPrice;
     this.category = category;
     this.location = location;
-    this.expireAt = LocalDateTime.now().plusDays(PROGRESSION_PERIOD_OF_BIDDING);
+    this.expireAt = LocalDateTime
+        .now()
+        .plusDays(PROGRESSION_PERIOD_OF_BIDDING);
     this.images = createImages(images);
     this.thumbnailImage = createThumbnailImage(images);
     this.writer = writer;
@@ -116,13 +125,15 @@ public class Product extends BaseTime {
     }
 
     AtomicInteger order = new AtomicInteger(1);
-    return imageUrls.stream()
-                    .map((url) -> Image.builder()
-                                       .url(url)
-                                       .product(this)
-                                       .order(order.getAndIncrement())
-                                       .build())
-                    .collect(Collectors.toList());
+    return imageUrls
+        .stream()
+        .map((url) -> Image
+            .builder()
+            .url(url)
+            .product(this)
+            .order(order.getAndIncrement())
+            .build())
+        .collect(Collectors.toList());
   }
 
   private String createThumbnailImage(List<String> imageUrls) {
@@ -155,17 +166,19 @@ public class Product extends BaseTime {
 
   private void setWinningPrice() {
     this.winningPrice =
-        biddings.size() == 1 ? (long)minimumPrice : biddings.get(1).getBiddingPrice() + 1000L;
+        biddings.size() == 1 ? (long)minimumPrice : biddings
+            .get(1)
+            .getBiddingPrice() + 1000L;
   }
 
   public List<User> getBiddersExceptWinner() {
-    List<User> bidders = biddings.stream()
-                                 .map(Bidding::getBidder)
-                                 .collect(Collectors.toList());
+    List<User> bidders = biddings
+        .stream()
+        .map(Bidding::getBidder)
+        .collect(Collectors.toList());
 
     bidders.remove(0);
 
     return bidders;
   }
 }
-

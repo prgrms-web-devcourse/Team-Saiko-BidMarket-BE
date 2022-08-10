@@ -33,24 +33,30 @@ public class DefaultChatRoomService implements ChatRoomService {
     long sellerId = createParam.getSellerId();
     long productId = createParam.getProductId();
 
-    User seller = userRepository.findById(sellerId)
-                                .orElseThrow(() -> new NotFoundException("User not exists"));
+    User seller = userRepository
+        .findById(sellerId)
+        .orElseThrow(() -> new NotFoundException("User not exists"));
 
-    User winner = userRepository.findWinnerOfBiddingByProductId(productId)
-                                .orElseThrow(
-                                    () -> new NotFoundException("Winner not exists"));
+    User winner = userRepository
+        .findWinnerOfBiddingByProductId(productId)
+        .orElseThrow(
+            () -> new NotFoundException("Winner not exists"));
 
-    Product product = productRepository.findById(createParam.getProductId())
-                                       .orElseThrow(
-                                           () -> new NotFoundException("Product not exists"));
+    Product product = productRepository
+        .findById(createParam.getProductId())
+        .orElseThrow(
+            () -> new NotFoundException("Product not exists"));
 
-    ChatRoom chatRoom = ChatRoom.builder()
-                                .seller(seller)
-                                .winner(winner)
-                                .product(product)
-                                .build();
+    ChatRoom chatRoom = ChatRoom
+        .builder()
+        .seller(seller)
+        .winner(winner)
+        .product(product)
+        .build();
 
-    return chatRoomRepository.save(chatRoom).getId();
+    return chatRoomRepository
+        .save(chatRoom)
+        .getId();
   }
 
   @Override

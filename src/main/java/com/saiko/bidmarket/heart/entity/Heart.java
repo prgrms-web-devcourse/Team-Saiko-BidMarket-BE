@@ -37,7 +37,10 @@ public class Heart extends BaseTime {
   private Product product;
 
   @Builder
-  public Heart(User user, Product product) {
+  public Heart(
+      User user,
+      Product product
+  ) {
     Assert.notNull(user, "User must be provided");
     Assert.notNull(product, "Product must be provided");
 

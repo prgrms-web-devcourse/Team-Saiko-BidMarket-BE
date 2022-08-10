@@ -30,10 +30,13 @@ public class ChatWebSocketController {
 
   @MessageMapping("/room/{id}")
   @SendTo("/chat/room/{id}")
-  public ChatPublishMessage send(@DestinationVariable long id,
-                                 @Valid ChatSendMessage chatSendMessage) {
+  public ChatPublishMessage send(
+      @DestinationVariable long id,
+      @Valid ChatSendMessage chatSendMessage
+  ) {
     log.info("Chat Message | room : {}, user : {}, content : {}", id, chatSendMessage.getUserId(),
-             chatSendMessage.getContent());
+             chatSendMessage.getContent()
+    );
 
     ChatMessageCreateParam param = ChatMessageCreateParam.of(id, chatSendMessage);
 

@@ -74,23 +74,30 @@ public class ChatRoomSelectResponse {
     Assert.notNull(opponent, "Opponent must be provided");
     Assert.notNull(lastMessage, "Last message must be provided");
 
-    ProductInfo productInfo = ProductInfo.builder()
-                                         .productId(chatRoom.getProduct().getId())
-                                         .thumbnailImg(chatRoom.getProduct().getThumbnailImage())
-                                         .build();
+    ProductInfo productInfo = ProductInfo
+        .builder()
+        .productId(chatRoom
+                       .getProduct()
+                       .getId())
+        .thumbnailImg(chatRoom
+                          .getProduct()
+                          .getThumbnailImage())
+        .build();
 
-    OpponentUserInfo opponentUserInfo = OpponentUserInfo.builder()
-                                                        .username(opponent.getUsername())
-                                                        .profileImg(opponent.getProfileImage())
-                                                        .build();
+    OpponentUserInfo opponentUserInfo = OpponentUserInfo
+        .builder()
+        .username(opponent.getUsername())
+        .profileImg(opponent.getProfileImage())
+        .build();
 
-    return ChatRoomSelectResponse.builder()
-                                 .chatRoomId(chatRoom.getId())
-                                 .productInfo(productInfo)
-                                 .opponentUserInfo(opponentUserInfo)
-                                 .lastMessage(lastMessage.getMessage())
-                                 .lastMessageDate(lastMessage.getCreatedAt())
-                                 .build();
+    return ChatRoomSelectResponse
+        .builder()
+        .chatRoomId(chatRoom.getId())
+        .productInfo(productInfo)
+        .opponentUserInfo(opponentUserInfo)
+        .lastMessage(lastMessage.getMessage())
+        .lastMessageDate(lastMessage.getCreatedAt())
+        .build();
   }
 
 }

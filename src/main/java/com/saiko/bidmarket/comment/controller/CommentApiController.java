@@ -33,8 +33,10 @@ public class CommentApiController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public CommentCreateResponse create(@AuthenticationPrincipal JwtAuthentication authentication,
-                                      @RequestBody @Valid CommentCreateRequest request) {
+  public CommentCreateResponse create(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @RequestBody @Valid CommentCreateRequest request
+  ) {
     return commentService.create(UnsignedLong.valueOf(authentication.getUserId()), request);
   }
 

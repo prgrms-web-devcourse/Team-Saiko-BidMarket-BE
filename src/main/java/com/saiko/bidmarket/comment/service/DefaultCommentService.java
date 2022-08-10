@@ -33,22 +33,30 @@ public class DefaultCommentService implements CommentService {
 
   @Override
   @Transactional
-  public CommentCreateResponse create(UnsignedLong userId, CommentCreateRequest request) {
+  public CommentCreateResponse create(
+      UnsignedLong userId,
+      CommentCreateRequest request
+  ) {
     Assert.notNull(userId, "UserId must be provided");
     Assert.notNull(request, "Request must be provided");
 
-    User writer = userRepository.findById(userId.getValue())
-                                .orElseThrow(() -> new NotFoundException(
-                                    "User does not exist"));
-    Product product = productRepository.findById(request.getProductId().getValue())
-                                       .orElseThrow(
-                                           () -> new NotFoundException("Product does not exist"));
+    User writer = userRepository
+        .findById(userId.getValue())
+        .orElseThrow(() -> new NotFoundException(
+            "User does not exist"));
+    Product product = productRepository
+        .findById(request
+                      .getProductId()
+                      .getValue())
+        .orElseThrow(
+            () -> new NotFoundException("Product does not exist"));
 
-    Comment comment = Comment.builder()
-                             .writer(writer)
-                             .product(product)
-                             .content(request.getContent())
-                             .build();
+    Comment comment = Comment
+        .builder()
+        .writer(writer)
+        .product(product)
+        .content(request.getContent())
+        .build();
 
     Comment savedComment = commentRepository.save(comment);
     return new CommentCreateResponse(UnsignedLong.valueOf(savedComment.getId()));
@@ -58,9 +66,10 @@ public class DefaultCommentService implements CommentService {
   public List<CommentSelectResponse> findAllByProduct(CommentSelectRequest request) {
     Assert.notNull(request, "Request must be provided");
 
-    return commentRepository.findAllByProduct(request)
-                            .stream()
-                            .map((comment -> CommentSelectResponse.from(comment)))
-                            .collect(Collectors.toList());
+    return commentRepository
+        .findAllByProduct(request)
+        .stream()
+        .map((comment -> CommentSelectResponse.from(comment)))
+        .collect(Collectors.toList());
   }
 }

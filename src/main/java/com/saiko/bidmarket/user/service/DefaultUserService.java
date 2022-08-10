@@ -42,25 +42,35 @@ public class DefaultUserService implements UserService {
 
   @Override
   @Transactional(readOnly = true)
-  public User findByProviderAndProviderId(String provider, String providerId) {
+  public User findByProviderAndProviderId(
+      String provider,
+      String providerId
+  ) {
     Assert.hasText(provider, "Provider must be provided");
     Assert.hasText(providerId, "ProviderId must be provided");
 
-    return userRepository.findByProviderAndProviderId(provider, providerId)
-                         .orElseThrow(() -> new NotFoundException("User does not exist"));
+    return userRepository
+        .findByProviderAndProviderId(provider, providerId)
+        .orElseThrow(() -> new NotFoundException("User does not exist"));
   }
 
   @Override
-  public User join(OAuth2User oAuth2User, String authorizedClientRegistrationId) {
+  public User join(
+      OAuth2User oAuth2User,
+      String authorizedClientRegistrationId
+  ) {
     Assert.notNull(oAuth2User, "OAuth2User must be provided");
-    Assert.hasText(authorizedClientRegistrationId,
-                   "AuthorizedClientRegistrationId must be provided");
+    Assert.hasText(
+        authorizedClientRegistrationId,
+        "AuthorizedClientRegistrationId must be provided"
+    );
 
     String providerId = oAuth2User.getName();
     try {
       User user = findByProviderAndProviderId(authorizedClientRegistrationId, providerId);
       log.warn("Already exists: {} for (provider: {}, providerId: {})", user,
-               authorizedClientRegistrationId, providerId);
+               authorizedClientRegistrationId, providerId
+      );
       return user;
     } catch (NotFoundException e) {
       Map<String, Object> attributes = oAuth2User.getAttributes();
@@ -72,7 +82,8 @@ public class DefaultUserService implements UserService {
       Group group = groupService.findByName("USER_GROUP");
 
       User user = new User(username, profileImage, authorizedClientRegistrationId, providerId,
-                           group);
+                           group
+      );
       return userRepository.save(user);
     }
   }
@@ -81,18 +92,23 @@ public class DefaultUserService implements UserService {
   public UserSelectResponse findById(long id) {
     Assert.isTrue(id > 0, "userId must be positive");
 
-    return UserSelectResponse.from(userRepository.findById(id)
-                                                 .orElseThrow(() -> new NotFoundException(
-                                                     "User does not exist")));
+    return UserSelectResponse.from(userRepository
+                                       .findById(id)
+                                       .orElseThrow(() -> new NotFoundException(
+                                           "User does not exist")));
   }
 
   @Override
-  public void updateUser(long id, UserUpdateRequest request) {
+  public void updateUser(
+      long id,
+      UserUpdateRequest request
+  ) {
     Assert.notNull(request, "request must be provide");
 
-    final User user = userRepository.findById(id)
-                                    .orElseThrow(
-                                        () -> new NotFoundException("User does not exist"));
+    final User user = userRepository
+        .findById(id)
+        .orElseThrow(
+            () -> new NotFoundException("User does not exist"));
     user.update(request.getUsername(), request.getProfileImage());
   }
 
@@ -107,22 +123,26 @@ public class DefaultUserService implements UserService {
     final UserProductSelectQueryParameter queryParameter = UserProductSelectQueryParameter.of(
         userId, request);
 
-    return productRepository.findAllUserProduct(queryParameter)
-                            .stream()
-                            .map(UserProductSelectResponse::from)
-                            .collect(Collectors.toList());
+    return productRepository
+        .findAllUserProduct(queryParameter)
+        .stream()
+        .map(UserProductSelectResponse::from)
+        .collect(Collectors.toList());
   }
 
   @Override
-  public List<UserBiddingSelectResponse> findAllUserBiddings(long userId,
-                                                             UserBiddingSelectRequest request) {
+  public List<UserBiddingSelectResponse> findAllUserBiddings(
+      long userId,
+      UserBiddingSelectRequest request
+  ) {
     Assert.isTrue(userId > 0, "User id must be positive");
     Assert.notNull(request, "Request must be provided");
 
-    return biddingRepository.findAllUserBidding(userId, request)
-                            .stream()
-                            .map((bidding) -> bidding.getProduct())
-                            .map(UserBiddingSelectResponse::from)
-                            .collect(Collectors.toList());
+    return biddingRepository
+        .findAllUserBidding(userId, request)
+        .stream()
+        .map((bidding) -> bidding.getProduct())
+        .map(UserBiddingSelectResponse::from)
+        .collect(Collectors.toList());
   }
 }

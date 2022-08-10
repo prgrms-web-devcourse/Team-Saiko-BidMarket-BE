@@ -91,16 +91,20 @@ public class BiddingRepositoryTest {
       @DisplayName("페이징 처리된 입찰 상품 목록을 반환한다")
       void itReturnBiddingProductList() {
         // given
-        Group group = groupRepository.findById(1L).get();
+        Group group = groupRepository
+            .findById(1L)
+            .get();
 
-        User writer = userRepository.save(User.builder()
+        User writer = userRepository.save(User
+                                              .builder()
                                               .username("제로")
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("123")
                                               .group(group)
                                               .build());
-        User bidder = userRepository.save(User.builder()
+        User bidder = userRepository.save(User
+                                              .builder()
                                               .username("레이")
                                               .profileImage("image")
                                               .provider("google")
@@ -108,27 +112,33 @@ public class BiddingRepositoryTest {
                                               .group(group)
                                               .build());
 
-        Product product = productRepository.save(Product.builder()
-                                                        .title("노트북 팝니다1")
-                                                        .description("싸요")
-                                                        .category(Category.DIGITAL_DEVICE)
-                                                        .minimumPrice(10000)
-                                                        .images(List.of("image"))
-                                                        .location(null)
-                                                        .writer(writer)
-                                                        .build());
+        Product product = productRepository.save(Product
+                                                     .builder()
+                                                     .title("노트북 팝니다1")
+                                                     .description("싸요")
+                                                     .category(Category.DIGITAL_DEVICE)
+                                                     .minimumPrice(10000)
+                                                     .images(List.of("image"))
+                                                     .location(null)
+                                                     .writer(writer)
+                                                     .build());
 
-        Bidding bidding = biddingRepository.save(Bidding.builder()
-                                                        .bidder(bidder)
-                                                        .product(product)
-                                                        .biddingPrice(BiddingPrice.valueOf(10000))
-                                                        .build());
+        Bidding bidding = biddingRepository.save(Bidding
+                                                     .builder()
+                                                     .bidder(bidder)
+                                                     .product(product)
+                                                     .biddingPrice(BiddingPrice.valueOf(10000))
+                                                     .build());
 
-        UserBiddingSelectRequest userBiddingSelectRequest = new UserBiddingSelectRequest(0, 1,
-                                                                                         END_DATE_ASC);
+        UserBiddingSelectRequest userBiddingSelectRequest = new UserBiddingSelectRequest(0,
+                                                                                         1,
+                                                                                         END_DATE_ASC
+        );
         // when
-        List<Bidding> result = biddingRepository.findAllUserBidding(bidder.getId(),
-                                                                    userBiddingSelectRequest);
+        List<Bidding> result = biddingRepository.findAllUserBidding(
+            bidder.getId(),
+            userBiddingSelectRequest
+        );
         // then
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(bidding);
@@ -185,9 +195,12 @@ public class BiddingRepositoryTest {
       @DisplayName("Bidding이 포함된 Optional 객체를 반환한다.")
       void itReturnBiddingWithOptional() {
         // given
-        Group group = groupRepository.findById(1L).get();
+        Group group = groupRepository
+            .findById(1L)
+            .get();
 
-        User writer = userRepository.save(User.builder()
+        User writer = userRepository.save(User
+                                              .builder()
                                               .username("제로")
                                               .profileImage("image")
                                               .provider("google")
@@ -195,7 +208,8 @@ public class BiddingRepositoryTest {
                                               .group(group)
                                               .build());
 
-        User bidder = userRepository.save(User.builder()
+        User bidder = userRepository.save(User
+                                              .builder()
                                               .username("레이")
                                               .profileImage("image")
                                               .provider("google")
@@ -203,21 +217,23 @@ public class BiddingRepositoryTest {
                                               .group(group)
                                               .build());
 
-        Product product = productRepository.save(Product.builder()
-                                                        .title("노트북 팝니다1")
-                                                        .description("싸요")
-                                                        .category(Category.DIGITAL_DEVICE)
-                                                        .minimumPrice(10000)
-                                                        .images(List.of("image"))
-                                                        .location(null)
-                                                        .writer(writer)
-                                                        .build());
+        Product product = productRepository.save(Product
+                                                     .builder()
+                                                     .title("노트북 팝니다1")
+                                                     .description("싸요")
+                                                     .category(Category.DIGITAL_DEVICE)
+                                                     .minimumPrice(10000)
+                                                     .images(List.of("image"))
+                                                     .location(null)
+                                                     .writer(writer)
+                                                     .build());
 
-        Bidding bidding = biddingRepository.save(Bidding.builder()
-                                                        .bidder(bidder)
-                                                        .product(product)
-                                                        .biddingPrice(BiddingPrice.valueOf(10000))
-                                                        .build());
+        Bidding bidding = biddingRepository.save(Bidding
+                                                     .builder()
+                                                     .bidder(bidder)
+                                                     .product(product)
+                                                     .biddingPrice(BiddingPrice.valueOf(10000))
+                                                     .build());
 
         BiddingPriceFindingRepoDto findingRepoDto = BiddingPriceFindingRepoDto
             .builder()

@@ -85,7 +85,10 @@ class ChatWebSocketControllerTest {
       }
 
       @Override
-      public void handleFrame(@NotNull StompHeaders headers, Object payload) {
+      public void handleFrame(
+          @NotNull StompHeaders headers,
+          Object payload
+      ) {
         blockingQueue.add(payload);
       }
     };
@@ -101,39 +104,45 @@ class ChatWebSocketControllerTest {
 
     handshakeHeaders = new WebSocketHttpHeaders();
     connectHeaders = new StompHeaders();
-    session = stompClient.connect(WS_URI, handshakeHeaders, connectHeaders,
-                                  getStompSessionHandlerAdapter()).get(10, SECONDS);
+    session = stompClient
+        .connect(WS_URI, handshakeHeaders, connectHeaders,
+                 getStompSessionHandlerAdapter()
+        )
+        .get(10, SECONDS);
   }
 
   private User getUser(long userId) {
-    User user = User.builder()
-                    .username("강철중")
-                    .profileImage("https://naver.com/img1")
-                    .provider("naver")
-                    .group(new Group())
-                    .providerId("1234")
-                    .build();
+    User user = User
+        .builder()
+        .username("강철중")
+        .profileImage("https://naver.com/img1")
+        .provider("naver")
+        .group(new Group())
+        .providerId("1234")
+        .build();
 
     ReflectionTestUtils.setField(user, "id", userId);
     return user;
   }
 
   private Product getProduct() {
-    return Product.builder()
-                  .title("test")
-                  .description("test")
-                  .images(Collections.emptyList())
-                  .writer(getUser(1L))
-                  .category(Category.BEAUTY)
-                  .build();
+    return Product
+        .builder()
+        .title("test")
+        .description("test")
+        .images(Collections.emptyList())
+        .writer(getUser(1L))
+        .category(Category.BEAUTY)
+        .build();
   }
 
   private ChatRoom getChatRoom(long roomId) {
-    ChatRoom chatRoom = ChatRoom.builder()
-                                .seller(getUser(1L))
-                                .winner(getUser(2L))
-                                .product(getProduct())
-                                .build();
+    ChatRoom chatRoom = ChatRoom
+        .builder()
+        .seller(getUser(1L))
+        .winner(getUser(2L))
+        .product(getProduct())
+        .build();
     ReflectionTestUtils.setField(chatRoom, "id", roomId);
     return chatRoom;
   }
@@ -156,11 +165,12 @@ class ChatWebSocketControllerTest {
         String subUrl = MessageFormat.format("/chat/room/{0}", roomId);
         session.subscribe(subUrl, getStompFrameHandler(ChatPublishMessage.class));
 
-        ChatMessage chatMessage = ChatMessage.builder()
-                                             .message("Test content")
-                                             .sender(getUser(userId))
-                                             .chatRoom(getChatRoom(roomId))
-                                             .build();
+        ChatMessage chatMessage = ChatMessage
+            .builder()
+            .message("Test content")
+            .sender(getUser(userId))
+            .chatRoom(getChatRoom(roomId))
+            .build();
 
         ChatPublishMessage chatPublishMessage = ChatPublishMessage.of(chatMessage);
         given(chatMessageService.create(any(ChatMessageCreateParam.class)))

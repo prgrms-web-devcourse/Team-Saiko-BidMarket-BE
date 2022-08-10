@@ -87,9 +87,12 @@ public class NotificationRepositoryTest {
       @DisplayName("페이징 처리된 알림 전체 목록을 반환한다")
       void ItReturnNotificationList() {
         //given
-        Group group = groupRepository.findById(1L).get();
+        Group group = groupRepository
+            .findById(1L)
+            .get();
 
-        User user = userRepository.save(User.builder()
+        User user = userRepository.save(User
+                                            .builder()
                                             .username("제로")
                                             .profileImage("image")
                                             .provider("google")
@@ -97,22 +100,24 @@ public class NotificationRepositoryTest {
                                             .group(group)
                                             .build());
 
-        Product product = productRepository.save(Product.builder()
-                                                        .title("노트북 팝니다1")
-                                                        .description("싸요")
-                                                        .category(Category.DIGITAL_DEVICE)
-                                                        .minimumPrice(10000)
-                                                        .images(List.of("thumbnailImage"))
-                                                        .location(null)
-                                                        .writer(user)
-                                                        .build());
+        Product product = productRepository.save(Product
+                                                     .builder()
+                                                     .title("노트북 팝니다1")
+                                                     .description("싸요")
+                                                     .category(Category.DIGITAL_DEVICE)
+                                                     .minimumPrice(10000)
+                                                     .images(List.of("thumbnailImage"))
+                                                     .location(null)
+                                                     .writer(user)
+                                                     .build());
 
-        Notification notification = notificationRepository.save(Notification.builder()
-                                                                            .user(user)
-                                                                            .product(product)
-                                                                            .type(
-                                                                                END_PRODUCT_FOR_WRITER_WITH_WINNER)
-                                                                            .build());
+        Notification notification = notificationRepository.save(Notification
+                                                                    .builder()
+                                                                    .user(user)
+                                                                    .product(product)
+                                                                    .type(
+                                                                        END_PRODUCT_FOR_WRITER_WITH_WINNER)
+                                                                    .build());
 
         NotificationSelectRequest request = new NotificationSelectRequest(0, 1);
 
@@ -122,11 +127,21 @@ public class NotificationRepositoryTest {
 
         //then
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getId()).isEqualTo(notification.getId());
-        assertThat(result.get(0).getProductId()).isEqualTo(product.getId());
-        assertThat(result.get(0).getTitle()).isEqualTo(product.getTitle());
-        assertThat(result.get(0).getThumbnailImage()).isEqualTo(product.getThumbnailImage());
-        assertThat(result.get(0).getType()).isEqualTo(notification.getType());
+        assertThat(result
+                       .get(0)
+                       .getId()).isEqualTo(notification.getId());
+        assertThat(result
+                       .get(0)
+                       .getProductId()).isEqualTo(product.getId());
+        assertThat(result
+                       .get(0)
+                       .getTitle()).isEqualTo(product.getTitle());
+        assertThat(result
+                       .get(0)
+                       .getThumbnailImage()).isEqualTo(product.getThumbnailImage());
+        assertThat(result
+                       .get(0)
+                       .getType()).isEqualTo(notification.getType());
       }
     }
   }

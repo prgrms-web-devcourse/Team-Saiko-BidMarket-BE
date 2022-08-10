@@ -13,7 +13,10 @@ public class BiddingPriceFindingDto {
   private final UnsignedLong bidderId;
 
   @Builder
-  private BiddingPriceFindingDto(UnsignedLong productId, UnsignedLong bidderId) {
+  private BiddingPriceFindingDto(
+      UnsignedLong productId,
+      UnsignedLong bidderId
+  ) {
     Assert.notNull(productId, "findingDto productId must be provided");
     Assert.notNull(bidderId, "findingDto userId must be provided");
 

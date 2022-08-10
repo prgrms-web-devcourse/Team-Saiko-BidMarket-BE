@@ -85,30 +85,40 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        response.andExpect(status().isOk())
-                .andDo(document("List chat rooms",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestParameters(
-                                    parameterWithName("offset").description("채팅방 조회 시작 번호"),
-                                    parameterWithName("limit").description("채팅방 조회 개수")
-                                ),
-                                responseFields(
-                                    fieldWithPath("[].chatRoomId")
-                                        .type(JsonFieldType.NUMBER).description("채팅방 번호"),
-                                    fieldWithPath("[].productInfo.productId")
-                                        .type(JsonFieldType.NUMBER).description("상품 번호"),
-                                    fieldWithPath("[].productInfo.thumbnailImg")
-                                        .type(JsonFieldType.STRING).description("상품 이미지"),
-                                    fieldWithPath("[].opponentUserInfo.username")
-                                        .type(JsonFieldType.STRING).description("상대방 유저명"),
-                                    fieldWithPath("[].opponentUserInfo.profileImg")
-                                        .type(JsonFieldType.STRING).description("상대방 유저 프로필"),
-                                    fieldWithPath("[].lastMessage")
-                                        .type(JsonFieldType.STRING).description("채팅 메시지"),
-                                    fieldWithPath("[].lastMessageDate")
-                                        .type(JsonFieldType.STRING).description("채팅 보낸 시간")
-                                )));
+        response
+            .andExpect(status().isOk())
+            .andDo(document(
+                "List chat rooms",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestParameters(
+                    parameterWithName("offset").description("채팅방 조회 시작 번호"),
+                    parameterWithName("limit").description("채팅방 조회 개수")
+                ),
+                responseFields(
+                    fieldWithPath("[].chatRoomId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("채팅방 번호"),
+                    fieldWithPath("[].productInfo.productId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상품 번호"),
+                    fieldWithPath("[].productInfo.thumbnailImg")
+                        .type(JsonFieldType.STRING)
+                        .description("상품 이미지"),
+                    fieldWithPath("[].opponentUserInfo.username")
+                        .type(JsonFieldType.STRING)
+                        .description("상대방 유저명"),
+                    fieldWithPath("[].opponentUserInfo.profileImg")
+                        .type(JsonFieldType.STRING)
+                        .description("상대방 유저 프로필"),
+                    fieldWithPath("[].lastMessage")
+                        .type(JsonFieldType.STRING)
+                        .description("채팅 메시지"),
+                    fieldWithPath("[].lastMessageDate")
+                        .type(JsonFieldType.STRING)
+                        .description("채팅 보낸 시간")
+                )
+            ));
       }
     }
 
@@ -194,48 +204,64 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
   }
 
   private User getUser(long userId) {
-    User user = User.builder()
-                    .username("test")
-                    .profileImage("test")
-                    .group(new Group())
-                    .provider("test")
-                    .providerId("test")
-                    .build();
+    User user = User
+        .builder()
+        .username("test")
+        .profileImage("test")
+        .group(new Group())
+        .provider("test")
+        .providerId("test")
+        .build();
     ReflectionTestUtils.setField(user, "id", userId);
     return user;
   }
 
-  private ChatRoom getChatRoom(User seller, User winner, Product product, long chatRoomId) {
-    ChatRoom chatRoom = ChatRoom.builder()
-                                .product(product)
-                                .seller(seller)
-                                .winner(winner)
-                                .build();
+  private ChatRoom getChatRoom(
+      User seller,
+      User winner,
+      Product product,
+      long chatRoomId
+  ) {
+    ChatRoom chatRoom = ChatRoom
+        .builder()
+        .product(product)
+        .seller(seller)
+        .winner(winner)
+        .build();
 
     ReflectionTestUtils.setField(chatRoom, "id", chatRoomId);
     return chatRoom;
   }
 
-  private Product getProduct(User seller, long productId) {
-    Product product = Product.builder()
-                             .title("test")
-                             .images(List.of("https://test.img"))
-                             .category(Category.ETC)
-                             .minimumPrice(10000)
-                             .writer(seller)
-                             .description("test")
-                             .location("test")
-                             .build();
+  private Product getProduct(
+      User seller,
+      long productId
+  ) {
+    Product product = Product
+        .builder()
+        .title("test")
+        .images(List.of("https://test.img"))
+        .category(Category.ETC)
+        .minimumPrice(10000)
+        .writer(seller)
+        .description("test")
+        .location("test")
+        .build();
     ReflectionTestUtils.setField(product, "id", productId);
     return product;
   }
 
-  private ChatMessage getChatMessage(User sender, ChatRoom chatRoom, long chatMessageId) {
-    ChatMessage chatMessage = ChatMessage.builder()
-                                         .message("test")
-                                         .chatRoom(chatRoom)
-                                         .sender(sender)
-                                         .build();
+  private ChatMessage getChatMessage(
+      User sender,
+      ChatRoom chatRoom,
+      long chatMessageId
+  ) {
+    ChatMessage chatMessage = ChatMessage
+        .builder()
+        .message("test")
+        .chatRoom(chatRoom)
+        .sender(sender)
+        .build();
 
     ReflectionTestUtils.setField(chatMessage, "id", chatMessageId);
     ReflectionTestUtils.setField(chatMessage, "createdAt", LocalDateTime.now());

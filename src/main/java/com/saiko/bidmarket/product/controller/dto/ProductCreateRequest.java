@@ -34,9 +34,14 @@ public class ProductCreateRequest {
   @Length(max = 20)
   private final String location;
 
-  public ProductCreateRequest(String title, String description,
-                              List<String> images, Category category, int minimumPrice,
-                              String location) {
+  public ProductCreateRequest(
+      String title,
+      String description,
+      List<String> images,
+      Category category,
+      int minimumPrice,
+      String location
+  ) {
     this.title = title;
     this.description = description;
     this.images = images;

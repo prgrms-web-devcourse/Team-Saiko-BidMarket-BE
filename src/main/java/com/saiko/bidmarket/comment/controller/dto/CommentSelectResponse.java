@@ -21,13 +21,18 @@ public class CommentSelectResponse {
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
-
   public static CommentSelectResponse from(Comment comment) {
     return CommentSelectResponse
         .builder()
-        .userId(UnsignedLong.valueOf(comment.getWriter().getId()))
-        .username(comment.getWriter().getUsername())
-        .profileImage(comment.getWriter().getProfileImage())
+        .userId(UnsignedLong.valueOf(comment
+                                         .getWriter()
+                                         .getId()))
+        .username(comment
+                      .getWriter()
+                      .getUsername())
+        .profileImage(comment
+                          .getWriter()
+                          .getProfileImage())
         .content(comment.getContent())
         .createdAt(comment.getCreatedAt())
         .updatedAt(comment.getUpdatedAt())

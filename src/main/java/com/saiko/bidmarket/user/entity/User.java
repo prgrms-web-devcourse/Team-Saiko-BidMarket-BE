@@ -51,8 +51,13 @@ public class User extends BaseTime {
   protected User() {/*no-op*/}
 
   @Builder
-  public User(String username, String profileImage, String provider, String providerId,
-              Group group) {
+  public User(
+      String username,
+      String profileImage,
+      String provider,
+      String providerId,
+      Group group
+  ) {
     Assert.isTrue(isNotBlank(username), "Username must be provided");
     Assert.isTrue(isNotBlank(profileImage), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(provider), "ProfileImage must be provided");
@@ -70,7 +75,10 @@ public class User extends BaseTime {
     return this.id == id;
   }
 
-  public void update(String username, String profileImage) {
+  public void update(
+      String username,
+      String profileImage
+  ) {
     Assert.notNull(username, "username must be provide");
     Assert.notNull(profileImage, "profileImage must be provide");
 

@@ -26,8 +26,11 @@ public class DefaultBiddingService implements BiddingService {
 
   private final ProductRepository productRepository;
 
-  public DefaultBiddingService(BiddingRepository biddingRepository, UserRepository userRepository,
-                               ProductRepository productRepository) {
+  public DefaultBiddingService(
+      BiddingRepository biddingRepository,
+      UserRepository userRepository,
+      ProductRepository productRepository
+  ) {
     this.biddingRepository = biddingRepository;
     this.userRepository = userRepository;
     this.productRepository = productRepository;
@@ -38,11 +41,17 @@ public class DefaultBiddingService implements BiddingService {
   public UnsignedLong create(BiddingCreateDto createDto) {
     Assert.notNull(createDto, "createDto must be provided");
 
-    User bidder = userRepository.findById(createDto.getBidderId().getValue())
-                                .orElseThrow(NotFoundException::new);
+    User bidder = userRepository
+        .findById(createDto
+                      .getBidderId()
+                      .getValue())
+        .orElseThrow(NotFoundException::new);
 
-    Product product = productRepository.findById(createDto.getProductId().getValue())
-                                       .orElseThrow(NotFoundException::new);
+    Product product = productRepository
+        .findById(createDto
+                      .getProductId()
+                      .getValue())
+        .orElseThrow(NotFoundException::new);
 
     Bidding bidding = new Bidding(createDto.getBiddingPrice(), bidder, product);
 
@@ -62,8 +71,9 @@ public class DefaultBiddingService implements BiddingService {
         .productId(findingDto.getProductId())
         .build();
 
-    Bidding bidding = biddingRepository.findByBidderIdAndProductId(findingRepoDto)
-                                       .orElseThrow(NotFoundException::new);
+    Bidding bidding = biddingRepository
+        .findByBidderIdAndProductId(findingRepoDto)
+        .orElseThrow(NotFoundException::new);
 
     return BiddingPrice.valueOf(bidding.getBiddingPrice());
   }

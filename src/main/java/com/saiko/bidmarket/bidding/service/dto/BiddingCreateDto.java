@@ -17,7 +17,11 @@ public class BiddingCreateDto {
   private final UnsignedLong bidderId;
 
   @Builder
-  public BiddingCreateDto(BiddingPrice biddingPrice, UnsignedLong productId, UnsignedLong bidderId) {
+  public BiddingCreateDto(
+      BiddingPrice biddingPrice,
+      UnsignedLong productId,
+      UnsignedLong bidderId
+  ) {
     Assert.notNull(biddingPrice, "bidding price must be provided");
     Assert.notNull(productId, "product id must be provided");
     Assert.notNull(bidderId, "bidder id must be provided");

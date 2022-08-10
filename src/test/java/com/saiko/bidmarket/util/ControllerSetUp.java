@@ -32,8 +32,10 @@ public class ControllerSetUp {
   protected MockMvc mockMvc;
 
   @BeforeEach
-  public void setUp(WebApplicationContext webApplicationContext,
-                    RestDocumentationContextProvider restDocumentationContextProvider) {
+  public void setUp(
+      WebApplicationContext webApplicationContext,
+      RestDocumentationContextProvider restDocumentationContextProvider
+  ) {
     this.mockMvc = MockMvcBuilders
         .webAppContextSetup(webApplicationContext)
         .addFilters(new CharacterEncodingFilter("UTF-8", true))

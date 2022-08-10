@@ -24,21 +24,25 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
   private final JPAQueryFactory jpaQueryFactory;
 
   @Override
-  public List<NotificationRepoDto> findAllNotification(UnsignedLong userId,
-                                                       NotificationSelectRequest request) {
+  public List<NotificationRepoDto> findAllNotification(
+      UnsignedLong userId,
+      NotificationSelectRequest request
+  ) {
     Assert.notNull(userId, "UserId must be provided");
     Assert.notNull(request, "Request must be provided");
 
-    return jpaQueryFactory.select(
-                              Projections.constructor(
-                                  NotificationRepoDto.class, notification.id, product.id,
-                                  product.title, product.thumbnailImage, notification.type,
-                                  notification.createdAt, notification.updatedAt))
-                          .from(notification)
-                          .join(notification.product, product)
-                          .where(notification.user.id.eq(userId.getValue()))
-                          .offset(request.getOffset())
-                          .limit(request.getLimit())
-                          .fetch();
+    return jpaQueryFactory
+        .select(
+            Projections.constructor(
+                NotificationRepoDto.class, notification.id, product.id,
+                product.title, product.thumbnailImage, notification.type,
+                notification.createdAt, notification.updatedAt
+            ))
+        .from(notification)
+        .join(notification.product, product)
+        .where(notification.user.id.eq(userId.getValue()))
+        .offset(request.getOffset())
+        .limit(request.getLimit())
+        .fetch();
   }
 }

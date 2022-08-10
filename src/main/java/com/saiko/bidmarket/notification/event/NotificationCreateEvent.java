@@ -18,7 +18,11 @@ public class NotificationCreateEvent {
   private final Product product;
 
   @Builder
-  private NotificationCreateEvent(User user, NotificationType notificationType, Product product) {
+  private NotificationCreateEvent(
+      User user,
+      NotificationType notificationType,
+      Product product
+  ) {
     Assert.notNull(user, "User must be provided");
     Assert.notNull(notificationType, "NotificationType must be provided");
     Assert.notNull(product, "Product must be provided");

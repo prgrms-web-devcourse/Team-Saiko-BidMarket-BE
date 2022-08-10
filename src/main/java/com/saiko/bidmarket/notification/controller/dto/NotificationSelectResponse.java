@@ -2,11 +2,8 @@ package com.saiko.bidmarket.notification.controller.dto;
 
 import java.time.LocalDateTime;
 
-import com.saiko.bidmarket.comment.controller.dto.CommentSelectResponse;
-import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.notification.repository.dto.NotificationRepoDto;
-import com.saiko.bidmarket.product.entity.Product;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -40,8 +37,12 @@ public class NotificationSelectResponse {
         .productId(UnsignedLong.valueOf(notificationRepoDto.getProductId()))
         .title(notificationRepoDto.getTitle())
         .thumbnailImage(notificationRepoDto.getThumbnailImage())
-        .type(notificationRepoDto.getType().getType())
-        .content(notificationRepoDto.getType().getMessage())
+        .type(notificationRepoDto
+                  .getType()
+                  .getType())
+        .content(notificationRepoDto
+                     .getType()
+                     .getMessage())
         .createdAt(notificationRepoDto.getCreatedAt())
         .updatedAt(notificationRepoDto.getUpdatedAt())
         .build();

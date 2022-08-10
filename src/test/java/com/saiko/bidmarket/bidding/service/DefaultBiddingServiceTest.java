@@ -44,26 +44,31 @@ class DefaultBiddingServiceTest {
   @Mock
   private ProductRepository productRepository;
 
-  private static User bidder = new User("test",
-                                        "imageURl",
-                                        "provider",
-                                        "providerId",
-                                        new Group());
+  private static User bidder = new User(
+      "test",
+      "imageURl",
+      "provider",
+      "providerId",
+      new Group()
+  );
   private static long bidderId = 1L;
 
-  private static User writer = new User("test",
-                                        "imageURl",
-                                        "provider",
-                                        "providerId",
-                                        new Group());
+  private static User writer = new User(
+      "test",
+      "imageURl",
+      "provider",
+      "providerId",
+      new Group()
+  );
 
   private static long writerId = 1L;
 
-  private static Product product = Product.builder()
-                                          .title("title")
-                                          .description("description")
-                                          .writer(writer)
-                                          .build();
+  private static Product product = Product
+      .builder()
+      .title("title")
+      .description("description")
+      .writer(writer)
+      .build();
 
   private static long productId = 1L;
 
@@ -106,11 +111,12 @@ class DefaultBiddingServiceTest {
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(product.getId());
         UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
-        BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                     .biddingPrice(biddingPrice)
-                                                     .bidderId(bidderId)
-                                                     .productId(productId)
-                                                     .build();
+        BiddingCreateDto createDto = BiddingCreateDto
+            .builder()
+            .biddingPrice(biddingPrice)
+            .bidderId(bidderId)
+            .productId(productId)
+            .build();
 
         given(userRepository.findById(anyLong())).willReturn(Optional.of(bidder));
         given(productRepository.findById(anyLong())).willReturn(Optional.empty());
@@ -133,11 +139,12 @@ class DefaultBiddingServiceTest {
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(product.getId());
         UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
-        BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                     .biddingPrice(biddingPrice)
-                                                     .bidderId(bidderId)
-                                                     .productId(productId)
-                                                     .build();
+        BiddingCreateDto createDto = BiddingCreateDto
+            .builder()
+            .biddingPrice(biddingPrice)
+            .bidderId(bidderId)
+            .productId(productId)
+            .build();
 
         ReflectionTestUtils.setField(product, "writer", bidder);
 
@@ -162,11 +169,12 @@ class DefaultBiddingServiceTest {
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(product.getId());
         UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
-        BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                     .biddingPrice(biddingPrice)
-                                                     .bidderId(bidderId)
-                                                     .productId(productId)
-                                                     .build();
+        BiddingCreateDto createDto = BiddingCreateDto
+            .builder()
+            .biddingPrice(biddingPrice)
+            .bidderId(bidderId)
+            .productId(productId)
+            .build();
 
         ReflectionTestUtils.setField(product, "progressed", false);
 
@@ -192,11 +200,12 @@ class DefaultBiddingServiceTest {
         BiddingPrice biddingPrice = BiddingPrice.valueOf(priceValue);
         UnsignedLong productId = UnsignedLong.valueOf(product.getId());
         UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
-        BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                     .biddingPrice(biddingPrice)
-                                                     .bidderId(bidderId)
-                                                     .productId(productId)
-                                                     .build();
+        BiddingCreateDto createDto = BiddingCreateDto
+            .builder()
+            .biddingPrice(biddingPrice)
+            .bidderId(bidderId)
+            .productId(productId)
+            .build();
 
         ReflectionTestUtils.setField(product, "progressed", false);
         ReflectionTestUtils.setField(product, "minimumPrice", (int)priceValue * 2);
@@ -222,11 +231,12 @@ class DefaultBiddingServiceTest {
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(product.getId());
         UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
-        BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                     .biddingPrice(biddingPrice)
-                                                     .bidderId(bidderId)
-                                                     .productId(productId)
-                                                     .build();
+        BiddingCreateDto createDto = BiddingCreateDto
+            .builder()
+            .biddingPrice(biddingPrice)
+            .bidderId(bidderId)
+            .productId(productId)
+            .build();
 
         given(userRepository.findById(anyLong())).willReturn(Optional.empty());
 
@@ -248,11 +258,12 @@ class DefaultBiddingServiceTest {
         BiddingPrice biddingPrice = BiddingPrice.valueOf(1000L);
         UnsignedLong productId = UnsignedLong.valueOf(product.getId());
         UnsignedLong bidderId = UnsignedLong.valueOf(bidder.getId());
-        BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                     .biddingPrice(biddingPrice)
-                                                     .bidderId(bidderId)
-                                                     .productId(productId)
-                                                     .build();
+        BiddingCreateDto createDto = BiddingCreateDto
+            .builder()
+            .biddingPrice(biddingPrice)
+            .bidderId(bidderId)
+            .productId(productId)
+            .build();
 
         ReflectionTestUtils.setField(product, "progressed", true);
 
@@ -308,11 +319,12 @@ class DefaultBiddingServiceTest {
       @DisplayName("NotFoundException을 던진다")
       void ItThrowsNotFoundException() {
         // given
-        BiddingPriceFindingDto dto = BiddingPriceFindingDto.builder()
-                                                           .bidderId(UnsignedLong.valueOf(bidderId))
-                                                           .productId(
-                                                               UnsignedLong.valueOf(productId))
-                                                           .build();
+        BiddingPriceFindingDto dto = BiddingPriceFindingDto
+            .builder()
+            .bidderId(UnsignedLong.valueOf(bidderId))
+            .productId(
+                UnsignedLong.valueOf(productId))
+            .build();
 
         given(biddingRepository.findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class)))
             .willReturn(Optional.empty());
@@ -333,18 +345,20 @@ class DefaultBiddingServiceTest {
       @DisplayName("BiddingPrice를 반환한다")
       void ItReturn() {
         // given
-        BiddingPriceFindingDto dto = BiddingPriceFindingDto.builder()
-                                                           .bidderId(UnsignedLong.valueOf(bidderId))
-                                                           .productId(
-                                                               UnsignedLong.valueOf(productId))
-                                                           .build();
+        BiddingPriceFindingDto dto = BiddingPriceFindingDto
+            .builder()
+            .bidderId(UnsignedLong.valueOf(bidderId))
+            .productId(
+                UnsignedLong.valueOf(productId))
+            .build();
 
         BiddingPrice expectedBiddingPrice = BiddingPrice.valueOf(10000L);
-        Bidding bidding = Bidding.builder()
-                                 .product(product)
-                                 .bidder(bidder)
-                                 .biddingPrice(expectedBiddingPrice)
-                                 .build();
+        Bidding bidding = Bidding
+            .builder()
+            .product(product)
+            .bidder(bidder)
+            .biddingPrice(expectedBiddingPrice)
+            .build();
         long biddingId = 1L;
         ReflectionTestUtils.setField(bidding, "id", biddingId);
 

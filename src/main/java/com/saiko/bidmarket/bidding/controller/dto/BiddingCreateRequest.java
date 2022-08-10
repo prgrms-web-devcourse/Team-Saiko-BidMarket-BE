@@ -16,7 +16,10 @@ public class BiddingCreateRequest {
   @NotNull
   private final BiddingPrice biddingPrice;
 
-  public BiddingCreateRequest(long productId, long biddingPrice) {
+  public BiddingCreateRequest(
+      long productId,
+      long biddingPrice
+  ) {
     this.productId = UnsignedLong.valueOf(productId);
     this.biddingPrice = BiddingPrice.valueOf(biddingPrice);
   }

@@ -30,7 +30,9 @@ public enum Category {
   @JsonCreator
   public static Category from(String name) {
     for (Category category : Category.values()) {
-      if (category.name().equals(name)) {
+      if (category
+          .name()
+          .equals(name)) {
         return category;
       }
     }
@@ -42,4 +44,3 @@ public enum Category {
     return displayName;
   }
 }
-

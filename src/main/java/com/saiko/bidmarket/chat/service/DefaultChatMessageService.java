@@ -28,18 +28,21 @@ public class DefaultChatMessageService implements ChatMessageService {
   public ChatPublishMessage create(ChatMessageCreateParam createParam) {
     Assert.notNull(createParam, "Create Param must be provided");
 
-    ChatRoom chatRoom = chatRoomRepository.findById(createParam.getRoomId())
-                                          .orElseThrow(
-                                              () -> new NotFoundException("Room not exist"));
+    ChatRoom chatRoom = chatRoomRepository
+        .findById(createParam.getRoomId())
+        .orElseThrow(
+            () -> new NotFoundException("Room not exist"));
 
-    User sender = userRepository.findById(createParam.getUserId())
-                                .orElseThrow(() -> new NotFoundException("User not exist"));
+    User sender = userRepository
+        .findById(createParam.getUserId())
+        .orElseThrow(() -> new NotFoundException("User not exist"));
 
-    ChatMessage chatMessage = ChatMessage.builder()
-                                         .message(createParam.getContent())
-                                         .sender(sender)
-                                         .chatRoom(chatRoom)
-                                         .build();
+    ChatMessage chatMessage = ChatMessage
+        .builder()
+        .message(createParam.getContent())
+        .sender(sender)
+        .chatRoom(chatRoom)
+        .build();
 
     ChatMessage savedChatMessage = chatMessageRepository.save(chatMessage);
 

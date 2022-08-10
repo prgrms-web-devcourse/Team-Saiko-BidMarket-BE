@@ -97,27 +97,32 @@ class DefaultChatRoomServiceTest {
   }
 
   private User getUser(long userId) {
-    User user = User.builder()
-                    .username("test")
-                    .provider("test")
-                    .providerId("test")
-                    .profileImage("test")
-                    .group(new Group())
-                    .build();
+    User user = User
+        .builder()
+        .username("test")
+        .provider("test")
+        .providerId("test")
+        .profileImage("test")
+        .group(new Group())
+        .build();
 
     ReflectionTestUtils.setField(user, "id", userId);
     return user;
   }
 
-  private Product getProduct(long productId, long userId) {
-    Product product = Product.builder()
-                             .title("test")
-                             .images(Collections.emptyList())
-                             .writer(getUser(userId))
-                             .description("test")
-                             .minimumPrice(1000)
-                             .category(Category.BEAUTY)
-                             .build();
+  private Product getProduct(
+      long productId,
+      long userId
+  ) {
+    Product product = Product
+        .builder()
+        .title("test")
+        .images(Collections.emptyList())
+        .writer(getUser(userId))
+        .description("test")
+        .minimumPrice(1000)
+        .category(Category.BEAUTY)
+        .build();
 
     ReflectionTestUtils.setField(product, "id", productId);
     return product;
