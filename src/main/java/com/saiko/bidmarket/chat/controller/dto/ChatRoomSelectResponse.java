@@ -49,7 +49,7 @@ public class ChatRoomSelectResponse {
     private final long productId;
 
     @NotBlank
-    private final String thumbnailImg;
+    private final String thumbnailImage;
   }
 
   @Valid
@@ -62,7 +62,7 @@ public class ChatRoomSelectResponse {
     private final String username;
 
     @NotBlank
-    private final String profileImg;
+    private final String profileImage;
   }
 
   public static ChatRoomSelectResponse of(
@@ -76,12 +76,12 @@ public class ChatRoomSelectResponse {
 
     ProductInfo productInfo = ProductInfo.builder()
                                          .productId(chatRoom.getProduct().getId())
-                                         .thumbnailImg(chatRoom.getProduct().getThumbnailImage())
+                                         .thumbnailImage(chatRoom.getProduct().getThumbnailImage())
                                          .build();
 
     OpponentUserInfo opponentUserInfo = OpponentUserInfo.builder()
                                                         .username(opponent.getUsername())
-                                                        .profileImg(opponent.getProfileImage())
+                                                        .profileImage(opponent.getProfileImage())
                                                         .build();
 
     return ChatRoomSelectResponse.builder()
