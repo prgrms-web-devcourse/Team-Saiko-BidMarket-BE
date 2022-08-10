@@ -94,8 +94,7 @@ public class ChatRoomSelectResponse {
 
     ProductInfo productInfo = ProductInfo.getProductInfo(product);
     OpponentUserInfo opponentUserInfo = OpponentUserInfo.getOpponentUserInfo(opponent);
-    ChatMessage lastMessage = chatRoom.getLastMessage();
-
+    //TODO: 최근채팅 반환 로직 작성
     return ChatRoomSelectResponse
         .builder()
         .chatRoomId(chatRoom.getId())
