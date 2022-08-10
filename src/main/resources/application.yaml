@@ -24,6 +24,7 @@ spring:
         - classpath:sql/product/product_data.sql
         - classpath:sql/product/image_data.sql
         - classpath:sql/bidding/bidding_data.sql
+        - classpath:sql/chat/chat_data.sql
       encoding: UTF-8
       mode: always
 
