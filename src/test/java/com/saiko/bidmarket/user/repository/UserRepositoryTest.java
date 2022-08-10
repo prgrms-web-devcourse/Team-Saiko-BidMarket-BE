@@ -2,7 +2,7 @@ package com.saiko.bidmarket.user.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.Collections;
+import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -59,7 +59,7 @@ class UserRepositoryTest {
     return Product.builder()
                   .title(title)
                   .description("test")
-                  .images(Collections.emptyList())
+                  .images(List.of("image"))
                   .writer(writer)
                   .category(Category.BEAUTY)
                   .build();

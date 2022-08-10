@@ -83,7 +83,7 @@ public class CommentRepositoryTest {
                                                         .description("싸요")
                                                         .category(Category.DIGITAL_DEVICE)
                                                         .minimumPrice(10000)
-                                                        .images(null)
+                                                        .images(List.of("image"))
                                                         .location(null)
                                                         .writer(writer)
                                                         .build());

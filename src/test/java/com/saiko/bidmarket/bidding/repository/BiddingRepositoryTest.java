@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
-import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.common.entity.UnsignedLong;
@@ -114,7 +113,7 @@ public class BiddingRepositoryTest {
                                                         .description("싸요")
                                                         .category(Category.DIGITAL_DEVICE)
                                                         .minimumPrice(10000)
-                                                        .images(null)
+                                                        .images(List.of("image"))
                                                         .location(null)
                                                         .writer(writer)
                                                         .build());
@@ -209,7 +208,7 @@ public class BiddingRepositoryTest {
                                                         .description("싸요")
                                                         .category(Category.DIGITAL_DEVICE)
                                                         .minimumPrice(10000)
-                                                        .images(null)
+                                                        .images(List.of("image"))
                                                         .location(null)
                                                         .writer(writer)
                                                         .build());
