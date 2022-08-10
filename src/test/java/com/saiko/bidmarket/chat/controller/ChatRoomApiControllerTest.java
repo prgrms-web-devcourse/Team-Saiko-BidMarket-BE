@@ -1,5 +1,7 @@
 package com.saiko.bidmarket.chat.controller;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -24,6 +26,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectRequest;
+import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.service.ChatRoomService;
@@ -68,7 +72,16 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
         User winner = getUser(winnerId);
         Product product = getProduct(seller, productId);
         ChatRoom chatRoom = getChatRoom(seller, winner, product, chatRoomId);
+
         ChatMessage chatMessage = getChatMessage(winner, chatRoom, chatMessageId);
+
+        chatRoom
+            .getChatMessage()
+            .add(chatMessage);
+
+        ChatRoomSelectResponse chatRoomSelectResponse = ChatRoomSelectResponse.of(sellerId, chatRoom);
+        given(chatRoomService.findAll(anyLong(), any(ChatRoomSelectRequest.class)))
+            .willReturn(List.of(chatRoomSelectResponse));
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
