@@ -56,39 +56,61 @@ public class ChatRoomRepositoryTest {
     @DisplayName("판매자와 낙찰자가 참여한 채팅방을 반환한다")
     void ItReturnChatRoom() {
       //given
-      Group group = groupRepository.findById(1l).get();
-      User seller = userRepository.save(User.builder()
-                                            .username("레이")
-                                            .group(group)
-                                            .profileImage("image")
-                                            .provider("google")
-                                            .providerId("123")
-                                            .build());
-      User bidder = userRepository.save(User.builder()
-                                            .username("제로")
-                                            .group(group)
-                                            .profileImage("image")
-                                            .provider("google")
-                                            .providerId("1234")
-                                            .build());
-      Product product = productRepository.save(Product.builder()
-                                                      .title("코드 리뷰 해드려요")
-                                                      .description("좋아요")
-                                                      .category(Category.HOBBY)
-                                                      .location("대면은 안해요")
-                                                      .images(List.of("image"))
-                                                      .minimumPrice(10000)
-                                                      .writer(seller)
-                                                      .build());
-      ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.builder()
-                                                          .seller(seller)
-                                                          .product(product)
-                                                          .winner(bidder)
-                                                          .build());
+      @SuppressWarnings({"all"})
+      Group group = groupRepository
+          .findById(1L)
+          .get();
+      User seller = userRepository.save(getUser("1234", group));
+      User winner = userRepository.save(getUser("123", group));
+
+      Product product = productRepository.save(getProduct(seller));
+      ChatRoom chatRoom = chatRoomRepository.save(getChatRoom(seller, winner, product));
+
       //when
-      ChatRoom foundChatRoom = chatRoomRepository.findByProduct_IdAndSeller_Id(product.getId(),
-                                                                               seller.getId()).get();
+      @SuppressWarnings({"all"})
+      ChatRoom foundChatRoom = chatRoomRepository
+          .findByProduct_IdAndSeller_Id(
+              product.getId(),
+              seller.getId()
+          )
+          .get();
+
+      //then
       assertThat(foundChatRoom).isEqualTo(chatRoom);
     }
   }
+
+  private User getUser(String providerId, Group group) {
+    return User
+        .builder()
+        .username("제로")
+        .group(group)
+        .profileImage("image")
+        .provider("google")
+        .providerId(providerId)
+        .build();
+  }
+
+  private Product getProduct(User seller) {
+    return Product
+        .builder()
+        .title("코드 리뷰 해드려요")
+        .description("좋아요")
+        .category(Category.HOBBY)
+        .location("대면은 안해요")
+        .images(List.of("image"))
+        .minimumPrice(10000)
+        .writer(seller)
+        .build();
+  }
+
+  private ChatRoom getChatRoom(User seller, User winner, Product product) {
+    return ChatRoom
+        .builder()
+        .seller(seller)
+        .product(product)
+        .winner(winner)
+        .build();
+  }
+
 }
