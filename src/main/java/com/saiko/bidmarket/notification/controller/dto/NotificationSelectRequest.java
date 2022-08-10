@@ -8,12 +8,12 @@ import lombok.Getter;
 @Getter
 public class NotificationSelectRequest {
   @PositiveOrZero
-  private final int offset;
+  private final long offset;
 
   @Positive
   private final int limit;
 
-  public NotificationSelectRequest(int offset, int limit) {
+  public NotificationSelectRequest(long offset, int limit) {
     this.offset = offset;
     this.limit = limit;
   }

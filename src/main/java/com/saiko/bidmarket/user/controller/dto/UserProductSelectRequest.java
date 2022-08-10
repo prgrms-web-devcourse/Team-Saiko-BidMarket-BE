@@ -13,14 +13,14 @@ import lombok.Getter;
 public class UserProductSelectRequest {
 
   @PositiveOrZero
-  private final int offset;
+  private final long offset;
 
   @Positive
   private final int limit;
 
   private final Sort sort;
 
-  public UserProductSelectRequest(int offset, int limit, Sort sort) {
+  public UserProductSelectRequest(long offset, int limit, Sort sort) {
     this.offset = offset;
     this.limit = limit;
     this.sort = sort != null ? sort : END_DATE_ASC;

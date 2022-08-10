@@ -5,8 +5,8 @@ import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.common.Sort;
+import com.saiko.bidmarket.product.Category;
 
 public class ProductSelectRequest {
   @Length(max = 32)
@@ -14,12 +14,12 @@ public class ProductSelectRequest {
   private final String progressed;
   private final Category category;
   @PositiveOrZero
-  private final int offset;
+  private final long offset;
   @Positive
   private final int limit;
   private final Sort sort;
 
-  public ProductSelectRequest(String title, String progressed, Category category, int offset,
+  public ProductSelectRequest(String title, String progressed, Category category, long offset,
                               int limit,
                               Sort sort) {
     this.title = title;
@@ -42,7 +42,7 @@ public class ProductSelectRequest {
     return category;
   }
 
-  public int getOffset() {
+  public long getOffset() {
     return offset;
   }
 
