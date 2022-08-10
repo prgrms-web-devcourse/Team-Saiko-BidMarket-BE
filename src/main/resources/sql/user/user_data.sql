@@ -22,4 +22,7 @@ VALUES ('유재희', 'google', '113052825681484000000',
         '2022-07-03T18:06:15'),
        ('abramgech', 'google', '103163611869308335152',
         'https://lh3.googleusercontent.com/a/AItbvmmRBO7OpOF-F-6FrAY-lP8FHJOWwC1n_GNyaNsH=s96-c', 1,
-        '2022-07-04 17:23:07');
+        '2022-07-04 17:23:07'),
+       ('testMan', 'google', '107457368496608138213',
+        'https://lh3.googleusercontent.com/a/AItbvmmRBO7OpOF-F-6FrAY-lP8FHJOWwC1n_GNyaNsH=s96-c', 1,
+        '2022-07-05 17:23:07');
