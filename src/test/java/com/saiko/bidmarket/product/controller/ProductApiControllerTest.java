@@ -89,6 +89,15 @@ class ProductApiControllerTest extends ControllerSetUp {
     }
   }
 
+  static class LocationSourceOutOfRange implements ArgumentsProvider {
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+      return Stream.of(
+          Arguments.of("a".repeat(21))
+      );
+    }
+  }
+
   @Nested
   @DisplayName("create 메서드는")
   @WithMockCustomLoginUser
@@ -198,6 +207,38 @@ class ProductApiControllerTest extends ControllerSetUp {
         requestMap.put("category", DIGITAL_DEVICE);
         requestMap.put("minimumPrice", 10000);
         requestMap.put("location", "관악구 신림동");
+        requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
+
+        String requestBody = objectMapper.writeValueAsString(requestMap);
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .post(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("location 의 길이가 범위를 벗어나면")
+    class ContextWithLocationOutOfRange {
+
+      @ParameterizedTest
+      @ArgumentsSource(LocationSourceOutOfRange.class)
+      @DisplayName("BadRequest 를 응답한다")
+      void ItResponseBadRequest(String location) throws Exception {
+        //given
+        HashMap<String, Object> requestMap = new HashMap<>();
+        requestMap.put("title", "키보드팝니다");
+        requestMap.put("description", "빨리 사세요");
+        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("minimumPrice", 10000);
+        requestMap.put("location", location);
         requestMap.put("imageUrl1", new String[]{"imageUrl1, imageUrl2"});
 
         String requestBody = objectMapper.writeValueAsString(requestMap);

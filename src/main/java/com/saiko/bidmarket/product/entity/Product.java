@@ -56,6 +56,7 @@ public class Product extends BaseTime {
   @Enumerated(EnumType.STRING)
   private Category category;
 
+  @Column(length = 20)
   private String location;
 
   @NotNull

@@ -31,6 +31,7 @@ public class ProductCreateRequest {
   @Min(value = 1000)
   private final int minimumPrice;
 
+  @Length(max = 20)
   private final String location;
 
   public ProductCreateRequest(String title, String description,
