@@ -9,7 +9,7 @@ CREATE TABLE `product`
     minimum_price   int          not null,
     category        varchar(100) not null,
     location        varchar(100),
-    thumbnail_image varchar(512),
+    thumbnail_image varchar(512) not null,
     progressed      tinyint(1)   not null,
     winning_price   bigint,
     expire_at       timestamp    not null,
