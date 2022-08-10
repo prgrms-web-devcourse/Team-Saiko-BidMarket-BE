@@ -57,11 +57,12 @@ public class ProductApiController {
     return productService.findById(id);
   }
 
-  @GetMapping("{productId}/users/{userId}")
+  @GetMapping("{productId}/result")
   @ResponseStatus(HttpStatus.OK)
-  public BiddingResultResponse getBiddingResult(@PathVariable long productId,
-                                                @PathVariable long userId) {
-    return productService.getBiddingResult(UnsignedLong.valueOf(productId),
-                                           UnsignedLong.valueOf(userId));
+  public BiddingResultResponse getBiddingResult(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @PathVariable long productId) {
+    return productService.getBiddingResult(UnsignedLong.valueOf(productId), UnsignedLong.valueOf(
+        authentication.getUserId()));
   }
 }
