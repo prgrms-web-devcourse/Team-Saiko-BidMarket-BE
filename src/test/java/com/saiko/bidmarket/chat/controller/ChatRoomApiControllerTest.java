@@ -79,7 +79,10 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
             .getChatMessage()
             .add(chatMessage);
 
-        ChatRoomSelectResponse chatRoomSelectResponse = ChatRoomSelectResponse.of(sellerId, chatRoom);
+        ChatRoomSelectResponse chatRoomSelectResponse = ChatRoomSelectResponse.of(
+            sellerId,
+            chatRoom
+        );
         given(chatRoomService.findAll(anyLong(), any(ChatRoomSelectRequest.class)))
             .willReturn(List.of(chatRoomSelectResponse));
 
@@ -92,30 +95,42 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        response.andExpect(status().isOk())
-                .andDo(document("List chat rooms",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestParameters(
-                                    parameterWithName("offset").description("채팅방 조회 시작 번호"),
-                                    parameterWithName("limit").description("채팅방 조회 개수")
-                                ),
-                                responseFields(
-                                    fieldWithPath("[].chatRoomId")
-                                        .type(JsonFieldType.NUMBER).description("채팅방 번호"),
-                                    fieldWithPath("[].productInfo.productId")
-                                        .type(JsonFieldType.NUMBER).description("상품 번호"),
-                                    fieldWithPath("[].productInfo.thumbnailImage")
-                                        .type(JsonFieldType.STRING).description("상품 이미지"),
-                                    fieldWithPath("[].opponentUserInfo.username")
-                                        .type(JsonFieldType.STRING).description("상대방 유저명"),
-                                    fieldWithPath("[].opponentUserInfo.profileImage")
-                                        .type(JsonFieldType.STRING).description("상대방 유저 프로필"),
-                                    fieldWithPath("[].lastMessage")
-                                        .type(JsonFieldType.STRING).description("채팅 메시지"),
-                                    fieldWithPath("[].lastMessageDate")
-                                        .type(JsonFieldType.STRING).description("채팅 보낸 시간")
-                                )));
+        response
+            .andExpect(status().isOk())
+            .andDo(document(
+                "List chat rooms",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestParameters(
+                    parameterWithName("offset").description("채팅방 조회 시작 번호"),
+                    parameterWithName("limit").description("채팅방 조회 개수")
+                ),
+                responseFields(
+                    fieldWithPath("[].chatRoomId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("채팅방 번호"),
+                    fieldWithPath("[].productInfo.productId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상품 번호"),
+                    fieldWithPath("[].productInfo.thumbnailImage")
+                        .type(JsonFieldType.STRING)
+                        .description("상품 이미지"),
+                    fieldWithPath("[].opponentUserInfo.username")
+                        .type(JsonFieldType.STRING)
+                        .description("상대방 유저명"),
+                    fieldWithPath("[].opponentUserInfo.profileImage")
+                        .type(JsonFieldType.STRING)
+                        .description("상대방 유저 프로필"),
+                    fieldWithPath("[].lastMessage")
+                        .type(JsonFieldType.STRING)
+                        .description("채팅 메시지")
+                        .optional(),
+                    fieldWithPath("[].lastMessageDate")
+                        .type(JsonFieldType.STRING)
+                        .description("채팅 보낸 시간")
+                        .optional()
+                )
+            ));
       }
     }
 

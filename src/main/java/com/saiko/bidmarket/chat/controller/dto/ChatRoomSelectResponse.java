@@ -101,8 +101,8 @@ public class ChatRoomSelectResponse {
         .chatRoomId(chatRoom.getId())
         .productInfo(productInfo)
         .opponentUserInfo(opponentUserInfo)
-        .lastMessage(lastMessage.getMessage())
-        .lastMessageDate(lastMessage.getCreatedAt())
+        .lastMessage(null)
+        .lastMessageDate(null)
         .build();
   }
 
