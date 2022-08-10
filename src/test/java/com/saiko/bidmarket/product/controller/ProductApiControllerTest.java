@@ -684,10 +684,9 @@ class ProductApiControllerTest extends ControllerSetUp {
         long productId = 1;
         long userId = 1;
 
-
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/{productId}/users/{userId}", productId, userId);
+            .get(BASE_URL + "/{productId}/result", productId);
 
         ResultActions response = mockMvc.perform(request);
 
@@ -697,17 +696,16 @@ class ProductApiControllerTest extends ControllerSetUp {
                 .andDo(document("Select bidding result", preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 pathParameters(
-                                    parameterWithName("productId").description("상품 아이디"),
-                                    parameterWithName("userId").description("유저 아이디")
+                                    parameterWithName("productId").description("상품 아이디")
                                 ),
                                 responseFields(
                                     fieldWithPath("role").type(JsonFieldType.STRING)
-                                                       .description("유저 역할"),
+                                                         .description("유저 역할"),
                                     fieldWithPath("biddingSucceed").type(JsonFieldType.BOOLEAN)
-                                                             .description("비딩 성공 여부"),
+                                                                   .description("비딩 성공 여부"),
                                     fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
-                                                                      .description("채팅방 아이디")
-                                        .optional()
+                                                               .description("채팅방 아이디")
+                                                               .optional()
                                 )));
       }
     }
@@ -724,26 +722,7 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL + "/{productId}/users/{userId}", productId, 1));
-
-        // then
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("userId 에 숫자 외에 다른 문자가 들어온다면")
-    class ContextNotNumberUserId {
-
-      @Test
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest() throws Exception {
-        // given
-        String userId = "NotNumber";
-
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL + "/{productId}/users/{userId}", 1, userId));
+            RestDocumentationRequestBuilders.get(BASE_URL + "/{productId}/result", productId));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -762,26 +741,7 @@ class ProductApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL + "/{productId}/users/{userId}", productId, 1));
-
-        // then
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("userId 에 음수 또는 0이 들어온다면")
-    class ContextNegativeOrZeroNumberUserId {
-
-      @ParameterizedTest
-      @ValueSource(strings = {"0", "-1"})
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest(String userId) throws Exception {
-        // given
-
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL + "/{productId}/users/{userId}", 1, userId));
+            RestDocumentationRequestBuilders.get(BASE_URL + "/{productId}/result", productId));
 
         // then
         response.andExpect(status().isBadRequest());
