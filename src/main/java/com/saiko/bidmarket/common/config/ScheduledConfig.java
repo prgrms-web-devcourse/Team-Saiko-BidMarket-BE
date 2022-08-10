@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
@@ -25,6 +26,7 @@ public class ScheduledConfig {
   public class Scheduler {
 
     @Scheduled(cron = "0 * * * * *")
+    @Transactional
     public void closeProduct() {
       LocalDateTime now = LocalDateTime.now();
       LocalDateTime nowTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
