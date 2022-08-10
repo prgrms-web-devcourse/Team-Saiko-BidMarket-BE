@@ -58,6 +58,8 @@ public class Product extends BaseTime {
 
   private String location;
 
+  @NotNull
+  @Column(length = 512)
   private String thumbnailImage;
 
   private boolean progressed;
