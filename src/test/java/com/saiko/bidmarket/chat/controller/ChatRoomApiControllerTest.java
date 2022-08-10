@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.chat.controller;
 
-import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -25,11 +24,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.service.ChatRoomService;
-import com.saiko.bidmarket.chat.service.dto.ChatRoomSelectParam;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.Group;
@@ -73,9 +70,6 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
         ChatRoom chatRoom = getChatRoom(seller, winner, product, chatRoomId);
         ChatMessage chatMessage = getChatMessage(winner, chatRoom, chatMessageId);
 
-        given(chatRoomService.findAll(any(ChatRoomSelectParam.class)))
-            .willReturn(List.of(ChatRoomSelectResponse.of(chatRoom, winner, chatMessage)));
-
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
             .get(REQUEST_URI)
@@ -98,11 +92,11 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
                                         .type(JsonFieldType.NUMBER).description("채팅방 번호"),
                                     fieldWithPath("[].productInfo.productId")
                                         .type(JsonFieldType.NUMBER).description("상품 번호"),
-                                    fieldWithPath("[].productInfo.thumbnailImg")
+                                    fieldWithPath("[].productInfo.thumbnailImage")
                                         .type(JsonFieldType.STRING).description("상품 이미지"),
                                     fieldWithPath("[].opponentUserInfo.username")
                                         .type(JsonFieldType.STRING).description("상대방 유저명"),
-                                    fieldWithPath("[].opponentUserInfo.profileImg")
+                                    fieldWithPath("[].opponentUserInfo.profileImage")
                                         .type(JsonFieldType.STRING).description("상대방 유저 프로필"),
                                     fieldWithPath("[].lastMessage")
                                         .type(JsonFieldType.STRING).description("채팅 메시지"),
