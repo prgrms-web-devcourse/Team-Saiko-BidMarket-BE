@@ -45,9 +45,9 @@ public class ChatRoomRepositoryTest {
 
   @BeforeEach
   void deleteAll() {
+    chatRoomRepository.deleteAll();
     productRepository.deleteAll();
     userRepository.deleteAll();
-    chatRoomRepository.deleteAll();
   }
 
   @Nested
