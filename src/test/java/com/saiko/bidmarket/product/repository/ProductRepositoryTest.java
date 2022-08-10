@@ -91,7 +91,7 @@ public class ProductRepositoryTest {
                                                                 .description("싸요")
                                                                 .category(Category.DIGITAL_DEVICE)
                                                                 .minimumPrice(10000)
-                                                                .images(null)
+                                                                .images(List.of("image"))
                                                                 .location(null)
                                                                 .writer(writer)
                                                                 .build());
@@ -101,7 +101,7 @@ public class ProductRepositoryTest {
                                                                      .category(
                                                                          Category.DIGITAL_DEVICE)
                                                                      .minimumPrice(10000)
-                                                                     .images(null)
+                                                                     .images(List.of("image"))
                                                                      .location(null)
                                                                      .writer(writer)
                                                                      .build());
@@ -136,7 +136,7 @@ public class ProductRepositoryTest {
                                                                 .description("싸요")
                                                                 .category(Category.DIGITAL_DEVICE)
                                                                 .minimumPrice(10000)
-                                                                .images(null)
+                                                                .images(List.of("image"))
                                                                 .location(null)
                                                                 .writer(writer)
                                                                 .build());
@@ -146,7 +146,7 @@ public class ProductRepositoryTest {
                                                                      .category(
                                                                          Category.DIGITAL_DEVICE)
                                                                      .minimumPrice(10000)
-                                                                     .images(null)
+                                                                     .images(List.of("image"))
                                                                      .location(null)
                                                                      .writer(writer)
                                                                      .build());
@@ -181,7 +181,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -190,7 +190,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -227,7 +227,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -236,7 +236,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -271,7 +271,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -280,7 +280,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -315,7 +315,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -324,7 +324,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -359,7 +359,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -368,7 +368,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -403,7 +403,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -412,7 +412,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -447,7 +447,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -456,7 +456,7 @@ public class ProductRepositoryTest {
                                       .description("예뻐요")
                                       .category(Category.PLANT)
                                       .minimumPrice(10000)
-                                      .images(null)
+                                      .images(List.of("image"))
                                       .location(null)
                                       .writer(writer)
                                       .build());
@@ -490,7 +490,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -499,7 +499,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -534,7 +534,7 @@ public class ProductRepositoryTest {
                                                          .description("싸요")
                                                          .category(Category.DIGITAL_DEVICE)
                                                          .minimumPrice(10000)
-                                                         .images(null)
+                                                         .images(List.of("image"))
                                                          .location(null)
                                                          .writer(writer)
                                                          .build());
@@ -543,7 +543,7 @@ public class ProductRepositoryTest {
                                       .description("예뻐요")
                                       .category(Category.PLANT)
                                       .minimumPrice(10000)
-                                      .images(null)
+                                      .images(List.of("image"))
                                       .location(null)
                                       .writer(writer)
                                       .build());
@@ -582,7 +582,7 @@ public class ProductRepositoryTest {
                    .description("싸요")
                    .category(Category.DIGITAL_DEVICE)
                    .minimumPrice(10000)
-                   .images(null)
+                   .images(List.of("image"))
                    .location(null)
                    .writer(writer)
                    .build()
@@ -637,7 +637,7 @@ public class ProductRepositoryTest {
                    .description("싸요")
                    .category(Category.DIGITAL_DEVICE)
                    .minimumPrice(10000)
-                   .images(null)
+                   .images(List.of("image"))
                    .location(null)
                    .writer(writer)
                    .build()
