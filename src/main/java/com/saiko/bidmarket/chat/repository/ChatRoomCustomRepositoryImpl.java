@@ -1,6 +1,7 @@
 package com.saiko.bidmarket.chat.repository;
 
 import static com.saiko.bidmarket.chat.entity.QChatRoom.*;
+import static com.saiko.bidmarket.product.entity.QProduct.*;
 import static com.saiko.bidmarket.user.entity.QUser.*;
 
 import java.util.List;
@@ -38,6 +39,8 @@ public class ChatRoomCustomRepositoryImpl implements ChatRoomCustomRepository {
         .join(chatRoom.seller, user)
         .fetchJoin()
         .join(chatRoom.winner, user)
+        .fetchJoin()
+        .join(chatRoom.product, product)
         .fetchJoin()
         .offset(request.getOffset())
         .limit(request.getLimit())
