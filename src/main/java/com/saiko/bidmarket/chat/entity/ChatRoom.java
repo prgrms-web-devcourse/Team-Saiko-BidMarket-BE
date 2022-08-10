@@ -1,5 +1,6 @@
 package com.saiko.bidmarket.chat.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,7 +43,7 @@ public class ChatRoom extends BaseTime {
   private Product product;
 
   @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ChatMessage> chatMessage;
+  private final List<ChatMessage> chatMessage = new ArrayList<>();
 
   @Builder
   private ChatRoom(User seller, User winner, Product product) {
