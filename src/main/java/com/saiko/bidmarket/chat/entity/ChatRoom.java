@@ -62,8 +62,9 @@ public class ChatRoom extends BaseTime {
 
   public ChatMessage getLastMessage() {
     if (chatMessage.size() == 0) {
-      return null;
+      return new ChatMessage();
     }
+
     int lastIdx = chatMessage.size() - 1;
     return chatMessage.get(lastIdx);
   }
