@@ -1,15 +1,16 @@
 package com.saiko.bidmarket.chat.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectRequest;
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
-import com.saiko.bidmarket.chat.service.dto.ChatRoomSelectParam;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -54,7 +55,18 @@ public class DefaultChatRoomService implements ChatRoomService {
   }
 
   @Override
-  public List<ChatRoomSelectResponse> findAll(ChatRoomSelectParam selectParam) {
-    return null;
+  public List<ChatRoomSelectResponse> findAll(
+      long userId,
+      ChatRoomSelectRequest request
+  ) {
+    Assert.isTrue(userId > 0, "User id must be positive");
+    Assert.notNull(request, "Request must be provided");
+
+    List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId, request);
+
+    return chatRooms
+        .stream()
+        .map(chatRoom -> ChatRoomSelectResponse.of(userId, chatRoom))
+        .collect(Collectors.toUnmodifiableList());
   }
 }

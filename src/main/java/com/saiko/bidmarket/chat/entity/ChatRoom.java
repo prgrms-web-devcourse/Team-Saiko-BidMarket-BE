@@ -54,5 +54,17 @@ public class ChatRoom extends BaseTime {
     this.winner = winner;
     this.product = product;
   }
-}
 
+  public User getOpponentUser(long userId) {
+    return seller.getId() == userId ? winner : seller;
+  }
+
+  public ChatMessage getLastMessage() {
+    if (chatMessage.size() == 0) {
+      return null;
+    }
+    int lastIdx = chatMessage.size() - 1;
+    return chatMessage.get(lastIdx);
+  }
+
+}

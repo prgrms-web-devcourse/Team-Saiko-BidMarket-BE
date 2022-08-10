@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.Builder;
@@ -50,6 +51,14 @@ public class ChatRoomSelectResponse {
 
     @NotBlank
     private final String thumbnailImage;
+
+    private static ProductInfo getProductInfo(Product product) {
+      return ProductInfo
+          .builder()
+          .productId(product.getId())
+          .thumbnailImage(product.getThumbnailImage())
+          .build();
+    }
   }
 
   @Valid
@@ -63,34 +72,38 @@ public class ChatRoomSelectResponse {
 
     @NotBlank
     private final String profileImage;
+
+    private static OpponentUserInfo getOpponentUserInfo(User opponent) {
+      return OpponentUserInfo
+          .builder()
+          .username(opponent.getUsername())
+          .profileImage(opponent.getProfileImage())
+          .build();
+    }
   }
 
   public static ChatRoomSelectResponse of(
-      ChatRoom chatRoom,
-      User opponent,
-      ChatMessage lastMessage
+      long userId,
+      ChatRoom chatRoom
   ) {
+    Assert.isTrue(userId > 0, "User id must be positive");
     Assert.notNull(chatRoom, "Chat room must be provided");
-    Assert.notNull(opponent, "Opponent must be provided");
-    Assert.notNull(lastMessage, "Last message must be provided");
 
-    ProductInfo productInfo = ProductInfo.builder()
-                                         .productId(chatRoom.getProduct().getId())
-                                         .thumbnailImage(chatRoom.getProduct().getThumbnailImage())
-                                         .build();
+    User opponent = chatRoom.getOpponentUser(userId);
+    Product product = chatRoom.getProduct();
 
-    OpponentUserInfo opponentUserInfo = OpponentUserInfo.builder()
-                                                        .username(opponent.getUsername())
-                                                        .profileImage(opponent.getProfileImage())
-                                                        .build();
+    ProductInfo productInfo = ProductInfo.getProductInfo(product);
+    OpponentUserInfo opponentUserInfo = OpponentUserInfo.getOpponentUserInfo(opponent);
+    ChatMessage lastMessage = chatRoom.getLastMessage();
 
-    return ChatRoomSelectResponse.builder()
-                                 .chatRoomId(chatRoom.getId())
-                                 .productInfo(productInfo)
-                                 .opponentUserInfo(opponentUserInfo)
-                                 .lastMessage(lastMessage.getMessage())
-                                 .lastMessageDate(lastMessage.getCreatedAt())
-                                 .build();
+    return ChatRoomSelectResponse
+        .builder()
+        .chatRoomId(chatRoom.getId())
+        .productInfo(productInfo)
+        .opponentUserInfo(opponentUserInfo)
+        .lastMessage(lastMessage.getMessage())
+        .lastMessageDate(lastMessage.getCreatedAt())
+        .build();
   }
 
 }

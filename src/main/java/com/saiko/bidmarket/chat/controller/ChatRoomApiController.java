@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectRequest;
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
 import com.saiko.bidmarket.chat.service.ChatRoomService;
-import com.saiko.bidmarket.chat.service.dto.ChatRoomSelectParam;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
 import lombok.AccessLevel;
@@ -35,7 +34,6 @@ public class ChatRoomApiController {
       @ModelAttribute @Valid ChatRoomSelectRequest request
   ) {
     long userId = authentication.getUserId();
-    ChatRoomSelectParam param = ChatRoomSelectParam.of(userId, request);
-    return chatRoomService.findAll(param);
+    return chatRoomService.findAll(userId, request);
   }
 }
