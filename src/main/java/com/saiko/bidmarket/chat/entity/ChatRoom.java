@@ -60,13 +60,4 @@ public class ChatRoom extends BaseTime {
     return seller.getId() == userId ? winner : seller;
   }
 
-  public ChatMessage getLastMessage() {
-    if (chatMessage.size() == 0) {
-      return new ChatMessage();
-    }
-
-    int lastIdx = chatMessage.size() - 1;
-    return chatMessage.get(lastIdx);
-  }
-
 }
