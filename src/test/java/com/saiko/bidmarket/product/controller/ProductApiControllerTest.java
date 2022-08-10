@@ -252,6 +252,68 @@ class ProductApiControllerTest extends ControllerSetUp {
     }
 
     @Nested
+    @DisplayName("images 가 null 이라면")
+    class ContextWithImagesNull {
+
+      @Test
+      @DisplayName("BadRequest 를 응답한다")
+      void ItResponseBadRequest() throws Exception {
+        //given
+        HashMap<String, Object> requestMap = new HashMap<>();
+        requestMap.put("title", "키보드팝니다");
+        requestMap.put("description", "깨끗합니다");
+        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("minimumPrice", 10000);
+        requestMap.put("location", "관악구 신림동");
+        requestMap.put("images", null);
+
+        String requestBody = objectMapper.writeValueAsString(requestMap);
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .post(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("images 가 빈 값 이라면")
+    class ContextWithImagesEmpty {
+
+      @Test
+      @DisplayName("BadRequest 를 응답한다")
+      void ItResponseBadRequest() throws Exception {
+        //given
+        HashMap<String, Object> requestMap = new HashMap<>();
+        requestMap.put("title", "키보드팝니다");
+        requestMap.put("description", "깨끗합니다");
+        requestMap.put("category", DIGITAL_DEVICE);
+        requestMap.put("minimumPrice", 10000);
+        requestMap.put("location", "관악구 신림동");
+        requestMap.put("images", Collections.EMPTY_LIST);
+
+        String requestBody = objectMapper.writeValueAsString(requestMap);
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .post(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
     @DisplayName("minimumPrice 가 범위를 벗어나면")
     class ContextWithMinimumPriceOutOfRange {
 

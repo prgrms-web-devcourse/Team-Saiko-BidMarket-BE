@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -20,6 +21,7 @@ public class ProductCreateRequest {
   @Length(max = 500)
   private final String description;
 
+  @NotEmpty
   @Size(max = 5)
   private final List<String> images;
 
