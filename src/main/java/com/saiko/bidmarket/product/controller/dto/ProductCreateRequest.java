@@ -12,6 +12,12 @@ import org.hibernate.validator.constraints.Length;
 
 import com.saiko.bidmarket.product.Category;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder(access = AccessLevel.PUBLIC)
 public class ProductCreateRequest {
   @NotBlank
   @Length(max = 32)
@@ -33,39 +39,4 @@ public class ProductCreateRequest {
 
   @Length(max = 20)
   private final String location;
-
-  public ProductCreateRequest(String title, String description,
-                              List<String> images, Category category, int minimumPrice,
-                              String location) {
-    this.title = title;
-    this.description = description;
-    this.images = images;
-    this.category = category;
-    this.minimumPrice = minimumPrice;
-    this.location = location;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public List<String> getImages() {
-    return images;
-  }
-
-  public Category getCategory() {
-    return category;
-  }
-
-  public int getMinimumPrice() {
-    return minimumPrice;
-  }
-
-  public String getLocation() {
-    return location;
-  }
 }
