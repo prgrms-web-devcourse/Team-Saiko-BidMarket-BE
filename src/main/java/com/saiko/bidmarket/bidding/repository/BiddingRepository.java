@@ -9,4 +9,6 @@ import com.saiko.bidmarket.product.entity.Product;
 
 public interface BiddingRepository extends BiddingCustomRepository, JpaRepository<Bidding, Long> {
   List<Bidding> findAllByProductOrderByBiddingPriceDesc(Product product);
+
+  void deleteAllByBidderId(long bidderId);
 }
