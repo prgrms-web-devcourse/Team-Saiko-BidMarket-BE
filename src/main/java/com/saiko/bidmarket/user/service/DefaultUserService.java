@@ -125,4 +125,9 @@ public class DefaultUserService implements UserService {
                             .map(UserBiddingSelectResponse::from)
                             .collect(Collectors.toList());
   }
+
+  @Override
+  public void deleteUser(long userId) {
+
+  }
 }
