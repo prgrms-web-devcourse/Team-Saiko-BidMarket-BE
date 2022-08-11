@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 
 @Repository
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
+public interface ChatMessageRepository
+    extends ChatMessageCustomRepository, JpaRepository<ChatMessage, Long> {
 }
