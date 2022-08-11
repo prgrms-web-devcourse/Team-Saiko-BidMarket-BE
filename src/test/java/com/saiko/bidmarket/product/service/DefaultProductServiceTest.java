@@ -66,6 +66,14 @@ class DefaultProductServiceTest {
 
   private static ProductCreateRequest productCreateRequest = new ProductCreateRequest(
       "텀블러 팝니다", "깨끗해요", List.of("image1", "image2"), ETC, 15000, "강남");
+  private static ProductSelectRequest productSelectRequest = new ProductSelectRequest(
+      null,
+      "true",
+      null,
+      0,
+      2,
+      null
+  );
   private static User writer = User
       .builder()
       .username("레이")
@@ -119,7 +127,6 @@ class DefaultProductServiceTest {
       .seller(writer)
       .product(product)
       .build();
-
   private static long writerId = 1;
   private static long productId = 1;
   private static long successfulBidderId = 2;
@@ -218,23 +225,6 @@ class DefaultProductServiceTest {
       @DisplayName("요청에 해당하는 상품 리스트를 반환한다")
       void ItResponseProductList() {
         //given
-        ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
-                                                                             2,
-                                                                             null
-        );
-        User writer = new User("제로", "image", "google", "1234", new Group());
-        Product product = Product
-            .builder()
-            .title("세탁기 팔아요")
-            .description("좋아요")
-            .minimumPrice(100000)
-            .category(HOUSEHOLD_APPLIANCE)
-            .location("수원")
-            .writer(writer)
-            .images(null)
-            .build();
-        ReflectionTestUtils.setField(product, "id", 1L);
-
         given(productRepository.findAllProduct(any(ProductSelectRequest.class)))
             .willReturn(List.of(product));
 
