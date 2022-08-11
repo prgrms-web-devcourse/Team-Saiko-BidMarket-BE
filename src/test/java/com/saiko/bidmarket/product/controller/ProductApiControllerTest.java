@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -96,6 +97,25 @@ class ProductApiControllerTest extends ControllerSetUp {
           Arguments.of("a".repeat(21))
       );
     }
+  }
+
+  private static Product product = Product
+      .builder()
+      .title("귤 팔아요")
+      .description("맛있어요")
+      .category(FOOD)
+      .images(List.of("image1"))
+      .location("제주도")
+      .minimumPrice(1000)
+      .writer(new User("제로", "image", "google", "123", new Group()))
+      .build();
+  private static long productId = 1;
+
+  @BeforeAll
+  static void setup() {
+    ReflectionTestUtils.setField(product, "id", productId);
+    ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
+
   }
 
   @Nested
@@ -620,19 +640,6 @@ class ProductApiControllerTest extends ControllerSetUp {
       @DisplayName("상품을 조회하고 결과를 반환한다")
       void ItReturnProductList() throws Exception {
         //given
-        Product product = Product
-            .builder()
-            .title("귤 팔아요")
-            .description("맛있어요")
-            .category(FOOD)
-            .images(List.of("image1"))
-            .location("제주도")
-            .minimumPrice(1000)
-            .writer(new User("제로", "image", "google", "123", new Group()))
-            .build();
-        ReflectionTestUtils.setField(product, "id", 1L);
-        ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
-
         List<ProductSelectResponse> responses = List.of(ProductSelectResponse.from(product));
         given(productService.findAll(any(ProductSelectRequest.class))).willReturn(responses);
 
