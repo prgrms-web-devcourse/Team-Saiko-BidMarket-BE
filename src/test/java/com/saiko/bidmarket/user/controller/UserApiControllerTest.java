@@ -626,5 +626,28 @@ class UserApiControllerTest extends ControllerSetUp {
       }
     }
   }
-}
 
+  @Nested
+  @DisplayName("deleteUser 메서드는")
+  @WithMockCustomLoginUser
+  class DescribeDeleteUser {
+
+    @Nested
+    @DisplayName("Delete요청을 받으면")
+    class ContextRecieveDeleteRequest {
+
+      @Test
+      @DisplayName("UserService의 deleteUser 메서드를 호출한다.")
+      void itCallServiceDeleteUser() throws Exception {
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.delete(BASE_URL);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).deleteUser(anyLong());
+        response.andExpect(status().isOk());
+      }
+    }
+  }
+}
