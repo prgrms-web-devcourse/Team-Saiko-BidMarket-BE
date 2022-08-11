@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
@@ -128,6 +129,18 @@ public class DefaultUserService implements UserService {
 
   @Override
   public void deleteUser(long userId) {
+    Assert.isTrue(userId > 0, "User id must be positive");
 
+    final User user = userRepository.findById(userId)
+        .orElseThrow(() -> new  NotFoundException("User does not exist"));
+
+    biddingRepository.deleteAllByBidderId(userId);
+    finishUserProducts(userId);
+    user.delete();
+  }
+
+  private void finishUserProducts(long userId) {
+    productRepository.findAllByWriterId(userId)
+        .forEach(Product::finish);
   }
 }
