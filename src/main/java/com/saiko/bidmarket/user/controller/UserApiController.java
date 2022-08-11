@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,10 +37,8 @@ public class UserApiController {
 
   @PatchMapping
   @ResponseStatus(HttpStatus.OK)
-  public void updateUser(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @RequestBody @Valid UserUpdateRequest request
-  ) {
+  public void updateUser(@AuthenticationPrincipal JwtAuthentication authentication,
+                         @RequestBody @Valid UserUpdateRequest request) {
     userService.updateUser(authentication.getUserId(), request);
   }
 
@@ -52,8 +51,7 @@ public class UserApiController {
   @GetMapping("auth")
   @ResponseStatus(HttpStatus.OK)
   public UserSelectResponse getUserIdInfo(
-      @AuthenticationPrincipal JwtAuthentication authentication
-  ) {
+      @AuthenticationPrincipal JwtAuthentication authentication) {
     final long userId = authentication.getUserId();
     return userService.findById(userId);
   }
@@ -61,9 +59,7 @@ public class UserApiController {
   @GetMapping("{id}/products")
   @ResponseStatus(HttpStatus.OK)
   public List<UserProductSelectResponse> getAllUserProduct(
-      @ModelAttribute @Valid UserProductSelectRequest request,
-      @PathVariable long id
-  ) {
+      @ModelAttribute @Valid UserProductSelectRequest request, @PathVariable long id) {
     return userService.findAllUserProducts(id, request);
   }
 
@@ -71,9 +67,17 @@ public class UserApiController {
   @ResponseStatus(HttpStatus.OK)
   public List<UserBiddingSelectResponse> getAllUserBidding(
       @AuthenticationPrincipal JwtAuthentication authentication,
-      @ModelAttribute @Valid UserBiddingSelectRequest request
-  ) {
+      @ModelAttribute @Valid UserBiddingSelectRequest request) {
     long userId = authentication.getUserId();
     return userService.findAllUserBiddings(userId, request);
+  }
+
+  @DeleteMapping
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteUser(
+      @AuthenticationPrincipal
+      JwtAuthentication authentication
+  ) {
+    userService.deleteUser(authentication.getUserId());
   }
 }

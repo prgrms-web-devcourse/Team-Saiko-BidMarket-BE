@@ -28,8 +28,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.common.Sort;
+import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
@@ -71,26 +71,18 @@ class UserApiControllerTest extends ControllerSetUp {
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .patch(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.patch(
+            BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody);
 
         ResultActions response = mockMvc.perform(request);
 
         //then
         verify(userService).updateUser(anyLong(), any(UserUpdateRequest.class));
-        response
-            .andExpect(status().isOk())
-            .andDo(document("Update User",
-                            preprocessRequest(prettyPrint()),
-                            requestFields(
-                                fieldWithPath("username").type(JsonFieldType.STRING)
-                                                         .description("변경할 유저 이름"),
-                                fieldWithPath("profileImage").type(JsonFieldType.STRING)
-                                                                .description("변경할 유저 프로필 이미지")
-                            )
-            ));
+        response.andExpect(status().isOk())
+                .andDo(document("Update User", preprocessRequest(prettyPrint()), requestFields(
+                    fieldWithPath("username").type(JsonFieldType.STRING).description("변경할 유저 이름"),
+                    fieldWithPath("profileImage").type(JsonFieldType.STRING)
+                                                 .description("변경할 유저 프로필 이미지"))));
       }
     }
 
@@ -108,16 +100,13 @@ class UserApiControllerTest extends ControllerSetUp {
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .patch(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.patch(
+            BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody);
 
         ResultActions response = mockMvc.perform(request);
 
         //then
-        response
-            .andExpect(status().isBadRequest());
+        response.andExpect(status().isBadRequest());
       }
     }
 
@@ -136,16 +125,13 @@ class UserApiControllerTest extends ControllerSetUp {
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .patch(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.patch(
+            BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody);
 
         ResultActions response = mockMvc.perform(request);
 
         //then
-        response
-            .andExpect(status().isBadRequest());
+        response.andExpect(status().isBadRequest());
       }
     }
 
@@ -164,16 +150,13 @@ class UserApiControllerTest extends ControllerSetUp {
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .patch(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.patch(
+            BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody);
 
         ResultActions response = mockMvc.perform(request);
 
         //then
-        response
-            .andExpect(status().isBadRequest());
+        response.andExpect(status().isBadRequest());
       }
     }
 
@@ -190,16 +173,13 @@ class UserApiControllerTest extends ControllerSetUp {
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //when
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .patch(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.patch(
+            BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody);
 
         ResultActions response = mockMvc.perform(request);
 
         //then
-        response
-            .andExpect(status().isBadRequest());
+        response.andExpect(status().isBadRequest());
       }
     }
   }
@@ -217,35 +197,24 @@ class UserApiControllerTest extends ControllerSetUp {
       void itReturnUsernameAndProfileImageUrl() throws Exception {
         //given
         long userId = 1L;
-        final User user = new User("test",
-                                   "test",
-                                   "test",
-                                   "test",
-                                   new Group());
+        final User user = new User("test", "test", "test", "test", new Group());
         ReflectionTestUtils.setField(user, "id", userId);
 
         //when
         when(userService.findById(anyLong())).thenReturn(UserSelectResponse.from(user));
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/" + userId);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(
+            BASE_URL + "/" + userId);
 
         ResultActions response = mockMvc.perform(request);
 
         //then
         verify(userService).findById(anyLong());
-        response
-            .andExpect(status().isOk())
-            .andDo(document("Get User",
-                            preprocessRequest(prettyPrint()),
-                            responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER)
-                                                   .description("유저 식별자"),
-                                fieldWithPath("username").type(JsonFieldType.STRING)
-                                                         .description("현재 유저 이름"),
-                                fieldWithPath("profileImage").type(JsonFieldType.STRING)
-                                                             .description("현재 유저 프로필 이미지")
-                            )
-            ));
+        response.andExpect(status().isOk())
+                .andDo(document("Get User", preprocessRequest(prettyPrint()), responseFields(
+                    fieldWithPath("id").type(JsonFieldType.NUMBER).description("유저 식별자"),
+                    fieldWithPath("username").type(JsonFieldType.STRING).description("현재 유저 이름"),
+                    fieldWithPath("profileImage").type(JsonFieldType.STRING)
+                                                 .description("현재 유저 프로필 이미지"))));
       }
     }
 
@@ -259,15 +228,14 @@ class UserApiControllerTest extends ControllerSetUp {
 
         //when
         when(userService.findById(anyLong())).thenThrow(NotFoundException.class);
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/" + 1L);
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(
+            BASE_URL + "/" + 1L);
 
         ResultActions response = mockMvc.perform(request);
 
         //then
         verify(userService).findById(anyLong());
-        response
-            .andExpect(status().isNotFound());
+        response.andExpect(status().isNotFound());
       }
     }
   }
@@ -285,36 +253,25 @@ class UserApiControllerTest extends ControllerSetUp {
       @DisplayName("해당 유저의 인코딩된 ID를 반환한다.")
       void itReturnEncodedUserID() throws Exception {
         //given
-        final User user = new User("test",
-                                   "test",
-                                   "test",
-                                   "test",
-                                   new Group());
+        final User user = new User("test", "test", "test", "test", new Group());
 
         ReflectionTestUtils.setField(user, "id", 1L);
 
         //when
         when(userService.findById(anyLong())).thenReturn(UserSelectResponse.from(user));
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/auth");
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(
+            BASE_URL + "/auth");
 
         ResultActions response = mockMvc.perform(request);
 
         //then
         verify(userService).findById(anyLong());
-        response
-            .andExpect(status().isOk())
-            .andDo(document("Get UserInfo",
-                            preprocessRequest(prettyPrint()),
-                            responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER)
-                                                   .description("유저 식별자"),
-                                fieldWithPath("username").type(JsonFieldType.STRING)
-                                                         .description("현재 유저 이름"),
-                                fieldWithPath("profileImage").type(JsonFieldType.STRING)
-                                                             .description("현재 유저 프로필 이미지")
-                            )
-            ));
+        response.andExpect(status().isOk())
+                .andDo(document("Get UserInfo", preprocessRequest(prettyPrint()), responseFields(
+                    fieldWithPath("id").type(JsonFieldType.NUMBER).description("유저 식별자"),
+                    fieldWithPath("username").type(JsonFieldType.STRING).description("현재 유저 이름"),
+                    fieldWithPath("profileImage").type(JsonFieldType.STRING)
+                                                 .description("현재 유저 프로필 이미지"))));
       }
     }
 
@@ -327,15 +284,14 @@ class UserApiControllerTest extends ControllerSetUp {
       void itReturnEncodedUserID() throws Exception {
         //when
         when(userService.findById(anyLong())).thenThrow(NotFoundException.class);
-        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/auth");
+        final MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(
+            BASE_URL + "/auth");
 
         ResultActions response = mockMvc.perform(request);
 
         //then
         verify(userService).findById(anyLong());
-        response
-            .andExpect(status().isNotFound());
+        response.andExpect(status().isNotFound());
       }
     }
   }
@@ -374,32 +330,42 @@ class UserApiControllerTest extends ControllerSetUp {
             responses);
 
         //when
-        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/" + userId + "/products")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .queryParam("offset", "1")
-            .queryParam("limit", "1")
-            .queryParam("sort", Sort.END_DATE_ASC.name());
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(
+                                                                                    BASE_URL + "/" + userId + "/products")
+                                                                                .contentType(
+                                                                                    MediaType.APPLICATION_FORM_URLENCODED)
+                                                                                .queryParam(
+                                                                                    "offset", "1")
+                                                                                .queryParam("limit",
+                                                                                            "1")
+                                                                                .queryParam("sort",
+                                                                                            Sort.END_DATE_ASC.name());
 
         ResultActions response = mockMvc.perform(request);
 
         //then
         response.andExpect(status().isOk())
-                .andDo(document("Select product", preprocessRequest(
-                    prettyPrint()), preprocessResponse(prettyPrint()), requestParameters(
-                    parameterWithName("offset").description("상품 조회 시작 번호"),
-                    parameterWithName("limit").description("상품 조회 개수"),
-                    parameterWithName("sort").description("상품 정렬 기준").optional()), responseFields(
-                    fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
-                    fieldWithPath("[].title").type(JsonFieldType.STRING).description("상품 제목"),
-                    fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
-                                                      .description("상품 썸네일 이미지"),
-                    fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
-                                                    .description("최소주문금액"),
-                    fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
-                    fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
-                    fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                 .description("수정 시간").optional())));
+                .andDo(document("Select product", preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()), requestParameters(
+                        parameterWithName("offset").description("상품 조회 시작 번호"),
+                        parameterWithName("limit").description("상품 조회 개수"),
+                        parameterWithName("sort").description("상품 정렬 기준").optional()),
+                                responseFields(fieldWithPath("[].id").type(JsonFieldType.NUMBER)
+                                                                     .description("상품 식별자"),
+                                               fieldWithPath("[].title").type(JsonFieldType.STRING)
+                                                                        .description("상품 제목"),
+                                               fieldWithPath("[].thumbnailImage").type(
+                                                   JsonFieldType.STRING).description("상품 썸네일 이미지"),
+                                               fieldWithPath("[].minimumPrice").type(
+                                                   JsonFieldType.NUMBER).description("최소주문금액"),
+                                               fieldWithPath("[].expireAt").type(
+                                                   JsonFieldType.STRING).description("비딩 종료 시간"),
+                                               fieldWithPath("[].createdAt").type(
+                                                   JsonFieldType.STRING).description("생성 시간"),
+                                               fieldWithPath("[].updatedAt").type(
+                                                                                JsonFieldType.STRING)
+                                                                            .description("수정 시간")
+                                                                            .optional())));
       }
     }
 
@@ -454,8 +420,7 @@ class UserApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders.get(BASE_URL + "/products")
                                             .param("offset", "1")
-                                            .param("limit", limit)
-        );
+                                            .param("limit", limit));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -474,8 +439,7 @@ class UserApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders.get(BASE_URL + "/products")
                                             .param("offset", "1")
-                                            .param("limit", limit)
-        );
+                                            .param("limit", limit));
         // then
         response.andExpect(status().isBadRequest());
       }
@@ -514,37 +478,48 @@ class UserApiControllerTest extends ControllerSetUp {
         ReflectionTestUtils.setField(product, "id", 1L);
         ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
 
-        given(userService.findAllUserBiddings(anyLong(), any(UserBiddingSelectRequest.class)))
-            .willReturn(List.of(UserBiddingSelectResponse.from(product)));
+        given(userService.findAllUserBiddings(anyLong(),
+                                              any(UserBiddingSelectRequest.class))).willReturn(
+            List.of(UserBiddingSelectResponse.from(product)));
 
         //when
-        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .get(BASE_URL + "/biddings")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .queryParam("offset", "1")
-            .queryParam("limit", "1")
-            .queryParam("sort", Sort.END_DATE_ASC.name());
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.get(
+                                                                                    BASE_URL + "/biddings")
+                                                                                .contentType(
+                                                                                    MediaType.APPLICATION_FORM_URLENCODED)
+                                                                                .queryParam(
+                                                                                    "offset", "1")
+                                                                                .queryParam("limit",
+                                                                                            "1")
+                                                                                .queryParam("sort",
+                                                                                            Sort.END_DATE_ASC.name());
 
         ResultActions response = mockMvc.perform(request);
 
         //then
         verify(userService).findAllUserBiddings(anyLong(), any(UserBiddingSelectRequest.class));
         response.andExpect(status().isOk())
-                .andDo(document("Select bidding", preprocessRequest(
-                    prettyPrint()), preprocessResponse(prettyPrint()), requestParameters(
-                    parameterWithName("offset").description("상품 조회 시작 번호"),
-                    parameterWithName("limit").description("상품 조회 개수"),
-                    parameterWithName("sort").description("상품 정렬 기준").optional()), responseFields(
-                    fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
-                    fieldWithPath("[].title").type(JsonFieldType.STRING).description("상품 제목"),
-                    fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
-                                                      .description("상품 썸네일 이미지"),
-                    fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
-                                                    .description("최소주문금액"),
-                    fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
-                    fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
-                    fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                 .description("수정 시간").optional())));
+                .andDo(document("Select bidding", preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()), requestParameters(
+                        parameterWithName("offset").description("상품 조회 시작 번호"),
+                        parameterWithName("limit").description("상품 조회 개수"),
+                        parameterWithName("sort").description("상품 정렬 기준").optional()),
+                                responseFields(fieldWithPath("[].id").type(JsonFieldType.NUMBER)
+                                                                     .description("상품 식별자"),
+                                               fieldWithPath("[].title").type(JsonFieldType.STRING)
+                                                                        .description("상품 제목"),
+                                               fieldWithPath("[].thumbnailImage").type(
+                                                   JsonFieldType.STRING).description("상품 썸네일 이미지"),
+                                               fieldWithPath("[].minimumPrice").type(
+                                                   JsonFieldType.NUMBER).description("최소주문금액"),
+                                               fieldWithPath("[].expireAt").type(
+                                                   JsonFieldType.STRING).description("비딩 종료 시간"),
+                                               fieldWithPath("[].createdAt").type(
+                                                   JsonFieldType.STRING).description("생성 시간"),
+                                               fieldWithPath("[].updatedAt").type(
+                                                                                JsonFieldType.STRING)
+                                                                            .description("수정 시간")
+                                                                            .optional())));
       }
     }
 
@@ -599,8 +574,7 @@ class UserApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders.get(BASE_URL + "/biddings")
                                             .param("offset", "1")
-                                            .param("limit", limit)
-        );
+                                            .param("limit", limit));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -619,10 +593,33 @@ class UserApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders.get(BASE_URL + "/biddings")
                                             .param("offset", "1")
-                                            .param("limit", limit)
-        );
+                                            .param("limit", limit));
         // then
         response.andExpect(status().isBadRequest());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("deleteUser 메서드는")
+  @WithMockCustomLoginUser
+  class DescribeDeleteUser {
+
+    @Nested
+    @DisplayName("Delete요청을 받으면")
+    class ContextRecieveDeleteRequest {
+
+      @Test
+      @DisplayName("UserService의 deleteUser 메서드를 호출한다.")
+      void itCallServiceDeleteUser() throws Exception {
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders.delete(BASE_URL);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).deleteUser(anyLong());
+        response.andExpect(status().isOk());
       }
     }
   }
