@@ -2,6 +2,7 @@ package com.saiko.bidmarket.product.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -172,6 +173,8 @@ public class Product extends BaseTime {
     if (biddings.isEmpty()) {
       return null;
     }
+
+    biddings.sort((a, b) -> (int)(b.getBiddingPrice() - a.getBiddingPrice()));
 
     Bidding wonBidding = biddings.get(0);
     wonBidding.win();
