@@ -579,12 +579,13 @@ class DefaultUserServiceTest {
                                                       .minimumPrice(1000)
                                                       .writer(seller)
                                                       .description("test")
-                                                      .build(), Product.builder()
-                                                                       .title("test")
-                                                                       .minimumPrice(1000)
-                                                                       .writer(seller)
-                                                                       .description("test")
-                                                                       .build());
+                                                      .build(),
+                                               Product.builder()
+                                                      .title("test")
+                                                      .minimumPrice(1000)
+                                                      .writer(seller)
+                                                      .description("test")
+                                                      .build());
 
         //when
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
