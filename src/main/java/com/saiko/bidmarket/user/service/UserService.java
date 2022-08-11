@@ -26,4 +26,6 @@ public interface UserService {
 
   List<UserBiddingSelectResponse> findAllUserBiddings(long userId,
                                                       UserBiddingSelectRequest request);
+
+  void deleteUser(long userId);
 }
