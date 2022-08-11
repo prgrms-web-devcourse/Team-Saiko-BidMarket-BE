@@ -1,7 +1,7 @@
 package com.saiko.bidmarket.user.service;
 
-import static com.saiko.bidmarket.product.Category.*;
 import static com.saiko.bidmarket.common.Sort.*;
+import static com.saiko.bidmarket.product.Category.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -488,6 +488,112 @@ class DefaultUserServiceTest {
         //then
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getId()).isEqualTo(productId);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("deleteUser 메서드는")
+  class DescribeDeleteUser {
+
+    @Nested
+    @DisplayName("음수값의 Id가 인자로 들어오면")
+    class ContextReceiveNegativeArgument {
+
+      @Test
+      @DisplayName("IllegalArgumentException을 반환한다.")
+      void itThrowIllegalArgumentException() {
+        //given
+        final long negativeId = -1;
+
+        //then
+        Assertions.assertThatThrownBy(() -> defaultUserService.deleteUser(negativeId))
+                  .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않는 유저의 삭제요청을 받으면")
+    class ContextReceiveNotExistUserRequest {
+
+      @Test
+      @DisplayName("NotFoundException을 반환한다.")
+      void itThrowIllegalArgumentException() {
+        //given
+        final long notExistUserId = 1;
+
+        //when
+        when(userRepository.findById(notExistUserId)).thenThrow(NotFoundException.class);
+
+        //then
+        Assertions.assertThatThrownBy(() -> defaultUserService.deleteUser(notExistUserId))
+                  .isInstanceOf(NotFoundException.class);
+        verify(userRepository).findById(anyLong());
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하는 유저의 삭제요청을 받으면")
+    class ContextReceiveDeleteUserRequest {
+
+      @Test
+      @DisplayName("해당 유저의 입찰 정보를 모두 삭제한다.")
+      void itDeleteUserBiddings() {
+        //given
+        final User bidder = User.builder()
+                                .username("test")
+                                .profileImage("s")
+                                .provider("test")
+                                .providerId("test")
+                                .group(new Group())
+                                .build();
+
+        ReflectionTestUtils.setField(bidder, "id", 1L);
+        final long bidderId = bidder.getId();
+
+        //when
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(bidder));
+        defaultUserService.deleteUser(bidderId);
+
+        //then
+        verify(biddingRepository).deleteAllByBidderId(anyLong());
+      }
+
+      @Test
+      @DisplayName("해당 유저의 경매중인 상품을 모두 종료한다.")
+      void itFinishUserProducts() {
+        //given
+        final User seller = User.builder()
+                                .username("test")
+                                .profileImage("s")
+                                .provider("test")
+                                .providerId("test")
+                                .group(new Group())
+                                .build();
+
+        ReflectionTestUtils.setField(seller, "id", 1L);
+        final long sellerId = seller.getId();
+
+        final List<Product> products = List.of(Product.builder()
+                                                      .title("test")
+                                                      .minimumPrice(1000)
+                                                      .writer(seller)
+                                                      .description("test")
+                                                      .build(), Product.builder()
+                                                                       .title("test")
+                                                                       .minimumPrice(1000)
+                                                                       .writer(seller)
+                                                                       .description("test")
+                                                                       .build());
+
+        //when
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
+        when(productRepository.findAllByWriterId(sellerId)).thenReturn(products);
+        defaultUserService.deleteUser(sellerId);
+
+        //then
+        Assertions.assertThat(products.get(0).isProgressed()).isEqualTo(false);
+        Assertions.assertThat(products.get(0).isProgressed()).isEqualTo(false);
       }
     }
   }
