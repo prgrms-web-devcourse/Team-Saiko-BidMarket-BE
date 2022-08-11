@@ -3,6 +3,7 @@ package com.saiko.bidmarket.user.entity;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,10 +16,14 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
+import com.saiko.bidmarket.heart.entity.Heart;
+import com.saiko.bidmarket.heart.entity.Hearts;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "`user`")
 @EqualsAndHashCode(of = {"provider", "providerId"}, callSuper = false)
@@ -47,6 +52,9 @@ public class User extends BaseTime {
   @ManyToOne(optional = false)
   @JoinColumn(name = "group_id")
   private Group group;
+
+  @Embedded
+  private final Hearts hearts = new Hearts();
 
   protected User() {/*no-op*/}
 
@@ -78,19 +86,10 @@ public class User extends BaseTime {
     this.profileImage = profileImage;
   }
 
-  public Long getId() {
-    return id;
-  }
+  public boolean toggleHeart(Heart heart) {
+    Assert.notNull(heart, "heart must be provided");
 
-  public String getUsername() {
-    return username;
-  }
-
-  public Group getGroup() {
-    return group;
-  }
-
-  public String getProfileImage() {
-    return profileImage;
+    return hearts
+        .toggleHeart(heart);
   }
 }

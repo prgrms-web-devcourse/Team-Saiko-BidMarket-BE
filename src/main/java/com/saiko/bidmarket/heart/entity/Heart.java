@@ -44,4 +44,18 @@ public class Heart extends BaseTime {
     this.user = user;
     this.product = product;
   }
+
+  public static Heart of(User user, Product product) {
+    return Heart
+        .builder()
+        .user(user)
+        .product(product)
+        .build();
+  }
+
+  public boolean ownAbout(Long productId) {
+    return this.product
+        .getId()
+        .equals(productId);
+  }
 }
