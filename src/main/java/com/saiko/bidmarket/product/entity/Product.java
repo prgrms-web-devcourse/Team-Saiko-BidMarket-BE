@@ -174,9 +174,14 @@ public class Product extends BaseTime {
       return null;
     }
 
-    biddings.sort((a, b) -> (int)(b.getBiddingPrice() - a.getBiddingPrice()));
-
     Bidding wonBidding = biddings.get(0);
+
+    if (biddings.size() > 1) {
+      biddings = new ArrayList<>(biddings);
+      biddings.sort((a, b) -> (int)(b.getBiddingPrice() - a.getBiddingPrice()));
+      wonBidding = biddings.get(0);
+    }
+
     wonBidding.win();
 
     setWinningPrice();
