@@ -63,7 +63,7 @@ public class DefaultProductService implements ProductService {
         .orElseThrow(
             () -> new NotFoundException("Product not exist"));
 
-    final Product product = Product.from(productCreateRequest, writer);
+    final Product product = Product.of(productCreateRequest, writer);
 
     return ProductCreateResponse.from(productRepository
                                           .save(product)

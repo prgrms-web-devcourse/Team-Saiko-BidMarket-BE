@@ -112,7 +112,7 @@ public class Product extends BaseTime {
     this.progressed = true;
   }
 
-  public static Product from(
+  public static Product of(
       ProductCreateRequest request,
       User writer
   ) {
