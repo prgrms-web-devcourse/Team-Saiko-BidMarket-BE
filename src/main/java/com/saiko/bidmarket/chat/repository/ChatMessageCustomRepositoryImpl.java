@@ -25,8 +25,6 @@ public class ChatMessageCustomRepositoryImpl implements ChatMessageCustomReposit
         jpaQueryFactory
             .selectFrom(chatMessage)
             .join(chatMessage.chatRoom, chatRoom)
-            .join(chatMessage.sender, user)
-            .fetchJoin()
             .where(chatMessage.chatRoom.id.eq(chatRoomId))
             .orderBy(chatMessage.createdAt.desc())
             .fetchFirst()
