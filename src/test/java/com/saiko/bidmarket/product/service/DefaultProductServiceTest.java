@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,52 +64,68 @@ class DefaultProductServiceTest {
   @InjectMocks
   DefaultProductService productService;
 
-  private static User writer = User.builder()
-                                   .username("레이")
-                                   .profileImage("image")
-                                   .provider("google")
-                                   .providerId("123")
-                                   .group(new Group())
-                                   .build();
-  private static Product product = Product.builder()
-                                          .title("책 팔아요")
-                                          .writer(writer)
-                                          .description("깨끗해요")
-                                          .images(List.of("image"))
-                                          .category(CHILDREN_BOOK)
-                                          .minimumPrice(10000)
-                                          .location("직거래 안해요")
-                                          .build();
-  private static User successfulBidder = User.builder()
-                                             .username("제로")
-                                             .profileImage("image")
-                                             .provider("google")
-                                             .providerId("123")
-                                             .group(new Group())
-                                             .build();
-  private static User failedBidder = User.builder()
-                                         .username("레이")
-                                         .profileImage("image")
-                                         .provider("google")
-                                         .providerId("1234")
-                                         .group(new Group())
-                                         .build();
+  private static ProductCreateRequest productCreateRequest = ProductCreateRequest
+      .builder()
+      .title("텀블러 팝니다")
+      .description("깨끗해요")
+      .images(List.of("image1", "image2"))
+      .category(ETC)
+      .minimumPrice(150000)
+      .location("강남")
+      .build();
+  private static User writer = User
+      .builder()
+      .username("레이")
+      .profileImage("image")
+      .provider("google")
+      .providerId("123")
+      .group(new Group())
+      .build();
+  private static Product product = Product
+      .builder()
+      .title("책 팔아요")
+      .writer(writer)
+      .description("깨끗해요")
+      .images(List.of("image"))
+      .category(CHILDREN_BOOK)
+      .minimumPrice(10000)
+      .location("직거래 안해요")
+      .build();
+  private static User successfulBidder = User
+      .builder()
+      .username("제로")
+      .profileImage("image")
+      .provider("google")
+      .providerId("123")
+      .group(new Group())
+      .build();
+  private static User failedBidder = User
+      .builder()
+      .username("레이")
+      .profileImage("image")
+      .provider("google")
+      .providerId("1234")
+      .group(new Group())
+      .build();
 
-  private static Bidding successfulBidding = Bidding.builder()
-                                                    .bidder(successfulBidder)
-                                                    .product(product)
-                                                    .biddingPrice(BiddingPrice.valueOf(10100))
-                                                    .build();
-  private static Bidding failedBidding = Bidding.builder()
-                                                .bidder(failedBidder)
-                                                .product(product)
-                                                .biddingPrice(BiddingPrice.valueOf(10000))
-                                                .build();
-  private static ChatRoom chatRoom = ChatRoom.builder()
-                                             .winner(successfulBidder)
-                                             .seller(writer)
-                                             .product(product)
-                                             .build();
+  private static Bidding successfulBidding = Bidding
+      .builder()
+      .bidder(successfulBidder)
+      .product(product)
+      .biddingPrice(BiddingPrice.valueOf(10100))
+      .build();
+  private static Bidding failedBidding = Bidding
+      .builder()
+      .bidder(failedBidder)
+      .product(product)
+      .biddingPrice(BiddingPrice.valueOf(10000))
+      .build();
+  private static ChatRoom chatRoom = ChatRoom
+      .builder()
+      .winner(successfulBidder)
+      .seller(writer)
+      .product(product)
+      .build();
 
   private static long writerId = 1;
   private static long productId = 1;
@@ -158,16 +173,6 @@ class DefaultProductServiceTest {
       @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
       void ItThrowsIllegalArgumentException(long userId) {
         //given
-        ProductCreateRequest productCreateRequest = new ProductCreateRequest(
-            "텀블러 팝니다",
-            "깨끗해요",
-            Arrays.asList("image1",
-                          "image2"),
-            ETC,
-            15000,
-            "강남"
-        );
-
         //when, then
         assertThatThrownBy(() -> productService.create(productCreateRequest, userId))
             .isInstanceOf(IllegalArgumentException.class);
@@ -182,36 +187,11 @@ class DefaultProductServiceTest {
       @DisplayName("저장한 객체에 대한 정보를 담은 응답을 반환한다")
       void ItResponseProduct() {
         //given
-        long userId = 1L;
-        long productId = 1L;
-
-        ProductCreateRequest productCreateRequest = new ProductCreateRequest(
-            "텀블러 팝니다",
-            "깨끗해요",
-            Arrays.asList("image1",
-                          "image2"),
-            ETC,
-            15000,
-            "강남"
-        );
-        User writer = new User("제로", "image", "google", "1234", new Group());
-        ReflectionTestUtils.setField(writer, "id", 1L);
-        Product product = Product.builder()
-                                 .title(productCreateRequest.getTitle())
-                                 .description(productCreateRequest.getDescription())
-                                 .location(productCreateRequest.getLocation())
-                                 .category(productCreateRequest.getCategory())
-                                 .minimumPrice(productCreateRequest.getMinimumPrice())
-                                 .images(productCreateRequest.getImages())
-                                 .writer(writer)
-                                 .build();
-        ReflectionTestUtils.setField(product, "id", 1L);
-
-        given(userRepository.findById(userId)).willReturn(Optional.of(writer));
+        given(userRepository.findById(writerId)).willReturn(Optional.of(writer));
         given(productRepository.save(any())).willReturn(product);
 
         //when
-        ProductCreateResponse response = productService.create(productCreateRequest, userId);
+        ProductCreateResponse response = productService.create(productCreateRequest, writerId);
 
         //then
         verify(productRepository).save(any(Product.class));
@@ -247,17 +227,19 @@ class DefaultProductServiceTest {
         //given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             null);
+                                                                             null
+        );
         User writer = new User("제로", "image", "google", "1234", new Group());
-        Product product = Product.builder()
-                                 .title("세탁기 팔아요")
-                                 .description("좋아요")
-                                 .minimumPrice(100000)
-                                 .category(HOUSEHOLD_APPLIANCE)
-                                 .location("수원")
-                                 .writer(writer)
-                                 .images(null)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("세탁기 팔아요")
+            .description("좋아요")
+            .minimumPrice(100000)
+            .category(HOUSEHOLD_APPLIANCE)
+            .location("수원")
+            .writer(writer)
+            .images(null)
+            .build();
         ReflectionTestUtils.setField(product, "id", 1L);
 
         given(productRepository.findAllProduct(any(ProductSelectRequest.class)))
@@ -269,7 +251,9 @@ class DefaultProductServiceTest {
         //then
         verify(productRepository).findAllProduct(any(ProductSelectRequest.class));
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getId()).isEqualTo(product.getId());
+        assertThat(result
+                       .get(0)
+                       .getId()).isEqualTo(product.getId());
       }
     }
   }
@@ -321,15 +305,16 @@ class DefaultProductServiceTest {
       void ItProduct() {
         //given
         User writer = new User("제로", "image", "google", "1234", new Group());
-        Product product = Product.builder()
-                                 .title("세탁기 팔아요")
-                                 .description("좋아요")
-                                 .minimumPrice(100000)
-                                 .category(HOUSEHOLD_APPLIANCE)
-                                 .location("수원")
-                                 .writer(writer)
-                                 .images(null)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("세탁기 팔아요")
+            .description("좋아요")
+            .minimumPrice(100000)
+            .category(HOUSEHOLD_APPLIANCE)
+            .location("수원")
+            .writer(writer)
+            .images(null)
+            .build();
         ReflectionTestUtils.setField(writer, "id", 1L);
         ReflectionTestUtils.setField(product, "id", 1L);
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
@@ -369,15 +354,16 @@ class DefaultProductServiceTest {
       void ItResponseProductList() {
         //when, then
         User writer = new User("제로", "image", "google", "1234", new Group());
-        Product product = Product.builder()
-                                 .title("세탁기 팔아요")
-                                 .description("좋아요")
-                                 .minimumPrice(100000)
-                                 .category(HOUSEHOLD_APPLIANCE)
-                                 .location("수원")
-                                 .writer(writer)
-                                 .images(null)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("세탁기 팔아요")
+            .description("좋아요")
+            .minimumPrice(100000)
+            .category(HOUSEHOLD_APPLIANCE)
+            .location("수원")
+            .writer(writer)
+            .images(null)
+            .build();
         ReflectionTestUtils.setField(product, "id", 1L);
         given(productRepository.findAllByProgressedAndExpireAtLessThan(
             anyBoolean(), any(LocalDateTime.class))).willReturn(List.of(product));
@@ -388,7 +374,9 @@ class DefaultProductServiceTest {
         //then
         verify(productRepository).findAllByProgressedAndExpireAtLessThan(anyBoolean(), any());
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getId()).isEqualTo(product.getId());
+        assertThat(result
+                       .get(0)
+                       .getId()).isEqualTo(product.getId());
       }
     }
   }
@@ -418,44 +406,50 @@ class DefaultProductServiceTest {
       @DisplayName("알림 생성 이벤트를 발생시킨다.")
       void ItGenerateCreatingNotificationEvent() {
         //given
-        User writer = User.builder()
-                          .username("writer")
-                          .profileImage("imageURL")
-                          .provider("provider")
-                          .providerId("providerId")
-                          .group(new Group())
-                          .build();
-        User bidderOne = User.builder()
-                             .username("bidderOne")
-                             .profileImage("imageURL")
-                             .provider("provider")
-                             .providerId("providerId")
-                             .group(new Group())
-                             .build();
-        User bidderTwo = User.builder()
-                             .username("bidderTwo")
-                             .profileImage("imageURL")
-                             .provider("provider")
-                             .providerId("providerId")
-                             .group(new Group())
-                             .build();
-        Product product = Product.builder()
-                                 .title("title")
-                                 .description("description")
-                                 .minimumPrice(10000)
-                                 .writer(writer)
-                                 .category(Category.ETC)
-                                 .build();
-        Bidding biddingOne = Bidding.builder()
-                                    .biddingPrice(BiddingPrice.valueOf(20000L))
-                                    .bidder(bidderOne)
-                                    .product(product)
-                                    .build();
-        Bidding biddingTwo = Bidding.builder()
-                                    .biddingPrice(BiddingPrice.valueOf(30000L))
-                                    .bidder(bidderOne)
-                                    .product(product)
-                                    .build();
+        User writer = User
+            .builder()
+            .username("writer")
+            .profileImage("imageURL")
+            .provider("provider")
+            .providerId("providerId")
+            .group(new Group())
+            .build();
+        User bidderOne = User
+            .builder()
+            .username("bidderOne")
+            .profileImage("imageURL")
+            .provider("provider")
+            .providerId("providerId")
+            .group(new Group())
+            .build();
+        User bidderTwo = User
+            .builder()
+            .username("bidderTwo")
+            .profileImage("imageURL")
+            .provider("provider")
+            .providerId("providerId")
+            .group(new Group())
+            .build();
+        Product product = Product
+            .builder()
+            .title("title")
+            .description("description")
+            .minimumPrice(10000)
+            .writer(writer)
+            .category(Category.ETC)
+            .build();
+        Bidding biddingOne = Bidding
+            .builder()
+            .biddingPrice(BiddingPrice.valueOf(20000L))
+            .bidder(bidderOne)
+            .product(product)
+            .build();
+        Bidding biddingTwo = Bidding
+            .builder()
+            .biddingPrice(BiddingPrice.valueOf(30000L))
+            .bidder(bidderOne)
+            .product(product)
+            .build();
         ReflectionTestUtils.setField(product, "id", 1L);
         ReflectionTestUtils.setField(product, "biddings", List.of(biddingTwo, biddingOne));
 
@@ -533,8 +527,10 @@ class DefaultProductServiceTest {
         // when
         // then
         assertThatThrownBy(
-            () -> productService.getBiddingResult(UnsignedLong.valueOf(product.getId()),
-                                                  UnsignedLong.valueOf(writer.getId())))
+            () -> productService.getBiddingResult(
+                UnsignedLong.valueOf(product.getId()),
+                UnsignedLong.valueOf(writer.getId())
+            ))
             .isInstanceOf(NotFoundException.class);
       }
     }
@@ -560,7 +556,9 @@ class DefaultProductServiceTest {
         verify(productRepository).findByIdJoinWithUser(anyLong());
         verify(chatRoomRepository).findByProduct_IdAndSeller_Id(anyLong(), anyLong());
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(true);
-        assertThat(biddingResult.getChatRoomId().getValue()).isEqualTo(chatRoom.getId());
+        assertThat(biddingResult
+                       .getChatRoomId()
+                       .getValue()).isEqualTo(chatRoom.getId());
         assertThat(biddingResult.getRole()).isEqualTo(Role.SELLER);
       }
     }
@@ -573,24 +571,26 @@ class DefaultProductServiceTest {
       @DisplayName("비딩 결과를 반환한다")
       void ItReturnBiddingResult() {
         // given
-        User writer = User.builder()
-                          .username("레이")
-                          .profileImage("image")
-                          .provider("google")
-                          .providerId("123")
-                          .group(new Group())
-                          .build();
+        User writer = User
+            .builder()
+            .username("레이")
+            .profileImage("image")
+            .provider("google")
+            .providerId("123")
+            .group(new Group())
+            .build();
         ReflectionTestUtils.setField(writer, "id", 1l);
 
-        Product product = Product.builder()
-                                 .title("책 팔아요")
-                                 .writer(writer)
-                                 .description("깨끗해요")
-                                 .images(List.of("image"))
-                                 .category(CHILDREN_BOOK)
-                                 .minimumPrice(10000)
-                                 .location("직거래 안해요")
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("책 팔아요")
+            .writer(writer)
+            .description("깨끗해요")
+            .images(List.of("image"))
+            .category(CHILDREN_BOOK)
+            .minimumPrice(10000)
+            .location("직거래 안해요")
+            .build();
         ReflectionTestUtils.setField(product, "id", 1l);
 
         given(productRepository.findByIdJoinWithUser(anyLong()))
@@ -625,17 +625,21 @@ class DefaultProductServiceTest {
             .willReturn(Optional.of(successfulBidding));
 
         // when
-        BiddingResultResponse biddingResult = productService.getBiddingResult(UnsignedLong.valueOf(
-                                                                                  product.getId()),
-                                                                              UnsignedLong.valueOf(
-                                                                                  successfulBidder.getId()));
+        BiddingResultResponse biddingResult = productService.getBiddingResult(
+            UnsignedLong.valueOf(
+                product.getId()),
+            UnsignedLong.valueOf(
+                successfulBidder.getId())
+        );
 
         // then
         verify(productRepository).findByIdJoinWithUser(anyLong());
         verify(chatRoomRepository).findByProduct_IdAndSeller_Id(anyLong(), anyLong());
         verify(biddingRepository).findByBidderIdAndProductId(any(BiddingPriceFindingRepoDto.class));
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(true);
-        assertThat(biddingResult.getChatRoomId().getValue()).isEqualTo(chatRoom.getId());
+        assertThat(biddingResult
+                       .getChatRoomId()
+                       .getValue()).isEqualTo(chatRoom.getId());
         assertThat(biddingResult.getRole()).isEqualTo(Role.BIDDER);
       }
     }
@@ -659,7 +663,8 @@ class DefaultProductServiceTest {
         BiddingResultResponse biddingResult = productService.getBiddingResult(
             UnsignedLong.valueOf(product.getId()),
             UnsignedLong.valueOf(
-                failedBidder.getId()));
+                failedBidder.getId())
+        );
 
         // then
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(false);
@@ -685,8 +690,10 @@ class DefaultProductServiceTest {
         // when
         // then
         assertThatThrownBy(
-            () -> productService.getBiddingResult(UnsignedLong.valueOf(product.getId()),
-                                                  UnsignedLong.valueOf(2)))
+            () -> productService.getBiddingResult(
+                UnsignedLong.valueOf(product.getId()),
+                UnsignedLong.valueOf(2)
+            ))
             .isInstanceOf(NotFoundException.class);
       }
     }

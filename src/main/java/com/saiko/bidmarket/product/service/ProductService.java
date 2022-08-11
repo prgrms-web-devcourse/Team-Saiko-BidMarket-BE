@@ -13,7 +13,10 @@ import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 
 public interface ProductService {
-  ProductCreateResponse create(ProductCreateRequest productCreateRequest, Long userId);
+  ProductCreateResponse create(
+      ProductCreateRequest productCreateRequest,
+      long userId
+  );
 
   List<ProductSelectResponse> findAll(ProductSelectRequest productSelectRequest);
 
@@ -23,5 +26,8 @@ public interface ProductService {
 
   void executeClosingProduct(Product product);
 
-  BiddingResultResponse getBiddingResult(UnsignedLong productId, UnsignedLong userId);
+  BiddingResultResponse getBiddingResult(
+      UnsignedLong productId,
+      UnsignedLong userId
+  );
 }

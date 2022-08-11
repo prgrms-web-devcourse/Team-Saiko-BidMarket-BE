@@ -3,6 +3,7 @@ package com.saiko.bidmarket.product.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -20,20 +21,23 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.Hibernate;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.common.entity.BaseTime;
 import com.saiko.bidmarket.product.Category;
+import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.user.entity.User;
 
+import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseTime {
   public static final int PROGRESSION_PERIOD_OF_BIDDING = 7;
 
@@ -80,12 +84,16 @@ public class Product extends BaseTime {
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Bidding> biddings = new ArrayList<>();
 
-  protected Product() {
-  }
-
   @Builder
-  private Product(String title, String description, int minimumPrice, Category category,
-                  String location, List<String> images, User writer) {
+  private Product(
+      String title,
+      String description,
+      int minimumPrice,
+      Category category,
+      String location,
+      List<String> images,
+      User writer
+  ) {
     Assert.hasText(title, "Title must be provided");
     Assert.hasText(description, "Description must be provided");
     Assert.notNull(writer, "Writer must be provided");
@@ -95,11 +103,29 @@ public class Product extends BaseTime {
     this.minimumPrice = minimumPrice;
     this.category = category;
     this.location = location;
-    this.expireAt = LocalDateTime.now().plusDays(PROGRESSION_PERIOD_OF_BIDDING);
+    this.expireAt = LocalDateTime
+        .now()
+        .plusDays(PROGRESSION_PERIOD_OF_BIDDING);
     this.images = createImages(images);
     this.thumbnailImage = createThumbnailImage(images);
     this.writer = writer;
     this.progressed = true;
+  }
+
+  public static Product from(
+      ProductCreateRequest request,
+      User writer
+  ) {
+    return Product
+        .builder()
+        .title(request.getTitle())
+        .description(request.getDescription())
+        .location(request.getLocation())
+        .category(request.getCategory())
+        .minimumPrice(request.getMinimumPrice())
+        .images(request.getImages())
+        .writer(writer)
+        .build();
   }
 
   public boolean hasWinner() {
@@ -116,13 +142,15 @@ public class Product extends BaseTime {
     }
 
     AtomicInteger order = new AtomicInteger(1);
-    return imageUrls.stream()
-                    .map((url) -> Image.builder()
-                                       .url(url)
-                                       .product(this)
-                                       .order(order.getAndIncrement())
-                                       .build())
-                    .collect(Collectors.toList());
+    return imageUrls
+        .stream()
+        .map((url) -> Image
+            .builder()
+            .url(url)
+            .product(this)
+            .order(order.getAndIncrement())
+            .build())
+        .collect(Collectors.toList());
   }
 
   private String createThumbnailImage(List<String> imageUrls) {
@@ -155,17 +183,36 @@ public class Product extends BaseTime {
 
   private void setWinningPrice() {
     this.winningPrice =
-        biddings.size() == 1 ? (long)minimumPrice : biddings.get(1).getBiddingPrice() + 1000L;
+        biddings.size() == 1 ? (long)minimumPrice : biddings
+            .get(1)
+            .getBiddingPrice() + 1000L;
   }
 
   public List<User> getBiddersExceptWinner() {
-    List<User> bidders = biddings.stream()
-                                 .map(Bidding::getBidder)
-                                 .collect(Collectors.toList());
+    List<User> bidders = biddings
+        .stream()
+        .map(Bidding::getBidder)
+        .collect(Collectors.toList());
 
     bidders.remove(0);
 
     return bidders;
   }
-}
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Product product = (Product)o;
+    return id != null && Objects.equals(id, product.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
+}
