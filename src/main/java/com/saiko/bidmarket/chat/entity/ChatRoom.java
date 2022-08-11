@@ -56,6 +56,11 @@ public class ChatRoom extends BaseTime {
     this.product = product;
   }
 
+  public static ChatRoom of(User seller, User winner, Product product) {
+    return new ChatRoom(seller, winner, product);
+  }
+
+
   public User getOpponentUser(long userId) {
     return seller.getId() == userId ? winner : seller;
   }

@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectRequest;
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
-import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
+import com.saiko.bidmarket.product.entity.Product;
 
 public interface ChatRoomService {
 
-  long create(ChatRoomCreateParam createParam);
+  long create(Product product);
 
   List<ChatRoomSelectResponse> findAll(
       long userId,
