@@ -33,9 +33,11 @@ public class ProductCustomRepositoryImpl
     Assert.notNull(productSelectRequest, "ProductSelectRequest must be provided");
     return jpaQueryFactory
         .selectFrom(product)
-        .where(eqCategory(productSelectRequest.getCategory()),
-               eqProgressed(productSelectRequest.getProgressed()),
-               eqTitle(productSelectRequest.getTitle()))
+        .where(
+            eqCategory(productSelectRequest.getCategory()),
+            eqProgressed(productSelectRequest.getProgressed()),
+            eqTitle(productSelectRequest.getTitle())
+        )
         .offset(productSelectRequest.getOffset())
         .limit(productSelectRequest.getLimit())
         .orderBy(getOrderSpecifier(productSelectRequest.getSort()))
@@ -46,13 +48,14 @@ public class ProductCustomRepositoryImpl
   public List<Product> findAllUserProduct(UserProductSelectQueryParameter query) {
     Assert.notNull(query, "Operation must be provided");
 
-    return jpaQueryFactory.selectFrom(product)
-                          .join(product.writer, user)
-                          .where(user.id.eq(query.getUserId()))
-                          .offset(query.getOffset())
-                          .limit(query.getLimit())
-                          .orderBy(getOrderSpecifier(query.getSort()))
-                          .fetch();
+    return jpaQueryFactory
+        .selectFrom(product)
+        .join(product.writer, user)
+        .where(user.id.eq(query.getUserId()))
+        .offset(query.getOffset())
+        .limit(query.getLimit())
+        .orderBy(getOrderSpecifier(query.getSort()))
+        .fetch();
   }
 
   private Predicate eqCategory(Category category) {
@@ -80,7 +83,8 @@ public class ProductCustomRepositoryImpl
     for (Sort value : Sort.values()) {
       if (sort == value) {
         Path<Object> fieldPath = Expressions.path(Object.class, product,
-                                                  value.getProperty());
+                                                  value.getProperty()
+        );
         return new OrderSpecifier(value.getOrder(), fieldPath);
       }
     }
