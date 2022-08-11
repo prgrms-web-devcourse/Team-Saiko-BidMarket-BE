@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectRequest;
@@ -64,6 +65,7 @@ public class DefaultChatRoomService implements ChatRoomService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<ChatRoomSelectResponse> findAll(
       long userId,
       ChatRoomSelectRequest request
