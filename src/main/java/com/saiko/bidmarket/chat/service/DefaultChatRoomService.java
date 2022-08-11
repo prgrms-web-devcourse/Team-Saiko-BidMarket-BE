@@ -34,24 +34,30 @@ public class DefaultChatRoomService implements ChatRoomService {
     long sellerId = createParam.getSellerId();
     long productId = createParam.getProductId();
 
-    User seller = userRepository.findById(sellerId)
-                                .orElseThrow(() -> new NotFoundException("User not exists"));
+    User seller = userRepository
+        .findById(sellerId)
+        .orElseThrow(() -> new NotFoundException("User not exists"));
 
-    User winner = userRepository.findWinnerOfBiddingByProductId(productId)
-                                .orElseThrow(
-                                    () -> new NotFoundException("Winner not exists"));
+    User winner = userRepository
+        .findWinnerOfBiddingByProductId(productId)
+        .orElseThrow(
+            () -> new NotFoundException("Winner not exists"));
 
-    Product product = productRepository.findById(createParam.getProductId())
-                                       .orElseThrow(
-                                           () -> new NotFoundException("Product not exists"));
+    Product product = productRepository
+        .findById(createParam.getProductId())
+        .orElseThrow(
+            () -> new NotFoundException("Product not exists"));
 
-    ChatRoom chatRoom = ChatRoom.builder()
-                                .seller(seller)
-                                .winner(winner)
-                                .product(product)
-                                .build();
+    ChatRoom chatRoom = ChatRoom
+        .builder()
+        .seller(seller)
+        .winner(winner)
+        .product(product)
+        .build();
 
-    return chatRoomRepository.save(chatRoom).getId();
+    return chatRoomRepository
+        .save(chatRoom)
+        .getId();
   }
 
   @Override
@@ -62,9 +68,8 @@ public class DefaultChatRoomService implements ChatRoomService {
     Assert.isTrue(userId > 0, "User id must be positive");
     Assert.notNull(request, "Request must be provided");
 
-    List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId, request);
-
-    return chatRooms
+    return chatRoomRepository
+        .findAllByUserId(userId, request)
         .stream()
         .map(chatRoom -> ChatRoomSelectResponse.of(userId, chatRoom))
         .collect(Collectors.toUnmodifiableList());
