@@ -38,8 +38,10 @@ public class ProductApiController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public ProductCreateResponse create(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @RequestBody @Valid ProductCreateRequest productCreateRequest
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @RequestBody @Valid
+      ProductCreateRequest productCreateRequest
   ) {
     return productService.create(productCreateRequest, authentication.getUserId());
   }
@@ -47,22 +49,28 @@ public class ProductApiController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<ProductSelectResponse> findAll(
-      @ModelAttribute @Valid ProductSelectRequest productSelectRequest
+      @ModelAttribute @Valid
+      ProductSelectRequest productSelectRequest
   ) {
     return productService.findAll(productSelectRequest);
   }
 
   @GetMapping("{id}")
   @ResponseStatus(HttpStatus.OK)
-  public ProductDetailResponse findById(@PathVariable long id) {
+  public ProductDetailResponse findById(
+      @PathVariable
+      long id
+  ) {
     return productService.findById(id);
   }
 
   @GetMapping("{productId}/result")
   @ResponseStatus(HttpStatus.OK)
   public BiddingResultResponse getBiddingResult(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @PathVariable long productId
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @PathVariable
+      long productId
   ) {
     return productService.getBiddingResult(UnsignedLong.valueOf(productId), UnsignedLong.valueOf(
         authentication.getUserId()));
