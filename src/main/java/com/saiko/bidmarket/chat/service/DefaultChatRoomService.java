@@ -30,7 +30,7 @@ public class DefaultChatRoomService implements ChatRoomService {
 
   @Override
   public long create(Product product) {
-    Assert.notNull(product, "Product must br provided");
+    Assert.notNull(product, "Product must be provided");
 
     User seller = product.getWriter();
 
