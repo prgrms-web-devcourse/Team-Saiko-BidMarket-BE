@@ -32,21 +32,20 @@ public class User extends BaseTime {
   @Column(length = 20)
   private String username;
 
-  @NotBlank
   @Column(length = 512)
   private String profileImage;
 
-  @NotBlank
   @Column(length = 20)
   private String provider;
 
-  @NotBlank
   @Column(length = 80)
   private String providerId;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "group_id")
   private Group group;
+
+  private static final String DEFAULT_DELETE_NAME = "Unknown";
 
   protected User() {/*no-op*/}
 
@@ -76,6 +75,13 @@ public class User extends BaseTime {
 
     this.username = username;
     this.profileImage = profileImage;
+  }
+
+  public void delete() {
+    this.username = DEFAULT_DELETE_NAME;
+    this.profileImage = "";
+    this.provider = null;
+    this.providerId = null;
   }
 
   public Long getId() {
