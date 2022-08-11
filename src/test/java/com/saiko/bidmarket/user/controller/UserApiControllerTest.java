@@ -33,6 +33,7 @@ import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -621,6 +622,66 @@ class UserApiControllerTest extends ControllerSetUp {
                                             .param("offset", "1")
                                             .param("limit", limit)
         );
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+  }
+
+  @WithMockCustomLoginUser
+  @Nested
+  @DisplayName("toggleHeart 메서드는")
+  class DescribeToggleHeart {
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidData {
+
+      @Test
+      @DisplayName("찜을 하거나 찜을 취소하고 찜 결과를 반환한다.")
+      void ItReturnUserToggleResponse() throws Exception {
+        //given
+        long productId = 1L;
+        UserHeartResponse userHeartResponse = UserHeartResponse.from(true);
+
+        given(userService.toggleHeart(anyLong(), anyLong())).willReturn(userHeartResponse);
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .put(BASE_URL + "/{productId}/hearts", productId)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).toggleHeart(anyLong(), anyLong());
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Toggle heart", preprocessRequest(
+                prettyPrint()), preprocessResponse(prettyPrint()), pathParameters(
+                parameterWithName("productId").description("상품 번호")
+            ), responseFields(
+                fieldWithPath("heart")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("찜하기 여부")
+            )));
+      }
+    }
+
+    @Nested
+    @DisplayName("id에 숫자 외에 다른 문자가 들어온다면")
+    class ContextNotNumberId {
+
+      @Test
+      @DisplayName("BadRequest로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+        String inputProductId = "NotNumber";
+
+        // when
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.put(
+            BASE_URL + "/{productId}/hearts", inputProductId));
+
         // then
         response.andExpect(status().isBadRequest());
       }

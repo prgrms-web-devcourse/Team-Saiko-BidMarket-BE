@@ -33,11 +33,14 @@ import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.heart.entity.Heart;
+import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -488,6 +491,180 @@ class DefaultUserServiceTest {
         //then
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getId()).isEqualTo(productId);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("toggleHeart 메서드는")
+  class DescribeToggleHeart {
+
+    @Nested
+    @DisplayName("userId에 음수나 0이 들어오면")
+    class ContextReceiveNegativeUserId {
+
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
+      @DisplayName("IllegalArgumentException을 반환한다.")
+      void itThrowIllegalArgumentException(long userId) {
+        //then
+        assertThatThrownBy(() -> defaultUserService.toggleHeart(userId, 1L))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않는 userId가 들어오면")
+    class ContextNotExistUserId {
+
+      @Test
+      @DisplayName("NotFoundException을 반환한다.")
+      void itResponseNotFoundException() {
+        //given
+        final long notExistUserId = 1;
+
+        when(userRepository.findById(notExistUserId)).thenReturn(Optional.empty());
+
+        //then
+        assertThatThrownBy(() -> defaultUserService.toggleHeart(notExistUserId, 1L))
+            .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("productId에 음수나 0이 들어오면")
+    class ContextReceiveNegativeProductId {
+
+      @ParameterizedTest
+      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
+      @DisplayName("IllegalArgumentException을 반환한다.")
+      void itThrowIllegalArgumentException(long productId) {
+        //then
+        assertThatThrownBy(() -> defaultUserService.toggleHeart(1L, productId))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않는 productId가 들어오면")
+    class ContextNotExistProductId {
+
+      @Test
+      @DisplayName("NotFoundException을 반환한다.")
+      void itResponseNotFoundException() {
+        //given
+        final long userId = 1L;
+        final long notExistProductId = 1;
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(User
+                                                                         .builder()
+                                                                         .username("레이")
+                                                                         .profileImage("image")
+                                                                         .provider("google")
+                                                                         .providerId("123")
+                                                                         .group(new Group())
+                                                                         .build()));
+        when(productRepository.findById(notExistProductId)).thenReturn(Optional.empty());
+
+        //then
+        assertThatThrownBy(() -> defaultUserService.toggleHeart(1L, notExistProductId))
+            .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidParameters {
+
+      @Test
+      @DisplayName("찜하기를 수행하고 UserHeartResponse 를 반환한다")
+      void itCreateHeartAndResponseUserHeartResponse() {
+        //given
+        Long userId = 1L;
+        Long productId = 1L;
+        User user = User
+            .builder()
+            .username("레이")
+            .profileImage("image")
+            .provider("google")
+            .providerId("123")
+            .group(new Group())
+            .build();
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        Product product = Product
+            .builder()
+            .title("책 팔아요")
+            .writer(user)
+            .description("깨끗해요")
+            .images(List.of("image"))
+            .category(CHILDREN_BOOK)
+            .minimumPrice(10000)
+            .location("직거래 안해요")
+            .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        //when
+        UserHeartResponse userHeartResponse = defaultUserService.toggleHeart(userId, productId);
+
+        //then
+        verify(userRepository).findById(anyLong());
+        verify(productRepository).findById(anyLong());
+        assertThat(user.getHearts().getHearts()).hasSize(1);
+        assertThat(userHeartResponse.isHeart()).isTrue();
+      }
+
+      @Test
+      @DisplayName("찜하기를 수행하고 UserHeartResponse 를 반환한다")
+      void itDeleteHeartAndResponseUserHeartResponse() {
+        //given
+        Long userId = 1L;
+        Long productId = 1L;
+        User user = User
+            .builder()
+            .username("레이")
+            .profileImage("image")
+            .provider("google")
+            .providerId("123")
+            .group(new Group())
+            .build();
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        Product product = Product
+            .builder()
+            .title("책 팔아요")
+            .writer(user)
+            .description("깨끗해요")
+            .images(List.of("image"))
+            .category(CHILDREN_BOOK)
+            .minimumPrice(10000)
+            .location("직거래 안해요")
+            .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+
+        Heart heart = Heart
+            .builder()
+            .user(user)
+            .product(product)
+            .build();
+        ReflectionTestUtils.setField(heart, "id", 1L);
+
+        user.toggleHeart(heart);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        //when
+        UserHeartResponse userHeartResponse = defaultUserService.toggleHeart(userId, productId);
+
+        //then
+        verify(userRepository).findById(anyLong());
+        verify(productRepository).findById(anyLong());
+        assertThat(user.getHearts().getHearts()).hasSize(0);
+        assertThat(userHeartResponse.isHeart()).isFalse();
       }
     }
   }
