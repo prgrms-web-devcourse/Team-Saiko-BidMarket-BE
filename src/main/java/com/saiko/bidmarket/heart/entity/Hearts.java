@@ -9,11 +9,12 @@ import javax.persistence.OneToMany;
 
 import com.saiko.bidmarket.common.exception.NotFoundException;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Hearts {
 
