@@ -81,30 +81,35 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             Sort.END_DATE_ASC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             Sort.END_DATE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product progressProduct = productRepository.save(Product.builder()
-                                                                .title("노트북 팝니다1")
-                                                                .description("싸요")
-                                                                .category(Category.DIGITAL_DEVICE)
-                                                                .minimumPrice(10000)
-                                                                .images(List.of("image"))
-                                                                .location(null)
-                                                                .writer(writer)
-                                                                .build());
-        Product notInProgressProduct = productRepository.save(Product.builder()
-                                                                     .title("노트북 팝니다2")
-                                                                     .description("싸요")
-                                                                     .category(
-                                                                         Category.DIGITAL_DEVICE)
-                                                                     .minimumPrice(10000)
-                                                                     .images(List.of("image"))
-                                                                     .location(null)
-                                                                     .writer(writer)
-                                                                     .build());
+        Product progressProduct = productRepository.save(Product
+                                                             .builder()
+                                                             .title("노트북 팝니다1")
+                                                             .description("싸요")
+                                                             .category(Category.DIGITAL_DEVICE)
+                                                             .minimumPrice(10000)
+                                                             .images(List.of("image"))
+                                                             .location(null)
+                                                             .writer(writer)
+                                                             .build());
+        Product notInProgressProduct = productRepository.save(Product
+                                                                  .builder()
+                                                                  .title("노트북 팝니다2")
+                                                                  .description("싸요")
+                                                                  .category(
+                                                                      Category.DIGITAL_DEVICE)
+                                                                  .minimumPrice(10000)
+                                                                  .images(List.of("image"))
+                                                                  .location(null)
+                                                                  .writer(writer)
+                                                                  .build());
         ReflectionTestUtils.setField(notInProgressProduct, "progressed", false);
 
         // when
@@ -126,30 +131,35 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "false", null, 0,
                                                                              2,
-                                                                             Sort.END_DATE_ASC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             Sort.END_DATE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product progressProduct = productRepository.save(Product.builder()
-                                                                .title("노트북 팝니다1")
-                                                                .description("싸요")
-                                                                .category(Category.DIGITAL_DEVICE)
-                                                                .minimumPrice(10000)
-                                                                .images(List.of("image"))
-                                                                .location(null)
-                                                                .writer(writer)
-                                                                .build());
-        Product notInProgressProduct = productRepository.save(Product.builder()
-                                                                     .title("노트북 팝니다2")
-                                                                     .description("싸요")
-                                                                     .category(
-                                                                         Category.DIGITAL_DEVICE)
-                                                                     .minimumPrice(10000)
-                                                                     .images(List.of("image"))
-                                                                     .location(null)
-                                                                     .writer(writer)
-                                                                     .build());
+        Product progressProduct = productRepository.save(Product
+                                                             .builder()
+                                                             .title("노트북 팝니다1")
+                                                             .description("싸요")
+                                                             .category(Category.DIGITAL_DEVICE)
+                                                             .minimumPrice(10000)
+                                                             .images(List.of("image"))
+                                                             .location(null)
+                                                             .writer(writer)
+                                                             .build());
+        Product notInProgressProduct = productRepository.save(Product
+                                                                  .builder()
+                                                                  .title("노트북 팝니다2")
+                                                                  .description("싸요")
+                                                                  .category(
+                                                                      Category.DIGITAL_DEVICE)
+                                                                  .minimumPrice(10000)
+                                                                  .images(List.of("image"))
+                                                                  .location(null)
+                                                                  .writer(writer)
+                                                                  .build());
         ReflectionTestUtils.setField(notInProgressProduct, "progressed", false);
 
         // when
@@ -171,31 +181,39 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             CREATED_AT_DESC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             CREATED_AT_DESC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        Product product2 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다2")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        Product product2 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다2")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
         ReflectionTestUtils.setField(product2, "createdAt",
-                                     product1.getCreatedAt().plusMinutes(10));
+                                     product1
+                                         .getCreatedAt()
+                                         .plusMinutes(10)
+        );
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -217,29 +235,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             MINIMUM_PRICE_ASC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             MINIMUM_PRICE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        Product product2 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다2")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        Product product2 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다2")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -261,29 +284,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             MINIMUM_PRICE_DESC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             MINIMUM_PRICE_DESC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        Product product2 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다2")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        Product product2 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다2")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -305,29 +333,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             null);
-        Group group = groupRepository.findById(1L).get();
+                                                                             null
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        Product product2 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다2")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        Product product2 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다2")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -349,29 +382,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             Sort.END_DATE_ASC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             Sort.END_DATE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        Product product2 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다2")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        Product product2 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다2")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -393,29 +431,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             Sort.END_DATE_ASC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             Sort.END_DATE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        Product product2 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다2")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        Product product2 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다2")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -437,29 +480,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(
             null, "true", Category.DIGITAL_DEVICE, 0, 2,
-            Sort.END_DATE_ASC);
-        Group group = groupRepository.findById(1L).get();
+            Sort.END_DATE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        productRepository.save(Product.builder()
-                                      .title("화분")
-                                      .description("예뻐요")
-                                      .category(Category.PLANT)
-                                      .minimumPrice(10000)
-                                      .images(List.of("image"))
-                                      .location(null)
-                                      .writer(writer)
-                                      .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        productRepository.save(Product
+                                   .builder()
+                                   .title("화분")
+                                   .description("예뻐요")
+                                   .category(Category.PLANT)
+                                   .minimumPrice(10000)
+                                   .images(List.of("image"))
+                                   .location(null)
+                                   .writer(writer)
+                                   .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -480,29 +528,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(null, "true", null, 0,
                                                                              2,
-                                                                             Sort.END_DATE_ASC);
-        Group group = groupRepository.findById(1L).get();
+                                                                             Sort.END_DATE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다1")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        Product product2 = productRepository.save(Product.builder()
-                                                         .title("노트북 팝니다2")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다1")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        Product product2 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북 팝니다2")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -524,29 +577,34 @@ public class ProductRepositoryTest {
         // given
         ProductSelectRequest productSelectRequest = new ProductSelectRequest(
             "노트북", "true", Category.DIGITAL_DEVICE, 0, 2,
-            Sort.END_DATE_ASC);
-        Group group = groupRepository.findById(1L).get();
+            Sort.END_DATE_ASC
+        );
+        Group group = groupRepository
+            .findById(1L)
+            .get();
         User writer = new User("제로", "image", "google", "123", group);
         writer = userRepository.save(writer);
 
-        Product product1 = productRepository.save(Product.builder()
-                                                         .title("노트북! 팝니다")
-                                                         .description("싸요")
-                                                         .category(Category.DIGITAL_DEVICE)
-                                                         .minimumPrice(10000)
-                                                         .images(List.of("image"))
-                                                         .location(null)
-                                                         .writer(writer)
-                                                         .build());
-        productRepository.save(Product.builder()
-                                      .title("화분")
-                                      .description("예뻐요")
-                                      .category(Category.PLANT)
-                                      .minimumPrice(10000)
-                                      .images(List.of("image"))
-                                      .location(null)
-                                      .writer(writer)
-                                      .build());
+        Product product1 = productRepository.save(Product
+                                                      .builder()
+                                                      .title("노트북! 팝니다")
+                                                      .description("싸요")
+                                                      .category(Category.DIGITAL_DEVICE)
+                                                      .minimumPrice(10000)
+                                                      .images(List.of("image"))
+                                                      .location(null)
+                                                      .writer(writer)
+                                                      .build());
+        productRepository.save(Product
+                                   .builder()
+                                   .title("화분")
+                                   .description("예뻐요")
+                                   .category(Category.PLANT)
+                                   .minimumPrice(10000)
+                                   .images(List.of("image"))
+                                   .location(null)
+                                   .writer(writer)
+                                   .build());
 
         // when
         List<Product> result = productRepository.findAllProduct(productSelectRequest);
@@ -571,21 +629,24 @@ public class ProductRepositoryTest {
       void itReturnProductList() {
         // given
 
-        Group group = groupRepository.findById(1L).get();
+        Group group = groupRepository
+            .findById(1L)
+            .get();
 
         User writer = new User("박동철", "image", "google", "1234", group);
         writer = userRepository.save(writer);
 
         Product product = productRepository.save(
-            Product.builder()
-                   .title("노트북 팝니다")
-                   .description("싸요")
-                   .category(Category.DIGITAL_DEVICE)
-                   .minimumPrice(10000)
-                   .images(List.of("image"))
-                   .location(null)
-                   .writer(writer)
-                   .build()
+            Product
+                .builder()
+                .title("노트북 팝니다")
+                .description("싸요")
+                .category(Category.DIGITAL_DEVICE)
+                .minimumPrice(10000)
+                .images(List.of("image"))
+                .location(null)
+                .writer(writer)
+                .build()
         );
 
         // when
@@ -626,30 +687,37 @@ public class ProductRepositoryTest {
       void itReturnProduct() {
         // given
 
-        Group group = groupRepository.findById(1L).get();
+        Group group = groupRepository
+            .findById(1L)
+            .get();
 
         User writer = new User("박동철", "image", "google", "1234", group);
         writer = userRepository.save(writer);
 
         Product product = productRepository.save(
-            Product.builder()
-                   .title("노트북 팝니다")
-                   .description("싸요")
-                   .category(Category.DIGITAL_DEVICE)
-                   .minimumPrice(10000)
-                   .images(List.of("image"))
-                   .location(null)
-                   .writer(writer)
-                   .build()
+            Product
+                .builder()
+                .title("노트북 팝니다")
+                .description("싸요")
+                .category(Category.DIGITAL_DEVICE)
+                .minimumPrice(10000)
+                .images(List.of("image"))
+                .location(null)
+                .writer(writer)
+                .build()
         );
 
         // when
-        Product foundProduct = productRepository.findByIdJoinWithUser(
-            product.getId()).get();
+        Product foundProduct = productRepository
+            .findByIdJoinWithUser(
+                product.getId())
+            .get();
 
         // then
         assertThat(foundProduct).isEqualTo(product);
-        assertThat(foundProduct.getWriter().getClass()).isEqualTo(User.class);
+        assertThat(foundProduct
+                       .getWriter()
+                       .getClass()).isEqualTo(User.class);
       }
     }
   }
