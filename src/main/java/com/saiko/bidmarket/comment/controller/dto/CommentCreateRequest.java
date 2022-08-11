@@ -1,24 +1,20 @@
 package com.saiko.bidmarket.comment.controller.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
-
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class CommentCreateRequest {
-  @NotNull
-  private UnsignedLong productId;
+  @Positive
+  private final long productId;
   @NotBlank
   @Length(max = 500)
-  private String content;
-
-  public CommentCreateRequest(long productId, String content) {
-    this.productId = UnsignedLong.valueOf(productId);
-    this.content = content;
-  }
+  private final String content;
 }

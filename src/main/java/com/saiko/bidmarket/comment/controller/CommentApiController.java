@@ -19,7 +19,6 @@ import com.saiko.bidmarket.comment.controller.dto.CommentCreateResponse;
 import com.saiko.bidmarket.comment.controller.dto.CommentSelectRequest;
 import com.saiko.bidmarket.comment.controller.dto.CommentSelectResponse;
 import com.saiko.bidmarket.comment.service.CommentService;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
 import lombok.AccessLevel;
@@ -33,9 +32,11 @@ public class CommentApiController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public CommentCreateResponse create(@AuthenticationPrincipal JwtAuthentication authentication,
-                                      @RequestBody @Valid CommentCreateRequest request) {
-    return commentService.create(UnsignedLong.valueOf(authentication.getUserId()), request);
+  public CommentCreateResponse create(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @RequestBody @Valid CommentCreateRequest request
+  ) {
+    return commentService.create(authentication.getUserId(), request);
   }
 
   @GetMapping
