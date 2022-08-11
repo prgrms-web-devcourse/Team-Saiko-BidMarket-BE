@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -75,5 +77,15 @@ public class UserApiController {
   ) {
     long userId = authentication.getUserId();
     return userService.findAllUserBiddings(userId, request);
+  }
+
+  @PutMapping("{productId}/hearts")
+  @ResponseStatus(HttpStatus.OK)
+  public UserHeartResponse toggleHeart(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @PathVariable long productId
+  ) {
+    long userId = authentication.getUserId();
+    return userService.toggleHeart(userId, productId);
   }
 }

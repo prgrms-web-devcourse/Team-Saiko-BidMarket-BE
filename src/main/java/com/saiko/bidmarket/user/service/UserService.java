@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -26,4 +27,6 @@ public interface UserService {
 
   List<UserBiddingSelectResponse> findAllUserBiddings(long userId,
                                                       UserBiddingSelectRequest request);
+
+  UserHeartResponse toggleHeart(long userId, long productId);
 }

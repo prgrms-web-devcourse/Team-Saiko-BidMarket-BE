@@ -13,10 +13,13 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.heart.entity.Heart;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -124,5 +127,20 @@ public class DefaultUserService implements UserService {
                             .map((bidding) -> bidding.getProduct())
                             .map(UserBiddingSelectResponse::from)
                             .collect(Collectors.toList());
+  }
+
+  @Override
+  public UserHeartResponse toggleHeart(long userId, long productId) {
+    Assert.isTrue(userId > 0, "User id must be positive");
+    Assert.isTrue(productId > 0, "Product id must be positive");
+
+    User user = userRepository.findById(userId)
+                                .orElseThrow(NotFoundException::new);
+
+    Product product = productRepository.findById(productId)
+                                       .orElseThrow(NotFoundException::new);
+
+    Heart heart = Heart.of(user, product);
+    return UserHeartResponse.from(user.toggleHeart(heart));
   }
 }
