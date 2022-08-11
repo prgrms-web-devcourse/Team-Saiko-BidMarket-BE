@@ -84,7 +84,8 @@ public class ChatRoomSelectResponse {
 
   public static ChatRoomSelectResponse of(
       long userId,
-      ChatRoom chatRoom
+      ChatRoom chatRoom,
+      ChatMessage lastChatMessage
   ) {
     Assert.isTrue(userId > 0, "User id must be positive");
     Assert.notNull(chatRoom, "Chat room must be provided");
@@ -94,14 +95,14 @@ public class ChatRoomSelectResponse {
 
     ProductInfo productInfo = ProductInfo.getProductInfo(product);
     OpponentUserInfo opponentUserInfo = OpponentUserInfo.getOpponentUserInfo(opponent);
-    //TODO: 최근채팅 반환 로직 작성
+
     return ChatRoomSelectResponse
         .builder()
         .chatRoomId(chatRoom.getId())
         .productInfo(productInfo)
         .opponentUserInfo(opponentUserInfo)
-        .lastMessage(null)
-        .lastMessageDate(null)
+        .lastMessage(lastChatMessage.getMessage())
+        .lastMessageDate(lastChatMessage.getCreatedAt())
         .build();
   }
 
