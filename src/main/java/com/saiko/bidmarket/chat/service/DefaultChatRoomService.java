@@ -8,7 +8,9 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectRequest;
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
+import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
+import com.saiko.bidmarket.chat.repository.ChatMessageRepository;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
 import com.saiko.bidmarket.common.exception.NotFoundException;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultChatRoomService implements ChatRoomService {
 
   private final ChatRoomRepository chatRoomRepository;
+  private final ChatMessageRepository chatMessageRepository;
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
 
@@ -71,7 +74,18 @@ public class DefaultChatRoomService implements ChatRoomService {
     return chatRoomRepository
         .findAllByUserId(userId, request)
         .stream()
-        .map(chatRoom -> ChatRoomSelectResponse.of(userId, chatRoom))
+        .map(chatRoom -> ChatRoomSelectResponse.of(
+                 userId,
+                 chatRoom,
+                 getLastMessageOfChatRoom(chatRoom.getId())
+             )
+        )
         .collect(Collectors.toUnmodifiableList());
+  }
+
+  private ChatMessage getLastMessageOfChatRoom(long chatRoomId) {
+    return chatMessageRepository
+        .findLastChatMessageOfChatRoom(chatRoomId)
+        .orElse(ChatMessage.getEmptyMessage());
   }
 }

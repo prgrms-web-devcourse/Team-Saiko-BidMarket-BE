@@ -20,7 +20,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectRequest;
 import com.saiko.bidmarket.chat.controller.dto.ChatRoomSelectResponse;
+import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
+import com.saiko.bidmarket.chat.repository.ChatMessageRepository;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
 import com.saiko.bidmarket.product.Category;
@@ -41,6 +43,9 @@ class DefaultChatRoomServiceTest {
 
   @Mock
   ProductRepository productRepository;
+
+  @Mock
+  ChatMessageRepository chatMessageRepository;
 
   @InjectMocks
   DefaultChatRoomService chatRoomService;
@@ -154,6 +159,10 @@ class DefaultChatRoomServiceTest {
 
         given(chatRoomRepository.findAllByUserId(anyLong(), any(ChatRoomSelectRequest.class)))
             .willReturn(List.of(chatRoom));
+
+        given(chatMessageRepository.findLastChatMessageOfChatRoom(anyLong()))
+            .willReturn(Optional.of(ChatMessage.getEmptyMessage()));
+
         //when
         List<ChatRoomSelectResponse> responses = chatRoomService.findAll(sellerId, request);
 

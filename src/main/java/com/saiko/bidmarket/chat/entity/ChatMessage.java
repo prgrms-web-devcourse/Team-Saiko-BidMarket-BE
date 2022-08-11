@@ -50,11 +50,6 @@ public class ChatMessage extends BaseTime {
   }
 
   public static ChatMessage getEmptyMessage() {
-    return ChatMessage
-        .builder()
-        .message(null)
-        .sender(null)
-        .chatRoom(null)
-        .build();
+    return new ChatMessage();
   }
 }

@@ -75,14 +75,12 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
 
         ChatMessage chatMessage = getChatMessage(winner, chatRoom, chatMessageId);
 
-        chatRoom
-            .getChatMessage()
-            .add(chatMessage);
-
         ChatRoomSelectResponse chatRoomSelectResponse = ChatRoomSelectResponse.of(
             sellerId,
-            chatRoom
+            chatRoom,
+            chatMessage
         );
+
         given(chatRoomService.findAll(anyLong(), any(ChatRoomSelectRequest.class)))
             .willReturn(List.of(chatRoomSelectResponse));
 
@@ -216,48 +214,64 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
   }
 
   private User getUser(long userId) {
-    User user = User.builder()
-                    .username("test")
-                    .profileImage("test")
-                    .group(new Group())
-                    .provider("test")
-                    .providerId("test")
-                    .build();
+    User user = User
+        .builder()
+        .username("test")
+        .profileImage("test")
+        .group(new Group())
+        .provider("test")
+        .providerId("test")
+        .build();
     ReflectionTestUtils.setField(user, "id", userId);
     return user;
   }
 
-  private ChatRoom getChatRoom(User seller, User winner, Product product, long chatRoomId) {
-    ChatRoom chatRoom = ChatRoom.builder()
-                                .product(product)
-                                .seller(seller)
-                                .winner(winner)
-                                .build();
+  private ChatRoom getChatRoom(
+      User seller,
+      User winner,
+      Product product,
+      long chatRoomId
+  ) {
+    ChatRoom chatRoom = ChatRoom
+        .builder()
+        .product(product)
+        .seller(seller)
+        .winner(winner)
+        .build();
 
     ReflectionTestUtils.setField(chatRoom, "id", chatRoomId);
     return chatRoom;
   }
 
-  private Product getProduct(User seller, long productId) {
-    Product product = Product.builder()
-                             .title("test")
-                             .images(List.of("https://test.img"))
-                             .category(Category.ETC)
-                             .minimumPrice(10000)
-                             .writer(seller)
-                             .description("test")
-                             .location("test")
-                             .build();
+  private Product getProduct(
+      User seller,
+      long productId
+  ) {
+    Product product = Product
+        .builder()
+        .title("test")
+        .images(List.of("https://test.img"))
+        .category(Category.ETC)
+        .minimumPrice(10000)
+        .writer(seller)
+        .description("test")
+        .location("test")
+        .build();
     ReflectionTestUtils.setField(product, "id", productId);
     return product;
   }
 
-  private ChatMessage getChatMessage(User sender, ChatRoom chatRoom, long chatMessageId) {
-    ChatMessage chatMessage = ChatMessage.builder()
-                                         .message("test")
-                                         .chatRoom(chatRoom)
-                                         .sender(sender)
-                                         .build();
+  private ChatMessage getChatMessage(
+      User sender,
+      ChatRoom chatRoom,
+      long chatMessageId
+  ) {
+    ChatMessage chatMessage = ChatMessage
+        .builder()
+        .message("test")
+        .chatRoom(chatRoom)
+        .sender(sender)
+        .build();
 
     ReflectionTestUtils.setField(chatMessage, "id", chatMessageId);
     ReflectionTestUtils.setField(chatMessage, "createdAt", LocalDateTime.now());
