@@ -25,15 +25,15 @@ import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.service.ProductService;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @RequestMapping("api/v1/products")
 public class ProductApiController {
 
   private final ProductService productService;
-
-  public ProductApiController(ProductService productService) {
-    this.productService = productService;
-  }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
@@ -47,7 +47,8 @@ public class ProductApiController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<ProductSelectResponse> findAll(
-      @ModelAttribute @Valid ProductSelectRequest productSelectRequest) {
+      @ModelAttribute @Valid ProductSelectRequest productSelectRequest
+  ) {
     return productService.findAll(productSelectRequest);
   }
 
@@ -61,7 +62,8 @@ public class ProductApiController {
   @ResponseStatus(HttpStatus.OK)
   public BiddingResultResponse getBiddingResult(
       @AuthenticationPrincipal JwtAuthentication authentication,
-      @PathVariable long productId) {
+      @PathVariable long productId
+  ) {
     return productService.getBiddingResult(UnsignedLong.valueOf(productId), UnsignedLong.valueOf(
         authentication.getUserId()));
   }

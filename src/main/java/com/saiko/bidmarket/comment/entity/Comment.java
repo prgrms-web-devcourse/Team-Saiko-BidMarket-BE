@@ -42,7 +42,11 @@ public class Comment extends BaseTime {
   private User writer;
 
   @Builder
-  public Comment(String content, Product product, User writer) {
+  private Comment(
+      String content,
+      Product product,
+      User writer
+  ) {
     Assert.hasText(content, "Content must be provided");
     Assert.notNull(product, "Product must be provided");
     Assert.notNull(writer, "Writer must be provided");
@@ -50,5 +54,18 @@ public class Comment extends BaseTime {
     this.content = content;
     this.product = product;
     this.writer = writer;
+  }
+
+  public static Comment of(
+      User writer,
+      Product product,
+      String content
+  ) {
+    return Comment
+        .builder()
+        .writer(writer)
+        .product(product)
+        .content(content)
+        .build();
   }
 }

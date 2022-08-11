@@ -1,14 +1,18 @@
 package com.saiko.bidmarket.comment.controller.dto;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
-
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder(access = AccessLevel.PRIVATE)
 public class CommentCreateResponse {
-  private final UnsignedLong id;
+  private final long id;
 
-  public CommentCreateResponse(UnsignedLong id) {
-    this.id = id;
+  public static CommentCreateResponse from(long id) {
+    return CommentCreateResponse
+        .builder()
+        .id(id)
+        .build();
   }
 }

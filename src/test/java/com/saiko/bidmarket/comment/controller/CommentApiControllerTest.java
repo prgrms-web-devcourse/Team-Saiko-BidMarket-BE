@@ -41,7 +41,6 @@ import com.saiko.bidmarket.comment.controller.dto.CommentSelectRequest;
 import com.saiko.bidmarket.comment.controller.dto.CommentSelectResponse;
 import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.comment.service.CommentService;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
@@ -89,8 +88,8 @@ class CommentApiControllerTest extends ControllerSetUp {
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
-        given(commentService.create(any(UnsignedLong.class), any(CommentCreateRequest.class)))
-            .willReturn(new CommentCreateResponse(UnsignedLong.valueOf(1)));
+        given(commentService.create(anyLong(), any(CommentCreateRequest.class)))
+            .willReturn(CommentCreateResponse.from(1));
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
@@ -101,21 +100,27 @@ class CommentApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(commentService).create(any(UnsignedLong.class), any(CommentCreateRequest.class));
-        response.andExpect(status().isCreated())
-                .andDo(document("Create comment",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestFields(
-                                    fieldWithPath("productId").type(JsonFieldType.NUMBER)
-                                                              .description("상품 아이디"),
-                                    fieldWithPath("content").type(JsonFieldType.STRING)
-                                                            .description("댓글 내용")),
-                                responseFields(
-                                    fieldWithPath("id")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("댓글 아이디")
-                                )));
+        verify(commentService).create(anyLong(), any(CommentCreateRequest.class));
+        response
+            .andExpect(status().isCreated())
+            .andDo(document(
+                "Create comment",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("productId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상품 아이디"),
+                    fieldWithPath("content")
+                        .type(JsonFieldType.STRING)
+                        .description("댓글 내용")
+                ),
+                responseFields(
+                    fieldWithPath("id")
+                        .type(JsonFieldType.NUMBER)
+                        .description("댓글 아이디")
+                )
+            ));
       }
     }
 
@@ -159,9 +164,10 @@ class CommentApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.post(BASE_URL)
-                                            .param("productId", productId)
-                                            .param("content", "제가 살래요")
+            RestDocumentationRequestBuilders
+                .post(BASE_URL)
+                .param("productId", productId)
+                .param("content", "제가 살래요")
         );
 
         // then
@@ -179,9 +185,10 @@ class CommentApiControllerTest extends ControllerSetUp {
       void itResponseBadRequest(String productId) throws Exception {
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.post(BASE_URL)
-                                            .param("productId", productId)
-                                            .param("content", "깨끗한가요?")
+            RestDocumentationRequestBuilders
+                .post(BASE_URL)
+                .param("productId", productId)
+                .param("content", "깨끗한가요?")
         );
         // then
         response.andExpect(status().isBadRequest());
@@ -201,29 +208,32 @@ class CommentApiControllerTest extends ControllerSetUp {
       @DisplayName("상품의 댓글을 조회하고 결과를 반환한다")
       void ItReturnCommentList() throws Exception {
         //given
-        User writer = User.builder()
-                          .username("제로")
-                          .profileImage("image")
-                          .provider("google")
-                          .providerId("123")
-                          .group(new Group())
-                          .build();
+        User writer = User
+            .builder()
+            .username("제로")
+            .profileImage("image")
+            .provider("google")
+            .providerId("123")
+            .group(new Group())
+            .build();
         ReflectionTestUtils.setField(writer, "id", 1L);
 
-        Product product = Product.builder()
-                                 .title("귤 팔아요")
-                                 .description("맛있어요")
-                                 .category(FOOD)
-                                 .images(List.of("image1"))
-                                 .location("제주도")
-                                 .minimumPrice(1000)
-                                 .writer(writer)
-                                 .build();
-        Comment comment = Comment.builder()
-                                 .writer(writer)
-                                 .product(product)
-                                 .content("그냥 주세요")
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("귤 팔아요")
+            .description("맛있어요")
+            .category(FOOD)
+            .images(List.of("image1"))
+            .location("제주도")
+            .minimumPrice(1000)
+            .writer(writer)
+            .build();
+        Comment comment = Comment
+            .builder()
+            .writer(writer)
+            .product(product)
+            .content("그냥 주세요")
+            .build();
 
         ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.now());
 
@@ -241,27 +251,38 @@ class CommentApiControllerTest extends ControllerSetUp {
 
         //then
         verify(commentService).findAllByProduct(any(CommentSelectRequest.class));
-        response.andExpect(status().isOk())
-                .andDo(document("Select comment", preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestParameters(
-                                    parameterWithName("productId").description("상품 아이디"),
-                                    parameterWithName("sort").description("댓글 정렬 기준").optional()),
-                                responseFields(
-                                    fieldWithPath("[].userId").type(JsonFieldType.NUMBER)
-                                                              .description("유저 식별자"),
-                                    fieldWithPath("[].username").type(JsonFieldType.STRING)
-                                                                .description("유저 이름"),
-                                    fieldWithPath("[].profileImage").type(JsonFieldType.STRING)
-                                                                    .description("유저 프로필 이미지"),
-                                    fieldWithPath("[].content").type(JsonFieldType.STRING)
-                                                               .description("댓글 내용"),
-                                    fieldWithPath("[].createdAt").type(JsonFieldType.STRING)
-                                                                 .description("생성 시간"),
-                                    fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                                 .description("수정 시간")
-                                                                 .optional()
-                                )));
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Select comment", preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
+                            requestParameters(
+                                parameterWithName("productId").description("상품 아이디"),
+                                parameterWithName("sort")
+                                    .description("댓글 정렬 기준")
+                                    .optional()
+                            ),
+                            responseFields(
+                                fieldWithPath("[].userId")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("유저 식별자"),
+                                fieldWithPath("[].username")
+                                    .type(JsonFieldType.STRING)
+                                    .description("유저 이름"),
+                                fieldWithPath("[].profileImage")
+                                    .type(JsonFieldType.STRING)
+                                    .description("유저 프로필 이미지"),
+                                fieldWithPath("[].content")
+                                    .type(JsonFieldType.STRING)
+                                    .description("댓글 내용"),
+                                fieldWithPath("[].createdAt")
+                                    .type(JsonFieldType.STRING)
+                                    .description("생성 시간"),
+                                fieldWithPath("[].updatedAt")
+                                    .type(JsonFieldType.STRING)
+                                    .description("수정 시간")
+                                    .optional()
+                            )
+            ));
       }
     }
 
@@ -296,12 +317,16 @@ class CommentApiControllerTest extends ControllerSetUp {
         String productId = "NotNumber";
 
         // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.get(BASE_URL)
-                                                                                 .queryParam(
-                                                                                     "productId",
-                                                                                     productId)
-                                                                                 .queryParam("sort",
-                                                                                             CREATED_AT_ASC.name()));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .queryParam(
+                                                         "productId",
+                                                         productId
+                                                     )
+                                                     .queryParam(
+                                                         "sort",
+                                                         CREATED_AT_ASC.name()
+                                                     ));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -318,12 +343,16 @@ class CommentApiControllerTest extends ControllerSetUp {
       void itResponseBadRequest(String productId) throws Exception {
         // given
         // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.get(BASE_URL)
-                                                                                 .queryParam(
-                                                                                     "productId",
-                                                                                     productId)
-                                                                                 .queryParam("sort",
-                                                                                             CREATED_AT_ASC.name()));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .queryParam(
+                                                         "productId",
+                                                         productId
+                                                     )
+                                                     .queryParam(
+                                                         "sort",
+                                                         CREATED_AT_ASC.name()
+                                                     ));
         // then
         response.andExpect(status().isBadRequest());
       }
@@ -340,12 +369,16 @@ class CommentApiControllerTest extends ControllerSetUp {
         String unsupportedSort = "unsupportedSort";
 
         // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.get(BASE_URL)
-                                                                                 .queryParam(
-                                                                                     "productId",
-                                                                                     "1")
-                                                                                 .queryParam("sort",
-                                                                                             unsupportedSort));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .queryParam(
+                                                         "productId",
+                                                         "1"
+                                                     )
+                                                     .queryParam(
+                                                         "sort",
+                                                         unsupportedSort
+                                                     ));
         // then
         response.andExpect(status().isBadRequest());
       }
