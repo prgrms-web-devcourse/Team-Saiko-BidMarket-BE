@@ -64,15 +64,8 @@ class DefaultProductServiceTest {
   @InjectMocks
   DefaultProductService productService;
 
-  private static ProductCreateRequest productCreateRequest = ProductCreateRequest
-      .builder()
-      .title("텀블러 팝니다")
-      .description("깨끗해요")
-      .images(List.of("image1", "image2"))
-      .category(ETC)
-      .minimumPrice(150000)
-      .location("강남")
-      .build();
+  private static ProductCreateRequest productCreateRequest = new ProductCreateRequest(
+      "텀블러 팝니다", "깨끗해요", List.of("image1", "image2"), ETC, 15000, "강남");
   private static User writer = User
       .builder()
       .username("레이")

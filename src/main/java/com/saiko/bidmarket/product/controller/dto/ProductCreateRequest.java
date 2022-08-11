@@ -13,11 +13,11 @@ import org.hibernate.validator.constraints.Length;
 import com.saiko.bidmarket.product.Category;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Builder(access = AccessLevel.PUBLIC)
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class ProductCreateRequest {
   @NotBlank
   @Length(max = 32)
