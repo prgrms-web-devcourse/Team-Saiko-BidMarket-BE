@@ -2,7 +2,6 @@ package com.saiko.bidmarket.product.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.Hibernate;
@@ -83,6 +83,7 @@ public class Product extends BaseTime {
   private User writer;
 
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy(value = "biddingPrice desc")
   private List<Bidding> biddings = new ArrayList<>();
 
   @Builder
@@ -175,12 +176,6 @@ public class Product extends BaseTime {
     }
 
     Bidding wonBidding = biddings.get(0);
-
-    if (biddings.size() > 1) {
-      biddings = new ArrayList<>(biddings);
-      biddings.sort((a, b) -> (int)(b.getBiddingPrice() - a.getBiddingPrice()));
-      wonBidding = biddings.get(0);
-    }
 
     wonBidding.win();
 
