@@ -24,10 +24,8 @@ import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatMessageRepository;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
-import com.saiko.bidmarket.chat.service.dto.ChatRoomCreateParam;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
@@ -40,9 +38,6 @@ class DefaultChatRoomServiceTest {
 
   @Mock
   UserRepository userRepository;
-
-  @Mock
-  ProductRepository productRepository;
 
   @Mock
   ChatMessageRepository chatMessageRepository;
@@ -75,19 +70,13 @@ class DefaultChatRoomServiceTest {
       @DisplayName("생성된 채팅방 id를 반환한다")
       void It() {
         //given
-        Long sellerId = 1L;
-        Long winnerId = 2L;
-        Long productId = 1L;
-        Long chatRoomId = 1L;
-
-        given(userRepository.findById(anyLong()))
-            .willReturn(Optional.of(getUser(sellerId)));
+        long sellerId = 1L;
+        long winnerId = 2L;
+        long productId = 1L;
+        long chatRoomId = 1L;
 
         given(userRepository.findWinnerOfBiddingByProductId(anyLong()))
             .willReturn(Optional.of(getUser(winnerId)));
-
-        given(productRepository.findById(anyLong()))
-            .willReturn(Optional.of(getProduct(productId, sellerId)));
 
         given(chatRoomRepository.save(any(ChatRoom.class)))
             .willAnswer(methodInvokeMock -> {
@@ -97,8 +86,7 @@ class DefaultChatRoomServiceTest {
             });
 
         //when
-        long savedChatRoomId = chatRoomService.create(
-            ChatRoomCreateParam.from(getProduct(productId, sellerId)));
+        long savedChatRoomId = chatRoomService.create(getProduct(productId, sellerId));
 
         //then
         assertThat(savedChatRoomId).isEqualTo(chatRoomId);
@@ -155,7 +143,6 @@ class DefaultChatRoomServiceTest {
         ChatRoom chatRoom = getChatRoom(chatRoomId, seller, winner, product);
 
         ChatRoomSelectRequest request = new ChatRoomSelectRequest(0, 10);
-
 
         given(chatRoomRepository.findAllByUserId(anyLong(), any(ChatRoomSelectRequest.class)))
             .willReturn(List.of(chatRoom));
