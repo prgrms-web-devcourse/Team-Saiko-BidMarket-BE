@@ -48,7 +48,7 @@ public class DefaultBiddingService implements BiddingService {
         .save(bidding)
         .getId();
 
-    return new BiddingCreateResponse(createdBiddingId);
+    return BiddingCreateResponse.from(createdBiddingId);
   }
 
   @Override
@@ -60,6 +60,6 @@ public class DefaultBiddingService implements BiddingService {
         .findByBidderIdAndProductId(userId, productId)
         .orElseThrow(NotFoundException::new);
 
-    return new BiddingPriceResponse(bidding.getBiddingPrice());
+    return BiddingPriceResponse.from(bidding.getBiddingPrice());
   }
 }
