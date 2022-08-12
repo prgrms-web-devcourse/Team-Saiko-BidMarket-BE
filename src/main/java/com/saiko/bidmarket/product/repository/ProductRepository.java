@@ -20,4 +20,6 @@ public interface ProductRepository extends ProductCustomRepository, JpaRepositor
   @Modifying(clearAutomatically = true)
   @Query("update Product p set p.progressed = false where p.writer.id = :userId")
   void finishByUserId(long userId);
+
+  List<Product> findAllByWriterId(long userId);
 }
