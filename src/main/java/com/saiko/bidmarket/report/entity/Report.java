@@ -2,6 +2,8 @@ package com.saiko.bidmarket.report.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,6 +40,7 @@ public class Report extends BaseTime {
   private User toUser;
 
   @NotNull
+  @Enumerated(value = EnumType.STRING)
   private Type type;
 
   @NotNull
