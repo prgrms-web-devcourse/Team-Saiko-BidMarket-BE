@@ -1,6 +1,5 @@
 package com.saiko.bidmarket.product.controller.dto;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.product.Role;
 
 import lombok.AccessLevel;
@@ -14,9 +13,9 @@ import lombok.RequiredArgsConstructor;
 public class BiddingResultResponse {
   private final Role role;
   private final boolean biddingSucceed;
-  private final UnsignedLong chatRoomId;
+  private final Long chatRoomId;
 
-  public static BiddingResultResponse responseForSuccessfulSeller(UnsignedLong chatRoomId) {
+  public static BiddingResultResponse responseForSuccessfulSeller(long chatRoomId) {
     return BiddingResultResponse.builder()
                                 .role(Role.SELLER)
                                 .biddingSucceed(true)
@@ -32,7 +31,7 @@ public class BiddingResultResponse {
                                 .build();
   }
 
-  public static BiddingResultResponse responseForSuccessfulBidder(UnsignedLong chatRoomId) {
+  public static BiddingResultResponse responseForSuccessfulBidder(long chatRoomId) {
     return BiddingResultResponse.builder()
                                 .role(Role.BIDDER)
                                 .biddingSucceed(true)

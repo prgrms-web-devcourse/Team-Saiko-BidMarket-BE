@@ -30,7 +30,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Category;
@@ -130,8 +129,10 @@ class DefaultUserServiceTest {
       @ValueSource(strings = {"\t", "\n"})
       @DisplayName("IllegalArgumentException 에러를 발생 시킨다")
       void ItThrowsIllegalArgumentException(String src) {
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(), Map.of("1", "1"),
-                                                      "1"
+        OAuth2User oAuth2User = new DefaultOAuth2User(
+            Collections.emptyList(),
+            Map.of("1", "1"),
+            "1"
         );
 
         assertThrows(
@@ -428,21 +429,6 @@ class DefaultUserServiceTest {
   class DescribeFindAllUserBiddings {
 
     @Nested
-    @DisplayName("userId 가 양수가 아니면")
-    class ContextWithNotPositive {
-
-      @ParameterizedTest
-      @ValueSource(longs = {0, -1L, Long.MIN_VALUE})
-      @DisplayName("IllegalArgumentException 예외를 던진다")
-      void ItThrowsIllegalArgumentException(long src) {
-        UserBiddingSelectRequest request = new UserBiddingSelectRequest(0, 1, END_DATE_ASC);
-
-        assertThatThrownBy(() -> defaultUserService.findAllUserBiddings(src, request)).isInstanceOf(
-            IllegalArgumentException.class);
-      }
-    }
-
-    @Nested
     @DisplayName("request 가 null이면")
     class ContextWithNullRequest {
 
@@ -488,7 +474,7 @@ class DefaultUserServiceTest {
             .builder()
             .product(product)
             .bidder(bidder)
-            .biddingPrice(BiddingPrice.valueOf(20000))
+            .biddingPrice(20000)
             .build();
 
         given(biddingRepository.findAllUserBidding(

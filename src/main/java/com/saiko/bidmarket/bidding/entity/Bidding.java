@@ -24,6 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bidding extends BaseTime {
 
+  private static final long PRICE_MIN_AMOUNT = 1_000L;
+
+  private static final long PRICE_UNIT_AMOUNT = 100L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -39,23 +43,27 @@ public class Bidding extends BaseTime {
   @ManyToOne(fetch = FetchType.LAZY)
   private Product product;
 
-
   @Builder
-  public Bidding(BiddingPrice biddingPrice, User bidder, Product product) {
-    Assert.notNull(biddingPrice, "Bidding price must be provided");
+  public Bidding(
+      long biddingPrice,
+      User bidder,
+      Product product
+  ) {
     Assert.notNull(bidder, "Bidder must be provided");
     Assert.notNull(product, "Product must be provided");
 
-    this.biddingPrice = biddingPrice.getValue();
+    this.biddingPrice = biddingPrice;
     this.bidder = bidder;
     this.product = product;
     this.won = false;
-    product.getBiddings().add(this);
+    product
+        .getBiddings()
+        .add(this);
 
-    validateCreatedField();
+    validate();
   }
 
-  private void validateCreatedField() {
+  private void validate() {
     validateMyProduct();
     validateProductProgress();
     validateBiddingPrice();
@@ -74,6 +82,14 @@ public class Bidding extends BaseTime {
   }
 
   private void validateBiddingPrice() {
+    if (biddingPrice < PRICE_MIN_AMOUNT) {
+      throw new IllegalArgumentException("비딩 최소 금액보다 작게 비딩할 수 없습니다.");
+    }
+
+    if (biddingPrice % PRICE_UNIT_AMOUNT != 0) {
+      throw new IllegalArgumentException("비딩 단위 금액보다 적은 단위 금액을 사용할 수 없습니다.");
+    }
+
     if (biddingPrice < product.getMinimumPrice()) {
       throw new IllegalArgumentException("상품의 최소 금액 이하로는 비딩할 수 없습니다.");
     }
