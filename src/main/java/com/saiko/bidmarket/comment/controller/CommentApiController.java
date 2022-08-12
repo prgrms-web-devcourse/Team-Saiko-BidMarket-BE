@@ -43,7 +43,9 @@ public class CommentApiController {
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<CommentSelectResponse> findAll(@ModelAttribute @Valid CommentSelectRequest request) {
+  public List<CommentSelectResponse> findAll(
+      @ModelAttribute @Valid
+      CommentSelectRequest request) {
     return commentService.findAllByProduct(request);
   }
 }

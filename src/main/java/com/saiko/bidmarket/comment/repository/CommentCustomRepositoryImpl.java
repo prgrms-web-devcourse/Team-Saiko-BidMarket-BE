@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-
 public class CommentCustomRepositoryImpl
     implements CommentCustomRepository {
   private final JPAQueryFactory jpaQueryFactory;
