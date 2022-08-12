@@ -52,7 +52,10 @@ public class DefaultChatMessageService implements ChatMessageService {
   }
 
   @Override
-  public List<ChatMessageSelectResponse> findAll(long chatRoomId, ChatMessageSelectRequest request) {
+  public List<ChatMessageSelectResponse> findAll(
+      long userId,
+      long chatRoomId, ChatMessageSelectRequest request
+  ) {
     return Collections.emptyList();
   }
 }

@@ -71,7 +71,7 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
 
         ChatMessageSelectResponse response = ChatMessageSelectResponse.of(chatMessage);
 
-        given(chatMessageService.findAll(anyLong(), any(ChatMessageSelectRequest.class)))
+        given(chatMessageService.findAll(anyLong(), anyLong(), any(ChatMessageSelectRequest.class)))
             .willReturn(List.of(response));
 
         //when

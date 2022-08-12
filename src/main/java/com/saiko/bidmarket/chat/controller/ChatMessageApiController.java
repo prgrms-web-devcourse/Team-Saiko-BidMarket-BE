@@ -3,10 +3,9 @@ package com.saiko.bidmarket.chat.controller;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectRequest;
 import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectResponse;
 import com.saiko.bidmarket.chat.service.ChatMessageService;
+import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,11 +30,14 @@ public class ChatMessageApiController {
   @GetMapping("{chatRoomId}/messages")
   @ResponseStatus(HttpStatus.OK)
   public List<ChatMessageSelectResponse> getAll(
+      @AuthenticationPrincipal
+      JwtAuthentication jwtAuthentication,
       @PathVariable
       long chatRoomId,
       @ModelAttribute @Valid
       ChatMessageSelectRequest chatMessageSelectRequest
   ) {
-    return chatMessageService.findAll(chatRoomId, chatMessageSelectRequest);
+    long userId = jwtAuthentication.getUserId();
+    return chatMessageService.findAll(userId, chatRoomId, chatMessageSelectRequest);
   }
 }
