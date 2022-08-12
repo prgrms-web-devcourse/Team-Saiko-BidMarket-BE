@@ -141,7 +141,7 @@ public class DefaultUserService implements UserService {
 
   private void finishUserProducts(long userId) {
     productRepository
-        .findAllByWriterId(userId)
+        .findAllByWriterIdAndProgressed(userId, true)
         .forEach(product -> biddingRepository.deleteAllBatchByProductId(product.getId()));
     productRepository.finishByUserId(userId);
   }
