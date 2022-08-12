@@ -1,15 +1,17 @@
 package com.saiko.bidmarket.bidding.service;
 
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 
 public interface BiddingService {
 
-  long create(
+  BiddingCreateResponse create(
       long userId,
       BiddingCreateRequest createRequest
   );
 
-  long findBiddingPriceByProductIdAndUserId(
+  BiddingPriceResponse findBiddingPriceByProductIdAndUserId(
       long userId,
       long productId
   );

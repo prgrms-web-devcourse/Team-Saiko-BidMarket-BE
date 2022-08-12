@@ -36,10 +36,8 @@ public class BiddingApiController {
       @RequestBody @Valid
       BiddingCreateRequest biddingCreateRequest
   ) {
+    return biddingService.create(authentication.getUserId(), biddingCreateRequest);
 
-    long createdBiddingId = biddingService.create(authentication.getUserId(), biddingCreateRequest);
-
-    return new BiddingCreateResponse(createdBiddingId);
   }
 
   @GetMapping("products/{productId}")
@@ -50,11 +48,9 @@ public class BiddingApiController {
       @PathVariable("productId")
       long pathProductId
   ) {
-    long biddingPrice = biddingService.findBiddingPriceByProductIdAndUserId(
+    return biddingService.findBiddingPriceByProductIdAndUserId(
         authentication.getUserId(),
         pathProductId
     );
-
-    return new BiddingPriceResponse(biddingPrice);
   }
 }
