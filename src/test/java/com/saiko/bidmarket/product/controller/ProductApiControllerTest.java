@@ -39,7 +39,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saiko.bidmarket.common.Sort;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
@@ -857,13 +856,12 @@ class ProductApiControllerTest extends ControllerSetUp {
       @DisplayName("비딩 결과를 반환한다")
       void ItReturnBiddingResult() throws Exception {
         //given
-        UnsignedLong chatRoomId = UnsignedLong.valueOf(1);
+        long chatRoomId = 1L;
 
-        given(productService.getBiddingResult(any(UnsignedLong.class), any(UnsignedLong.class)))
+        given(productService.getBiddingResult(anyLong(), anyLong()))
             .willReturn(BiddingResultResponse.responseForSuccessfulSeller(chatRoomId));
 
         long productId = 1;
-        long userId = 1;
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
@@ -872,7 +870,7 @@ class ProductApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        verify(productService).getBiddingResult(any(UnsignedLong.class), any(UnsignedLong.class));
+        verify(productService).getBiddingResult(anyLong(), anyLong());
         response
             .andExpect(status().isOk())
             .andDo(document("Select bidding result", preprocessRequest(prettyPrint()),
@@ -905,25 +903,6 @@ class ProductApiControllerTest extends ControllerSetUp {
       void itResponseBadRequest() throws Exception {
         // given
         String productId = "NotNumber";
-
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL + "/{productId}/result", productId));
-
-        // then
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("productId 에 음수 또는 0이 들어온다면")
-    class ContextNegativeOrZeroNumberProductId {
-
-      @ParameterizedTest
-      @ValueSource(strings = {"0", "-1"})
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest(String productId) throws Exception {
-        // given
 
         // when
         ResultActions response = mockMvc.perform(

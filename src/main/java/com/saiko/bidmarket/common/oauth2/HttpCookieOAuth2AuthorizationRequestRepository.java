@@ -36,7 +36,8 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
 
   public HttpCookieOAuth2AuthorizationRequestRepository(
       String cookieName,
-      int cookieExpireSeconds) {
+      int cookieExpireSeconds
+  ) {
 
     this.cookieName = cookieName;
     this.cookieExpireSeconds = cookieExpireSeconds;
@@ -51,9 +52,11 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
   }
 
   @Override
-  public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest,
-                                       HttpServletRequest request,
-                                       HttpServletResponse response) {
+  public void saveAuthorizationRequest(
+      OAuth2AuthorizationRequest authorizationRequest,
+      HttpServletRequest request,
+      HttpServletResponse response
+  ) {
 
     if (authorizationRequest == null) {
       getCookie(request).ifPresent(cookie -> clear(cookie, response));
@@ -86,8 +89,10 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
   }
 
   @Override
-  public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request,
-                                                               HttpServletResponse response) {
+  public OAuth2AuthorizationRequest removeAuthorizationRequest(
+      HttpServletRequest request,
+      HttpServletResponse response
+  ) {
 
     return getCookie(request)
         .map(cookie -> {
@@ -103,7 +108,10 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
     return ofNullable(WebUtils.getCookie(request, cookieName));
   }
 
-  private void clear(Cookie cookie, HttpServletResponse response) {
+  private void clear(
+      Cookie cookie,
+      HttpServletResponse response
+  ) {
 
     cookie.setValue("");
     cookie.setPath("/");
@@ -114,7 +122,9 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
   private OAuth2AuthorizationRequest getOAuth2AuthorizationRequest(Cookie cookie) {
 
     return SerializationUtils.deserialize(
-        Base64.getUrlDecoder().decode(cookie.getValue())
+        Base64
+            .getUrlDecoder()
+            .decode(cookie.getValue())
     );
   }
 }

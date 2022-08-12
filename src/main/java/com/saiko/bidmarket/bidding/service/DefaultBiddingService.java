@@ -4,13 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
 import com.saiko.bidmarket.bidding.entity.Bidding;
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
-import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
-import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
-import com.saiko.bidmarket.bidding.service.dto.BiddingPriceFindingDto;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -26,8 +22,11 @@ public class DefaultBiddingService implements BiddingService {
 
   private final ProductRepository productRepository;
 
-  public DefaultBiddingService(BiddingRepository biddingRepository, UserRepository userRepository,
-                               ProductRepository productRepository) {
+  public DefaultBiddingService(
+      BiddingRepository biddingRepository,
+      UserRepository userRepository,
+      ProductRepository productRepository
+  ) {
     this.biddingRepository = biddingRepository;
     this.userRepository = userRepository;
     this.productRepository = productRepository;
@@ -35,36 +34,36 @@ public class DefaultBiddingService implements BiddingService {
 
   @Transactional
   @Override
-  public UnsignedLong create(BiddingCreateDto createDto) {
-    Assert.notNull(createDto, "createDto must be provided");
+  public long create(
+      long userId,
+      BiddingCreateRequest createRequest
+  ) {
+    Assert.notNull(createRequest, "createRequest must be provided");
 
-    User bidder = userRepository.findById(createDto.getBidderId().getValue())
-                                .orElseThrow(NotFoundException::new);
+    User bidder = userRepository
+        .findById(userId)
+        .orElseThrow(NotFoundException::new);
 
-    Product product = productRepository.findById(createDto.getProductId().getValue())
-                                       .orElseThrow(NotFoundException::new);
+    Product product = productRepository
+        .findById(createRequest.getProductId())
+        .orElseThrow(NotFoundException::new);
 
-    Bidding bidding = new Bidding(createDto.getBiddingPrice(), bidder, product);
+    Bidding bidding = new Bidding(createRequest.getBiddingPrice(), bidder, product);
 
-    Bidding createdBidding = biddingRepository.save(bidding);
-
-    return UnsignedLong.valueOf(createdBidding.getId());
+    return biddingRepository
+        .save(bidding)
+        .getId();
   }
 
   @Override
-  public BiddingPrice findBiddingPriceByProductIdAndUserId(
-      BiddingPriceFindingDto findingDto
+  public long findBiddingPriceByProductIdAndUserId(
+      long productId,
+      long userId
   ) {
-    Assert.notNull(findingDto, "findingDto must be provided");
-    BiddingPriceFindingRepoDto findingRepoDto = BiddingPriceFindingRepoDto
-        .builder()
-        .bidderId(findingDto.getBidderId())
-        .productId(findingDto.getProductId())
-        .build();
+    Bidding bidding = biddingRepository
+        .findByBidderIdAndProductId(userId, productId)
+        .orElseThrow(NotFoundException::new);
 
-    Bidding bidding = biddingRepository.findByBidderIdAndProductId(findingRepoDto)
-                                       .orElseThrow(NotFoundException::new);
-
-    return BiddingPrice.valueOf(bidding.getBiddingPrice());
+    return bidding.getBiddingPrice();
   }
 }

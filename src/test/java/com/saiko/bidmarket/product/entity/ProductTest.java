@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
@@ -36,8 +35,12 @@ public class ProductTest {
         User winner = product.finish();
 
         //then
-        assertThat(product).extracting("progressed").isEqualTo(false);
-        assertThat(product).extracting("winningPrice").isNull();
+        assertThat(product)
+            .extracting("progressed")
+            .isEqualTo(false);
+        assertThat(product)
+            .extracting("winningPrice")
+            .isNull();
         assertThat(winner).isNull();
       }
     }
@@ -54,17 +57,25 @@ public class ProductTest {
         int minimumPrice = 10000;
         Product product = product(writer, minimumPrice);
         User bidder = user("bidder");
-        Bidding bidding = bidding(BiddingPrice.valueOf(20000L), bidder, product);
+        Bidding bidding = bidding(20000L, bidder, product);
         ReflectionTestUtils.setField(product, "biddings", List.of(bidding));
 
         //when
         User winner = product.finish();
 
         //then
-        assertThat(product).extracting("progressed").isEqualTo(false);
-        assertThat(product).extracting("winningPrice").isEqualTo((long)minimumPrice);
-        assertThat(bidding).extracting("won").isEqualTo(true);
-        assertThat(winner).usingRecursiveComparison().isEqualTo(bidder);
+        assertThat(product)
+            .extracting("progressed")
+            .isEqualTo(false);
+        assertThat(product)
+            .extracting("winningPrice")
+            .isEqualTo((long)minimumPrice);
+        assertThat(bidding)
+            .extracting("won")
+            .isEqualTo(true);
+        assertThat(winner)
+            .usingRecursiveComparison()
+            .isEqualTo(bidder);
       }
     }
 
@@ -81,48 +92,68 @@ public class ProductTest {
         Product product = product(writer, minimumPrice);
         User bidderOne = user("bidderOne");
         User bidderTwo = user("bidderTwo");
-        Bidding biddingOne = bidding(BiddingPrice.valueOf(10000L), bidderOne, product);
-        Bidding biddingTwo = bidding(BiddingPrice.valueOf(20000L), bidderTwo, product);
+        Bidding biddingOne = bidding(10000L, bidderOne, product);
+        Bidding biddingTwo = bidding(20000L, bidderTwo, product);
         ReflectionTestUtils.setField(product, "biddings", List.of(biddingTwo, biddingOne));
 
         //when
         User winner = product.finish();
 
         //then
-        assertThat(product).extracting("progressed").isEqualTo(false);
-        assertThat(product).extracting("winningPrice").isEqualTo(11000L);
-        assertThat(biddingTwo).extracting("won").isEqualTo(true);
-        assertThat(biddingOne).extracting("won").isEqualTo(false);
-        assertThat(winner).usingRecursiveComparison().isEqualTo(bidderTwo);
+        assertThat(product)
+            .extracting("progressed")
+            .isEqualTo(false);
+        assertThat(product)
+            .extracting("winningPrice")
+            .isEqualTo(11000L);
+        assertThat(biddingTwo)
+            .extracting("won")
+            .isEqualTo(true);
+        assertThat(biddingOne)
+            .extracting("won")
+            .isEqualTo(false);
+        assertThat(winner)
+            .usingRecursiveComparison()
+            .isEqualTo(bidderTwo);
       }
     }
   }
 
   private User user(String name) {
-    return User.builder()
-               .username(name)
-               .profileImage("imageURL")
-               .provider("provider")
-               .providerId("providerId")
-               .group(new Group())
-               .build();
+    return User
+        .builder()
+        .username(name)
+        .profileImage("imageURL")
+        .provider("provider")
+        .providerId("providerId")
+        .group(new Group())
+        .build();
   }
 
-  private Product product(User writer, int minimumPrice) {
-    return Product.builder()
-                  .title("title")
-                  .description("description")
-                  .minimumPrice(minimumPrice)
-                  .writer(writer)
-                  .category(Category.ETC)
-                  .build();
+  private Product product(
+      User writer,
+      int minimumPrice
+  ) {
+    return Product
+        .builder()
+        .title("title")
+        .description("description")
+        .minimumPrice(minimumPrice)
+        .writer(writer)
+        .category(Category.ETC)
+        .build();
   }
 
-  private Bidding bidding(BiddingPrice biddingPrice, User bidder, Product product) {
-    return Bidding.builder()
-                  .biddingPrice(biddingPrice)
-                  .bidder(bidder)
-                  .product(product)
-                  .build();
+  private Bidding bidding(
+      long biddingPrice,
+      User bidder,
+      Product product
+  ) {
+    return Bidding
+        .builder()
+        .biddingPrice(biddingPrice)
+        .bidder(bidder)
+        .product(product)
+        .build();
   }
 }
