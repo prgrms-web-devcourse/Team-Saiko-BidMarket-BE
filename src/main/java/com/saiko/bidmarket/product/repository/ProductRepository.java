@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.saiko.bidmarket.product.entity.Product;
@@ -16,5 +17,7 @@ public interface ProductRepository extends ProductCustomRepository, JpaRepositor
   @Query("select p from Product p join fetch p.writer where p.id = :id")
   Optional<Product> findByIdJoinWithUser(long id);
 
-  List<Product> findAllByWriterIdAndProgressed(long useId, boolean progressed);
+  @Modifying(clearAutomatically = true)
+  @Query("update Product p set p.progressed = false where p.writer.id = :userId")
+  void finishByUserId(long userId);
 }
