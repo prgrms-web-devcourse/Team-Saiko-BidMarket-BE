@@ -148,7 +148,7 @@ class BiddingApiControllerTest extends ControllerSetUp {
 
         long biddingId = 1L;
         given(biddingService.create(anyLong(), any(BiddingCreateRequest.class)))
-            .willReturn(new BiddingCreateResponse(biddingId));
+            .willReturn(BiddingCreateResponse.from(biddingId));
 
         // when
         ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
@@ -220,7 +220,7 @@ class BiddingApiControllerTest extends ControllerSetUp {
         long productId = 1L;
 
         given(biddingService.findBiddingPriceByProductIdAndUserId(anyLong(), anyLong()))
-            .willReturn(new BiddingPriceResponse(10000L));
+            .willReturn(BiddingPriceResponse.from(10000L));
 
         // when
         ResultActions response = mockMvc.perform(
