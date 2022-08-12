@@ -8,7 +8,7 @@ import com.saiko.bidmarket.product.entity.Product;
 
 public interface ChatRoomService {
 
-  long create(Product product);
+  void create(Product product);
 
   List<ChatRoomSelectResponse> findAll(
       long userId,

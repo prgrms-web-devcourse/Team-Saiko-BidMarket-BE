@@ -13,7 +13,6 @@ import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatMessageRepository;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
-import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
@@ -30,20 +29,15 @@ public class DefaultChatRoomService implements ChatRoomService {
 
   @Override
   @Transactional
-  public long create(Product product) {
+  public void create(Product product) {
     Assert.notNull(product, "Product must be provided");
 
     User seller = product.getWriter();
 
-    User winner = userRepository
+    userRepository
         .findWinnerOfBiddingByProductId(product.getId())
-        .orElseThrow(() -> new NotFoundException("Winner not exists"));
-
-    ChatRoom chatRoom = ChatRoom.of(seller, winner, product);
-
-    return chatRoomRepository
-        .save(chatRoom)
-        .getId();
+        .map(winner -> ChatRoom.of(seller, winner, product))
+        .ifPresent(chatRoomRepository::save);
   }
 
   @Override

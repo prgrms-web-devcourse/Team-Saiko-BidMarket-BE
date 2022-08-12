@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.chat.service.ChatRoomService;
 import com.saiko.bidmarket.common.config.ScheduledConfig;
 import com.saiko.bidmarket.common.config.ScheduledConfig.Scheduler;
 import com.saiko.bidmarket.product.entity.Product;
@@ -33,6 +34,9 @@ public class SchedulerTest {
 
   @MockBean
   private ProductService productService;
+
+  @MockBean
+  private ChatRoomService chatRoomService;
 
   @Nested
   @DisplayName("1분마다 동작하는 closeProduct 메소드는")
@@ -69,6 +73,7 @@ public class SchedulerTest {
               verify(scheduler, atLeast(1)).closeProduct();
               verify(productService).findAllThatNeedToClose(any());
               verify(productService).executeClosingProduct(any());
+              verify(chatRoomService).create(any(Product.class));
             });
       }
     }
@@ -91,6 +96,7 @@ public class SchedulerTest {
               verify(scheduler, atLeast(1)).closeProduct();
               verify(productService).findAllThatNeedToClose(any());
               verify(productService, times(0)).executeClosingProduct(any());
+              verify(chatRoomService, times(0)).create(any(Product.class));
             });
       }
     }
