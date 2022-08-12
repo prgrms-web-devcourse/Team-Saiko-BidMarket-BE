@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -96,10 +97,13 @@ class CommentApiControllerTest extends ControllerSetUp {
       .content("그냥 주세요")
       .build();
   private static long writerId = 1;
+  private static long productId = 1;
   private static long commentId = 1;
 
+  @BeforeAll
   static void setup() {
     ReflectionTestUtils.setField(writer, "id", writerId);
+    ReflectionTestUtils.setField(product, "id", productId);
     ReflectionTestUtils.setField(comment, "id", commentId);
     ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.now());
   }
@@ -249,7 +253,7 @@ class CommentApiControllerTest extends ControllerSetUp {
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
             .get(BASE_URL)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .queryParam("productId", "1")
+            .queryParam("productId", String.valueOf(productId))
             .queryParam("sort", CREATED_AT_ASC.name());
 
         ResultActions response = mockMvc.perform(request);
