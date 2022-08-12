@@ -131,7 +131,8 @@ public class DefaultUserService implements UserService {
   public void deleteUser(long userId) {
     Assert.isTrue(userId > 0, "User id must be positive");
 
-    final User user = userRepository.findById(userId)
+    final User user = userRepository
+        .findById(userId)
         .orElseThrow(() -> new  NotFoundException("User does not exist"));
 
     biddingRepository.deleteAllBatchByBidderId(userId);
