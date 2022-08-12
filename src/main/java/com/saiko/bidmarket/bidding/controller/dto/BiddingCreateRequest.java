@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BiddingCreateRequest {
 
-  @Positive
   private final long productId;
 
   @Positive
