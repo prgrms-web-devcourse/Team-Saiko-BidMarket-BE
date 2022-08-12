@@ -134,13 +134,15 @@ public class DefaultUserService implements UserService {
         .findById(userId)
         .orElseThrow(() -> new  NotFoundException("User does not exist"));
 
+    biddingRepository.deleteAllBatchByBidderId(userId);
     finishUserProducts(userId);
     user.delete();
   }
 
   private void finishUserProducts(long userId) {
-    biddingRepository.deleteAllBatchByBidderId(userId);
-    biddingRepository.deleteAllByWriterId(userId);
+    productRepository
+        .findAllByWriterId(userId)
+        .forEach(product -> biddingRepository.deleteAllBatchByProductId(product.getId()));
     productRepository.finishByUserId(userId);
   }
 }
