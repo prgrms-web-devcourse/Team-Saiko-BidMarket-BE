@@ -594,39 +594,14 @@ class DefaultUserServiceTest {
         ReflectionTestUtils.setField(seller, "id", 1L);
         final long sellerId = seller.getId();
 
-        final Product firstProduct = Product
-            .builder()
-            .title("test")
-            .minimumPrice(1000)
-            .writer(seller)
-            .description("test")
-            .build();
-
-        final Product secondProduct = Product
-            .builder()
-            .title("test")
-            .minimumPrice(1000)
-            .writer(seller)
-            .description("test")
-            .build();
-
-        ReflectionTestUtils.setField(firstProduct, "id", 1L);
-        ReflectionTestUtils.setField(secondProduct, "id", 2L);
-
-        final List<Product> products = List.of(firstProduct, secondProduct);
-
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
-        when(productRepository.findAllByWriterIdAndProgressed(sellerId, true)).thenReturn(products);
 
         //when
         defaultUserService.deleteUser(sellerId);
 
         //then
-        Assertions
-            .assertThat(products)
-            .filteredOn(Product::isProgressed)
-            .isEmpty();
-        verify(biddingRepository, times(2)).deleteAllBatchByProductId(anyLong());
+        verify(biddingRepository).deleteAllByWriterId(anyLong());
+        verify(productRepository).finishByUserId(anyLong());
       }
     }
   }
