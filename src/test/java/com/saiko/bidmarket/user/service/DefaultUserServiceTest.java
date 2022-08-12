@@ -539,7 +539,7 @@ class DefaultUserServiceTest {
       }
 
       @Test
-      @DisplayName("해당 유저의 경매중인 상품을 모두 종료한다.")
+      @DisplayName("해당 상품의 입찰을 전부 제거하고, 해당 상품을 모두 종료한다.")
       void itFinishUserProducts() {
         //given
         final User seller = User.builder()
@@ -553,27 +553,41 @@ class DefaultUserServiceTest {
         ReflectionTestUtils.setField(seller, "id", 1L);
         final long sellerId = seller.getId();
 
-        final List<Product> products = List.of(Product.builder()
-                                                      .title("test")
-                                                      .minimumPrice(1000)
-                                                      .writer(seller)
-                                                      .description("test")
-                                                      .build(), Product.builder()
-                                                                       .title("test")
-                                                                       .minimumPrice(1000)
-                                                                       .writer(seller)
-                                                                       .description("test")
-                                                                       .build());
+        final Product firstProduct = Product
+            .builder()
+            .title("test")
+            .minimumPrice(1000)
+            .writer(seller)
+            .description("test")
+            .build();
+
+        final Product secondProduct = Product
+            .builder()
+            .title("test")
+            .minimumPrice(1000)
+            .writer(seller)
+            .description("test")
+            .build();
+
+        ReflectionTestUtils.setField(firstProduct, "id", 1L);
+        ReflectionTestUtils.setField(secondProduct, "id", 2L);
+
+
+        final List<Product> products = List.of(firstProduct, secondProduct);
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
+        when(productRepository.findAllByWriterIdAndProgressed(sellerId, true))
+            .thenReturn(products);
 
         //when
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
-        when(productRepository.findAllByWriterId(sellerId)).thenReturn(products);
         defaultUserService.deleteUser(sellerId);
 
         //then
         Assertions.assertThat(products)
                   .filteredOn(Product::isProgressed)
                   .isEmpty();
+        verify(biddingRepository, times(2))
+            .deleteAllBatchByProductId(anyLong());
       }
     }
   }
