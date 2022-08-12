@@ -29,6 +29,8 @@ public class NotificationSelectResponse {
 
   private final String content;
 
+  private final boolean checked;
+
   private final LocalDateTime createdAt;
 
   private final LocalDateTime updatedAt;
@@ -42,6 +44,7 @@ public class NotificationSelectResponse {
         .thumbnailImage(notificationRepoDto.getThumbnailImage())
         .type(notificationRepoDto.getType().getType())
         .content(notificationRepoDto.getType().getMessage())
+        .checked(notificationRepoDto.isChecked())
         .createdAt(notificationRepoDto.getCreatedAt())
         .updatedAt(notificationRepoDto.getUpdatedAt())
         .build();

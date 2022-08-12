@@ -19,19 +19,22 @@ public class NotificationRepoDto {
 
   private NotificationType type;
 
+  private boolean checked;
+
   private LocalDateTime createdAt;
 
   private LocalDateTime updatedAt;
 
   @QueryProjection
   public NotificationRepoDto(long id, long productId, String title, String thumbnailImage,
-                             NotificationType type, LocalDateTime createdAt,
+                             NotificationType type, boolean checked, LocalDateTime createdAt,
                              LocalDateTime updatedAt) {
     this.id = id;
     this.productId = productId;
     this.title = title;
     this.thumbnailImage = thumbnailImage;
     this.type = type;
+    this.checked = checked;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }

@@ -43,6 +43,8 @@ public class Notification extends BaseTime {
   @JoinColumn(name = "user_id")
   private User user;
 
+  private boolean checked;
+
   @Builder
   public Notification(NotificationType type, Product product, User user) {
     Assert.notNull(type, "Type must be provided");
