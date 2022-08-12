@@ -9,18 +9,20 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.saiko.bidmarket.chat.service.ChatRoomService;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableScheduling
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class ScheduledConfig {
 
   private final ProductService productService;
-
-  public ScheduledConfig(ProductService productService) {
-    this.productService = productService;
-  }
+  private final ChatRoomService chatRoomService;
 
   @Component
   public class Scheduler {
@@ -35,6 +37,7 @@ public class ScheduledConfig {
       List<Product> productsInProgress = productService.findAllThatNeedToClose(nowTime);
 
       productsInProgress.forEach(productService::executeClosingProduct);
+      productsInProgress.forEach(chatRoomService::create);
     }
   }
 }

@@ -86,10 +86,10 @@ class DefaultChatRoomServiceTest {
             });
 
         //when
-        long savedChatRoomId = chatRoomService.create(getProduct(productId, sellerId));
+        chatRoomService.create(getProduct(productId, sellerId));
 
         //then
-        assertThat(savedChatRoomId).isEqualTo(chatRoomId);
+        verify(userRepository).findWinnerOfBiddingByProductId(anyLong());
       }
     }
   }
