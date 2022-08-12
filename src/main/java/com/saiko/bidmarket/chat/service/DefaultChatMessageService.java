@@ -1,8 +1,13 @@
 package com.saiko.bidmarket.chat.service;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectRequest;
+import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectResponse;
 import com.saiko.bidmarket.chat.controller.dto.ChatPublishMessage;
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
@@ -44,5 +49,10 @@ public class DefaultChatMessageService implements ChatMessageService {
     ChatMessage savedChatMessage = chatMessageRepository.save(chatMessage);
 
     return ChatPublishMessage.of(savedChatMessage);
+  }
+
+  @Override
+  public List<ChatMessageSelectResponse> findAll(long chatRoomId, ChatMessageSelectRequest request) {
+    return Collections.emptyList();
   }
 }
