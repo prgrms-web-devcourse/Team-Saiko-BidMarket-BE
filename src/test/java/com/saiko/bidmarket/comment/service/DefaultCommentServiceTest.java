@@ -50,7 +50,8 @@ class DefaultCommentServiceTest {
   DefaultCommentService commentService;
 
   private static long productId = 1;
-  private static long userId = 1L;
+  private static long userId = 1;
+  private static long commentWriterId = 1;
   private static long commentId = 1;
 
   private static CommentCreateRequest commentCreateRequest = new CommentCreateRequest(
@@ -75,17 +76,31 @@ class DefaultCommentServiceTest {
       .images(Collections.emptyList())
       .writer(writer)
       .build();
+  private static User commentWriter = User
+      .builder()
+      .username("레이")
+      .profileImage("image")
+      .provider("google")
+      .providerId("1234")
+      .group(new Group())
+      .build();
   private static Comment comment = Comment
       .builder()
-      .writer(writer)
+      .writer(commentWriter)
       .product(product)
       .content(commentCreateRequest.getContent())
       .build();
+
+  private static CommentSelectRequest commentSelectRequest = new CommentSelectRequest(
+      productId,
+      Sort.CREATED_AT_ASC
+  );
 
   @BeforeAll
   static void setup() {
     ReflectionTestUtils.setField(writer, "id", userId);
     ReflectionTestUtils.setField(product, "id", productId);
+    ReflectionTestUtils.setField(commentWriter, "id", commentWriterId);
     ReflectionTestUtils.setField(comment, "id", commentId);
   }
 
@@ -196,34 +211,6 @@ class DefaultCommentServiceTest {
       @DisplayName("상품의 전체 댓글을 조회하고 반환한다")
       void ItResponseComment() {
         //given
-        Product product = Product
-            .builder()
-            .title("그림 그려드려요")
-            .description("잘 그려요")
-            .location("전주")
-            .category(HOBBY)
-            .minimumPrice(1000)
-            .images(Collections.emptyList())
-            .writer(new User("제로", "image", "google", "1234", new Group()))
-            .build();
-
-        User commentWriter = new User("레이", "image", "google", "1234", new Group());
-        ReflectionTestUtils.setField(commentWriter, "id", 1L);
-
-        Comment comment = Comment
-            .builder()
-            .writer(commentWriter)
-            .product(product)
-            .content("연예인도 되나요?")
-            .build();
-        long commentId = 1l;
-        ReflectionTestUtils.setField(comment, "id", commentId);
-
-        CommentSelectRequest commentSelectRequest = new CommentSelectRequest(
-            1,
-            Sort.CREATED_AT_ASC
-        );
-
         given(commentRepository.findAllByProduct(any(CommentSelectRequest.class)))
             .willReturn(List.of(comment));
 
@@ -236,8 +223,7 @@ class DefaultCommentServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result
                        .get(0)
-                       .getUserId()
-                       .getValue()).isEqualTo(commentWriter.getId());
+                       .getUserId()).isEqualTo(commentWriter.getId());
         assertThat(result
                        .get(0)
                        .getUsername()).isEqualTo(commentWriter.getUsername());
@@ -277,10 +263,6 @@ class DefaultCommentServiceTest {
       @DisplayName("빈 리스트를 반환한다")
       void ItReturnEmptyList() {
         //given
-        CommentSelectRequest commentSelectRequest = new CommentSelectRequest(
-            1l,
-            Sort.CREATED_AT_ASC
-        );
         given(commentRepository.findAllByProduct(any(CommentSelectRequest.class)))
             .willReturn(Collections.EMPTY_LIST);
 

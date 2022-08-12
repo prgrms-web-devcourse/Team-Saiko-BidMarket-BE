@@ -70,6 +70,40 @@ class CommentApiControllerTest extends ControllerSetUp {
     }
   }
 
+  private static User writer = User
+      .builder()
+      .username("제로")
+      .profileImage("image")
+      .provider("google")
+      .providerId("123")
+      .group(new Group())
+      .build();
+  private static Product product = Product
+      .builder()
+      .title("귤 팔아요")
+      .description("맛있어요")
+      .category(FOOD)
+      .images(List.of("image1"))
+      .location("제주도")
+      .minimumPrice(1000)
+      .writer(writer)
+      .build();
+
+  private static Comment comment = Comment
+      .builder()
+      .writer(writer)
+      .product(product)
+      .content("그냥 주세요")
+      .build();
+  private static long writerId = 1;
+  private static long commentId = 1;
+
+  static void setup() {
+    ReflectionTestUtils.setField(writer, "id", writerId);
+    ReflectionTestUtils.setField(comment, "id", commentId);
+    ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.now());
+  }
+
   @Nested
   @DisplayName("create 메서드는")
   @WithMockCustomLoginUser
@@ -208,35 +242,6 @@ class CommentApiControllerTest extends ControllerSetUp {
       @DisplayName("상품의 댓글을 조회하고 결과를 반환한다")
       void ItReturnCommentList() throws Exception {
         //given
-        User writer = User
-            .builder()
-            .username("제로")
-            .profileImage("image")
-            .provider("google")
-            .providerId("123")
-            .group(new Group())
-            .build();
-        ReflectionTestUtils.setField(writer, "id", 1L);
-
-        Product product = Product
-            .builder()
-            .title("귤 팔아요")
-            .description("맛있어요")
-            .category(FOOD)
-            .images(List.of("image1"))
-            .location("제주도")
-            .minimumPrice(1000)
-            .writer(writer)
-            .build();
-        Comment comment = Comment
-            .builder()
-            .writer(writer)
-            .product(product)
-            .content("그냥 주세요")
-            .build();
-
-        ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.now());
-
         given(commentService.findAllByProduct(any(CommentSelectRequest.class)))
             .willReturn(List.of(CommentSelectResponse.from(comment)));
 
@@ -283,26 +288,6 @@ class CommentApiControllerTest extends ControllerSetUp {
                                     .optional()
                             )
             ));
-      }
-    }
-
-    @Nested
-    @DisplayName("productId 가 null 이라면")
-    class ContextNullProductId {
-
-      @Test
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest() throws Exception {
-        // given
-        // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
-                                                     .get(BASE_URL)
-                                                     .contentType(
-                                                         MediaType.APPLICATION_FORM_URLENCODED)
-                                                     .queryParam("sort", CREATED_AT_ASC.name()));
-
-        // then
-        response.andExpect(status().isBadRequest());
       }
     }
 
