@@ -11,6 +11,6 @@ public interface NotificationService {
 
   void checkNotification(
       long userId,
-      long notificationId
+      long id
   );
 }

@@ -43,13 +43,13 @@ public class DefaultNotificationService implements NotificationService {
   @Override
   public void checkNotification(
       long userId,
-      long notificationId
+      long id
   ) {
     Assert.isTrue(userId > 0, "UserId must be positive");
-    Assert.isTrue(notificationId > 0, "NotificationId must be positive");
+    Assert.isTrue(id > 0, "NotificationId must be positive");
 
     Notification notification = notificationRepository
-        .findById(notificationId)
+        .findById(id)
         .orElseThrow(() -> new NotFoundException("Notification not exist"));
 
     if (notification.isNotPossibleToAccessNotification(userId)) {
