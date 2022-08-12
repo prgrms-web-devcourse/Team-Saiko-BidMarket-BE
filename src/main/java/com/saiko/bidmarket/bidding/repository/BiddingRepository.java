@@ -14,7 +14,5 @@ public interface BiddingRepository extends BiddingCustomRepository, JpaRepositor
 
   void deleteAllBatchByBidderId(long bidderId);
 
-  @Modifying
-  @Query("delete from Bidding b where b.product.writer.id = :writerId and b.product.progressed = true")
-  void deleteAllByWriterId(long writerId);
+  void deleteAllBatchByProductId(long productId);
 }
