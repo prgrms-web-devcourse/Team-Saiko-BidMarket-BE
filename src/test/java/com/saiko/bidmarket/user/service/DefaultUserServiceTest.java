@@ -609,7 +609,8 @@ class DefaultUserServiceTest {
         ReflectionTestUtils.setField(product, "id", 1L);
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
-        when(productRepository.findAllByWriterId(anyLong())).thenReturn(List.of(product));
+        when(productRepository.findAllByWriterIdAndProgressed(anyLong(), anyBoolean()))
+            .thenReturn(List.of(product));
 
         //when
         defaultUserService.deleteUser(sellerId);
