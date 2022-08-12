@@ -65,4 +65,9 @@ public class ChatRoom extends BaseTime {
     return seller.getId() == userId ? winner : seller;
   }
 
+  public void checkParticipant(long userId) {
+    if (seller.getId() != userId && winner.getId() != userId) {
+      throw new IllegalArgumentException("채팅방에 참여중인 사용자가 아닙니다");
+    }
+  }
 }
