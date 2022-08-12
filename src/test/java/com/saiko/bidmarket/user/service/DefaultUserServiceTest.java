@@ -197,12 +197,10 @@ class DefaultUserServiceTest {
         User user = defaultUserService.join(oAuth2User, "google");
 
         //then
-        String savedUserUsername = (String)ReflectionTestUtils.getField(user, User.class,
-                                                                        "username"
-        );
-        String savedUserProfileImg = (String)ReflectionTestUtils.getField(user, User.class,
-                                                                          "profileImage"
-        );
+        String savedUserUsername =
+            (String)ReflectionTestUtils.getField(user, User.class, "username");
+        String savedUserProfileImg =
+            (String)ReflectionTestUtils.getField(user, User.class, "profileImage");
 
         assertAll(
             () -> assertEquals("test", savedUserUsername),
