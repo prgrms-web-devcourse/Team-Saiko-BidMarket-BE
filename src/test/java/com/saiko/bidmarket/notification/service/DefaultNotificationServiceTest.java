@@ -111,6 +111,7 @@ public class DefaultNotificationServiceTest {
                                                                           product.getTitle(),
                                                                           product.getThumbnailImage(),
                                                                           notification.getType(),
+                                                                          notification.isChecked(),
                                                                           notification.getCreatedAt(),
                                                                           notification.getUpdatedAt());
         NotificationSelectResponse notificationSelectResponse = NotificationSelectResponse.from(
@@ -140,6 +141,8 @@ public class DefaultNotificationServiceTest {
             notificationSelectResponse.getType());
         assertThat(notificationSelectResponses.get(0).getContent()).isEqualTo(
             notificationSelectResponse.getContent());
+        assertThat(notificationSelectResponses.get(0).isChecked()).isEqualTo(
+            notificationSelectResponse.isChecked());
       }
     }
   }

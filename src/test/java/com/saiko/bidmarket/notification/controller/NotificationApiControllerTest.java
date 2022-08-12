@@ -104,6 +104,7 @@ public class NotificationApiControllerTest extends ControllerSetUp {
                                                                           product.getTitle(),
                                                                           product.getThumbnailImage(),
                                                                           notification.getType(),
+                                                                          notification.isChecked(),
                                                                           notification.getCreatedAt(),
                                                                           notification.getUpdatedAt());
 
@@ -140,6 +141,8 @@ public class NotificationApiControllerTest extends ControllerSetUp {
                                             .description("알림 타입"),
                     fieldWithPath("[].content").type(JsonFieldType.STRING)
                                             .description("알림 메세지"),
+                    fieldWithPath("[].checked").type(JsonFieldType.BOOLEAN)
+                                               .description("알림 조회 여부"),
                     fieldWithPath("[].createdAt").type(JsonFieldType.STRING)
                                                  .description("알림 생성 시간"),
                     fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
