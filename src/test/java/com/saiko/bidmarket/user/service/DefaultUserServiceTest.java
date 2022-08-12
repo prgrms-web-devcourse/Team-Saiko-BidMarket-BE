@@ -79,8 +79,10 @@ class DefaultUserServiceTest {
       @ValueSource(strings = {"\n", "\t"})
       @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
       void ItThrowsIllegalArgumentException(String src) {
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.findByProviderAndProviderId(src, "123"));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultUserService.findByProviderAndProviderId(src, "123")
+        );
       }
     }
 
@@ -93,8 +95,10 @@ class DefaultUserServiceTest {
       @ValueSource(strings = {"\n", "\t"})
       @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
       void ItThrowsIllegalArgumentException(String src) {
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.findByProviderAndProviderId("123", src));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultUserService.findByProviderAndProviderId("123", src)
+        );
 
       }
     }
@@ -126,10 +130,13 @@ class DefaultUserServiceTest {
       @DisplayName("IllegalArgumentException 에러를 발생 시킨다")
       void ItThrowsIllegalArgumentException(String src) {
         OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(), Map.of("1", "1"),
-                                                      "1");
+                                                      "1"
+        );
 
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.join(oAuth2User, src));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> defaultUserService.join(oAuth2User, src)
+        );
       }
     }
 
@@ -145,7 +152,8 @@ class DefaultUserServiceTest {
         String providerId = "testProviderId";
         User user = new User("username", "test", provider, providerId, new Group());
         OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(),
-                                                      Map.of("name", providerId), "name");
+                                                      Map.of("name", providerId), "name"
+        );
         given(userRepository.findByProviderAndProviderId(anyString(), anyString())).willReturn(
             Optional.of(user));
         //when
@@ -153,9 +161,14 @@ class DefaultUserServiceTest {
 
         //then
         String joinedUserProvider = (String)ReflectionTestUtils.getField(joinedUser, "provider");
-        String joinedUserProviderId = (String)ReflectionTestUtils.getField(joinedUser,
-                                                                           "providerId");
-        assertAll(() -> assertEquals(provider, joinedUserProvider), () -> assertEquals(providerId, joinedUserProviderId));
+        String joinedUserProviderId = (String)ReflectionTestUtils.getField(
+            joinedUser,
+            "providerId"
+        );
+        assertAll(
+            () -> assertEquals(provider, joinedUserProvider),
+            () -> assertEquals(providerId, joinedUserProviderId)
+        );
       }
     }
 
@@ -183,11 +196,16 @@ class DefaultUserServiceTest {
 
         //then
         String savedUserUsername = (String)ReflectionTestUtils.getField(user, User.class,
-                                                                        "username");
+                                                                        "username"
+        );
         String savedUserProfileImg = (String)ReflectionTestUtils.getField(user, User.class,
-                                                                          "profileImage");
+                                                                          "profileImage"
+        );
 
-        assertAll(() -> assertEquals("test", savedUserUsername), () -> assertEquals("testUrl", savedUserProfileImg));
+        assertAll(
+            () -> assertEquals("test", savedUserUsername),
+            () -> assertEquals("testUrl", savedUserProfileImg)
+        );
       }
     }
 
@@ -246,8 +264,12 @@ class DefaultUserServiceTest {
         final UserSelectResponse actualUser = defaultUserService.findById(existUserId);
 
         //then
-        Assertions.assertThat(actualUser.getUsername()).isEqualTo(expected.getUsername());
-        Assertions.assertThat(actualUser.getProfileImage()).isEqualTo(expected.getProfileImage());
+        Assertions
+            .assertThat(actualUser.getUsername())
+            .isEqualTo(expected.getUsername());
+        Assertions
+            .assertThat(actualUser.getProfileImage())
+            .isEqualTo(expected.getProfileImage());
       }
     }
   }
@@ -317,8 +339,12 @@ class DefaultUserServiceTest {
         final String actualProfileImage = targetUser.getProfileImage();
 
         //then
-        Assertions.assertThat(actualUsername).isEqualTo(expected);
-        Assertions.assertThat(actualProfileImage).isEqualTo(expected);
+        Assertions
+            .assertThat(actualUsername)
+            .isEqualTo(expected);
+        Assertions
+            .assertThat(actualProfileImage)
+            .isEqualTo(expected);
       }
     }
   }
@@ -367,19 +393,21 @@ class DefaultUserServiceTest {
 
         UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
 
-        Product product = Product.builder()
-                                 .title("감자 팜")
-                                 .description("zz")
-                                 .location("강원도")
-                                 .category(ETC)
-                                 .minimumPrice(15000)
-                                 .images(List.of("testUrl"))
-                                 .writer(writer)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("감자 팜")
+            .description("zz")
+            .location("강원도")
+            .category(ETC)
+            .minimumPrice(15000)
+            .images(List.of("testUrl"))
+            .writer(writer)
+            .build();
         long productId = 1L;
         ReflectionTestUtils.setField(product, "id", productId);
 
-        given(productRepository.findAllUserProduct(any(UserProductSelectQueryParameter.class))).willReturn(List.of(product));
+        given(productRepository.findAllUserProduct(
+            any(UserProductSelectQueryParameter.class))).willReturn(List.of(product));
 
         //when
         final List<UserProductSelectResponse> allUserProducts = defaultUserService.findAllUserProducts(
@@ -387,7 +415,9 @@ class DefaultUserServiceTest {
 
         //then
         assertThat(allUserProducts.size()).isEqualTo(1);
-        assertThat(allUserProducts.get(0).getId()).isEqualTo(productId);
+        assertThat(allUserProducts
+                       .get(0)
+                       .getId()).isEqualTo(productId);
       }
     }
   }
@@ -436,15 +466,16 @@ class DefaultUserServiceTest {
 
         UserBiddingSelectRequest request = new UserBiddingSelectRequest(0, 1, END_DATE_ASC);
 
-        Product product = Product.builder()
-                                 .title("감자 팜")
-                                 .description("zz")
-                                 .location("강원도")
-                                 .category(ETC)
-                                 .minimumPrice(15000)
-                                 .images(List.of("testUrl"))
-                                 .writer(writer)
-                                 .build();
+        Product product = Product
+            .builder()
+            .title("감자 팜")
+            .description("zz")
+            .location("강원도")
+            .category(ETC)
+            .minimumPrice(15000)
+            .images(List.of("testUrl"))
+            .writer(writer)
+            .build();
         long productId = 1L;
         ReflectionTestUtils.setField(product, "id", productId);
 
@@ -452,13 +483,17 @@ class DefaultUserServiceTest {
         long userId = 1L;
         ReflectionTestUtils.setField(bidder, "id", userId);
 
-        Bidding bidding = Bidding.builder()
-                                 .product(product)
-                                 .bidder(bidder)
-                                 .biddingPrice(BiddingPrice.valueOf(20000))
-                                 .build();
+        Bidding bidding = Bidding
+            .builder()
+            .product(product)
+            .bidder(bidder)
+            .biddingPrice(BiddingPrice.valueOf(20000))
+            .build();
 
-        given(biddingRepository.findAllUserBidding(anyLong(), any(UserBiddingSelectRequest.class))).willReturn(
+        given(biddingRepository.findAllUserBidding(
+            anyLong(),
+            any(UserBiddingSelectRequest.class)
+        )).willReturn(
             List.of(bidding));
 
         //when
@@ -466,7 +501,9 @@ class DefaultUserServiceTest {
 
         //then
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getId()).isEqualTo(productId);
+        assertThat(result
+                       .get(0)
+                       .getId()).isEqualTo(productId);
       }
     }
   }
@@ -486,8 +523,9 @@ class DefaultUserServiceTest {
         final long negativeId = -1;
 
         //then
-        Assertions.assertThatThrownBy(() -> defaultUserService.deleteUser(negativeId))
-                  .isInstanceOf(IllegalArgumentException.class);
+        Assertions
+            .assertThatThrownBy(() -> defaultUserService.deleteUser(negativeId))
+            .isInstanceOf(IllegalArgumentException.class);
       }
     }
 
@@ -505,8 +543,9 @@ class DefaultUserServiceTest {
         when(userRepository.findById(notExistUserId)).thenThrow(NotFoundException.class);
 
         //then
-        Assertions.assertThatThrownBy(() -> defaultUserService.deleteUser(notExistUserId))
-                  .isInstanceOf(NotFoundException.class);
+        Assertions
+            .assertThatThrownBy(() -> defaultUserService.deleteUser(notExistUserId))
+            .isInstanceOf(NotFoundException.class);
         verify(userRepository).findById(anyLong());
       }
     }
@@ -519,13 +558,14 @@ class DefaultUserServiceTest {
       @DisplayName("해당 유저의 입찰 정보를 모두 삭제한다.")
       void itDeleteUserBiddings() {
         //given
-        final User bidder = User.builder()
-                                .username("test")
-                                .profileImage("s")
-                                .provider("test")
-                                .providerId("test")
-                                .group(new Group())
-                                .build();
+        final User bidder = User
+            .builder()
+            .username("test")
+            .profileImage("s")
+            .provider("test")
+            .providerId("test")
+            .group(new Group())
+            .build();
 
         ReflectionTestUtils.setField(bidder, "id", 1L);
         final long bidderId = bidder.getId();
@@ -542,13 +582,14 @@ class DefaultUserServiceTest {
       @DisplayName("해당 상품의 입찰을 전부 제거하고, 해당 상품을 모두 종료한다.")
       void itFinishUserProducts() {
         //given
-        final User seller = User.builder()
-                                .username("test")
-                                .profileImage("s")
-                                .provider("test")
-                                .providerId("test")
-                                .group(new Group())
-                                .build();
+        final User seller = User
+            .builder()
+            .username("test")
+            .profileImage("s")
+            .provider("test")
+            .providerId("test")
+            .group(new Group())
+            .build();
 
         ReflectionTestUtils.setField(seller, "id", 1L);
         final long sellerId = seller.getId();
@@ -572,22 +613,20 @@ class DefaultUserServiceTest {
         ReflectionTestUtils.setField(firstProduct, "id", 1L);
         ReflectionTestUtils.setField(secondProduct, "id", 2L);
 
-
         final List<Product> products = List.of(firstProduct, secondProduct);
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
-        when(productRepository.findAllByWriterIdAndProgressed(sellerId, true))
-            .thenReturn(products);
+        when(productRepository.findAllByWriterIdAndProgressed(sellerId, true)).thenReturn(products);
 
         //when
         defaultUserService.deleteUser(sellerId);
 
         //then
-        Assertions.assertThat(products)
-                  .filteredOn(Product::isProgressed)
-                  .isEmpty();
-        verify(biddingRepository, times(2))
-            .deleteAllBatchByProductId(anyLong());
+        Assertions
+            .assertThat(products)
+            .filteredOn(Product::isProgressed)
+            .isEmpty();
+        verify(biddingRepository, times(2)).deleteAllBatchByProductId(anyLong());
       }
     }
   }
