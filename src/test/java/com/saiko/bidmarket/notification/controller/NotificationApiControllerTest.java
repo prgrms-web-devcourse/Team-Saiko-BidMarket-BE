@@ -246,7 +246,7 @@ public class NotificationApiControllerTest extends ControllerSetUp {
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
-            .put(BASE_URL + "/{notificationId}", notificationId)
+            .put(BASE_URL + "/{id}", notificationId)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         ResultActions response = mockMvc.perform(request);
@@ -256,7 +256,7 @@ public class NotificationApiControllerTest extends ControllerSetUp {
             .andExpect(status().isOk())
             .andDo(document("Check notification", preprocessRequest(
                                 prettyPrint()), preprocessResponse(prettyPrint()), pathParameters(
-                                parameterWithName("notificationId").description("알림 아이디")
+                                parameterWithName("id").description("알림 아이디")
                             )
             ));
       }
@@ -274,7 +274,7 @@ public class NotificationApiControllerTest extends ControllerSetUp {
 
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.put(BASE_URL + "/{notificationId}", notificationId));
+            RestDocumentationRequestBuilders.put(BASE_URL + "/{id}", notificationId));
 
         // then
         response.andExpect(status().isBadRequest());

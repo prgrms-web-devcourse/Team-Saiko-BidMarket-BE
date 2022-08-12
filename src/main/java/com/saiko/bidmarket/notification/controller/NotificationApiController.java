@@ -42,12 +42,12 @@ public class NotificationApiController {
     return notificationService.findAllNotifications(userId, request);
   }
 
-  @PutMapping("{notificationId}")
+  @PutMapping("{id}")
   @ResponseStatus(HttpStatus.OK)
   public void checkNotification(
       @AuthenticationPrincipal JwtAuthentication authentication,
-      @PathVariable long notificationId
+      @PathVariable long id
   ) {
-    notificationService.checkNotification(authentication.getUserId(), notificationId);
+    notificationService.checkNotification(authentication.getUserId(), id);
   }
 }
