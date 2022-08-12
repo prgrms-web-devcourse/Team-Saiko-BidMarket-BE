@@ -112,8 +112,7 @@ class DefaultUserServiceTest {
       @Test
       @DisplayName("IllegalArgumentException")
       void ItIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class,
-                     () -> defaultUserService.join(null, "123"));
+        assertThrows(IllegalArgumentException.class, () -> defaultUserService.join(null, "123"));
       }
     }
 
@@ -126,8 +125,7 @@ class DefaultUserServiceTest {
       @ValueSource(strings = {"\t", "\n"})
       @DisplayName("IllegalArgumentException 에러를 발생 시킨다")
       void ItThrowsIllegalArgumentException(String src) {
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(),
-                                                      Map.of("1", "1"),
+        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(), Map.of("1", "1"),
                                                       "1");
 
         assertThrows(IllegalArgumentException.class,
@@ -157,10 +155,7 @@ class DefaultUserServiceTest {
         String joinedUserProvider = (String)ReflectionTestUtils.getField(joinedUser, "provider");
         String joinedUserProviderId = (String)ReflectionTestUtils.getField(joinedUser,
                                                                            "providerId");
-        assertAll(
-            () -> assertEquals(provider, joinedUserProvider),
-            () -> assertEquals(providerId, joinedUserProviderId)
-        );
+        assertAll(() -> assertEquals(provider, joinedUserProvider), () -> assertEquals(providerId, joinedUserProviderId));
       }
     }
 
@@ -175,8 +170,8 @@ class DefaultUserServiceTest {
         Group userGroup = new Group();
         ReflectionTestUtils.setField(userGroup, "name", "USER_GROUP");
         given(groupService.findByName(anyString())).willReturn(userGroup);
-        given(userRepository.findByProviderAndProviderId(anyString(), anyString()))
-            .willReturn(Optional.empty());
+        given(userRepository.findByProviderAndProviderId(anyString(), anyString())).willReturn(
+            Optional.empty());
 
         given(groupService.findByName(anyString())).willReturn(new Group());
         Map<String, Object> attributes = Map.of("name", "test", "picture", "testUrl");
@@ -192,10 +187,7 @@ class DefaultUserServiceTest {
         String savedUserProfileImg = (String)ReflectionTestUtils.getField(user, User.class,
                                                                           "profileImage");
 
-        assertAll(
-            () -> assertEquals("test", savedUserUsername),
-            () -> assertEquals("testUrl", savedUserProfileImg)
-        );
+        assertAll(() -> assertEquals("test", savedUserUsername), () -> assertEquals("testUrl", savedUserProfileImg));
       }
     }
 
@@ -214,8 +206,8 @@ class DefaultUserServiceTest {
       @DisplayName("IllegalArgumentException을 반환한다.")
       void itThrowIllegalArgumentException(long id) {
         //then
-        assertThatThrownBy(() -> defaultUserService.findById(id))
-            .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> defaultUserService.findById(id)).isInstanceOf(
+            IllegalArgumentException.class);
       }
     }
 
@@ -230,8 +222,8 @@ class DefaultUserServiceTest {
         final long notExistUserId = 1;
 
         //then
-        assertThatThrownBy(() -> defaultUserService.findById(notExistUserId))
-            .isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> defaultUserService.findById(notExistUserId)).isInstanceOf(
+            NotFoundException.class);
       }
     }
 
@@ -244,13 +236,7 @@ class DefaultUserServiceTest {
       void itReturnExistUser() {
         //given
         final long existUserId = 1;
-        final User existUser = new User(
-            "test",
-            "test",
-            "test",
-            "test",
-            new Group()
-        );
+        final User existUser = new User("test", "test", "test", "test", new Group());
         ReflectionTestUtils.setField(existUser, "id", 1L);
         final UserSelectResponse expected = UserSelectResponse.from(existUser);
 
@@ -261,8 +247,7 @@ class DefaultUserServiceTest {
 
         //then
         Assertions.assertThat(actualUser.getUsername()).isEqualTo(expected.getUsername());
-        Assertions.assertThat(actualUser.getProfileImage())
-                  .isEqualTo(expected.getProfileImage());
+        Assertions.assertThat(actualUser.getProfileImage()).isEqualTo(expected.getProfileImage());
       }
     }
   }
@@ -283,8 +268,8 @@ class DefaultUserServiceTest {
         final UserUpdateRequest request = null;
 
         //then
-        assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
-            .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> defaultUserService.updateUser(userId, request)).isInstanceOf(
+            IllegalArgumentException.class);
       }
     }
 
@@ -303,8 +288,8 @@ class DefaultUserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> defaultUserService.updateUser(userId, request))
-            .isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> defaultUserService.updateUser(userId, request)).isInstanceOf(
+            NotFoundException.class);
       }
     }
 
@@ -318,11 +303,7 @@ class DefaultUserServiceTest {
         //given
         final long userId = 1;
         final UserUpdateRequest request = new UserUpdateRequest("update", "update");
-        final User targetUser = new User("before",
-                                         "before",
-                                         "provider",
-                                         "providerId",
-                                         new Group());
+        final User targetUser = new User("before", "before", "provider", "providerId", new Group());
 
         ReflectionTestUtils.setField(targetUser, "id", 1L);
 
@@ -356,8 +337,8 @@ class DefaultUserServiceTest {
       void ItThrowsIllegalArgumentException(long src) {
         UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
 
-        assertThatThrownBy(() -> defaultUserService.findAllUserProducts(src, request))
-            .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> defaultUserService.findAllUserProducts(src, request)).isInstanceOf(
+            IllegalArgumentException.class);
       }
     }
 
@@ -369,8 +350,8 @@ class DefaultUserServiceTest {
       @ValueSource(longs = {1, Long.MAX_VALUE})
       @DisplayName("IllegalArgumentException 에러를 발생시킨다")
       void ItIllegalArgumentException(long src) {
-        assertThatThrownBy(() -> defaultUserService.findAllUserProducts(src, null))
-            .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> defaultUserService.findAllUserProducts(src, null)).isInstanceOf(
+            IllegalArgumentException.class);
       }
     }
 
@@ -398,8 +379,7 @@ class DefaultUserServiceTest {
         long productId = 1L;
         ReflectionTestUtils.setField(product, "id", productId);
 
-        given(productRepository.findAllUserProduct(any(UserProductSelectQueryParameter.class)))
-            .willReturn(List.of(product));
+        given(productRepository.findAllUserProduct(any(UserProductSelectQueryParameter.class))).willReturn(List.of(product));
 
         //when
         final List<UserProductSelectResponse> allUserProducts = defaultUserService.findAllUserProducts(
@@ -426,8 +406,8 @@ class DefaultUserServiceTest {
       void ItThrowsIllegalArgumentException(long src) {
         UserBiddingSelectRequest request = new UserBiddingSelectRequest(0, 1, END_DATE_ASC);
 
-        assertThatThrownBy(() -> defaultUserService.findAllUserBiddings(src, request))
-            .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> defaultUserService.findAllUserBiddings(src, request)).isInstanceOf(
+            IllegalArgumentException.class);
       }
     }
 
@@ -439,8 +419,8 @@ class DefaultUserServiceTest {
       @ValueSource(longs = {1, Long.MAX_VALUE})
       @DisplayName("IllegalArgumentException 에러를 발생시킨다")
       void ItIllegalArgumentException(long src) {
-        assertThatThrownBy(() -> defaultUserService.findAllUserBiddings(src, null))
-            .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> defaultUserService.findAllUserBiddings(src, null)).isInstanceOf(
+            IllegalArgumentException.class);
       }
     }
 
@@ -478,12 +458,11 @@ class DefaultUserServiceTest {
                                  .biddingPrice(BiddingPrice.valueOf(20000))
                                  .build();
 
-        given(biddingRepository.findAllUserBidding(anyLong(), any(UserBiddingSelectRequest.class)))
-            .willReturn(List.of(bidding));
+        given(biddingRepository.findAllUserBidding(anyLong(), any(UserBiddingSelectRequest.class))).willReturn(
+            List.of(bidding));
 
         //when
-        List<UserBiddingSelectResponse> result = defaultUserService.findAllUserBiddings(1,
-                                                                                        request);
+        List<UserBiddingSelectResponse> result = defaultUserService.findAllUserBiddings(1, request);
 
         //then
         assertThat(result.size()).isEqualTo(1);
@@ -556,7 +535,7 @@ class DefaultUserServiceTest {
         defaultUserService.deleteUser(bidderId);
 
         //then
-        verify(biddingRepository).deleteAllByBidderId(anyLong());
+        verify(biddingRepository).deleteAllBatchByBidderId(anyLong());
       }
 
       @Test
@@ -579,13 +558,12 @@ class DefaultUserServiceTest {
                                                       .minimumPrice(1000)
                                                       .writer(seller)
                                                       .description("test")
-                                                      .build(),
-                                               Product.builder()
-                                                      .title("test")
-                                                      .minimumPrice(1000)
-                                                      .writer(seller)
-                                                      .description("test")
-                                                      .build());
+                                                      .build(), Product.builder()
+                                                                       .title("test")
+                                                                       .minimumPrice(1000)
+                                                                       .writer(seller)
+                                                                       .description("test")
+                                                                       .build());
 
         //when
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
@@ -593,8 +571,9 @@ class DefaultUserServiceTest {
         defaultUserService.deleteUser(sellerId);
 
         //then
-        Assertions.assertThat(products.get(0).isProgressed()).isEqualTo(false);
-        Assertions.assertThat(products.get(0).isProgressed()).isEqualTo(false);
+        Assertions.assertThat(products)
+                  .filteredOn(Product::isProgressed)
+                  .isEmpty();
       }
     }
   }
