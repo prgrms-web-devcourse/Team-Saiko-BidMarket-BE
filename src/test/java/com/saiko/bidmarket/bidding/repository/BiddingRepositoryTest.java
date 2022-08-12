@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -231,6 +232,77 @@ public class BiddingRepositoryTest {
         // then
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).isEqualTo(bidding);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("deleteAllByWriterId 메서드는")
+  class DescribeDeleteAllByWriterId {
+
+    @Nested
+    @DisplayName("호출되면")
+    class ContextCall {
+
+      @Test
+      @DisplayName("상품 작성자에 대한 모든 진행중인 상품의 입찰을 삭제한다.")
+      void itDeleteAllBiddingOfProgressProducts() {
+        //given
+        Group group = groupRepository
+            .findById(1L)
+            .get();
+
+        final User seller = userRepository.save(
+            User
+                .builder()
+                .username("test")
+                .provider("test")
+                .providerId("test")
+                .group(group)
+                .profileImage("test")
+                .build()
+        );
+
+        final User bidder = userRepository.save(
+            User
+                .builder()
+                .username("test2")
+                .provider("test2")
+                .providerId("test2")
+                .group(group)
+                .profileImage("test")
+                .build()
+        );
+
+        final Product firstProduct = productRepository.save(
+            Product
+                .builder()
+                .title("test")
+                .category(Category.BEAUTY)
+                .description("test")
+                .minimumPrice(2000)
+                .location("test")
+                .writer(seller)
+                .images(List.of("ss"))
+                .build()
+        );
+
+        final Bidding bidding = biddingRepository.save(
+            Bidding
+                .builder()
+                .biddingPrice(BiddingPrice.valueOf(3000))
+                .bidder(bidder)
+                .product(firstProduct)
+                .build()
+        );
+
+        //when
+        biddingRepository.deleteAllByWriterId(seller.getId());
+        final Optional<Bidding> actual = biddingRepository.findById(bidding.getId());
+
+        //then
+        Assertions.assertThat(actual).isEqualTo(Optional.empty());
+
       }
     }
   }
