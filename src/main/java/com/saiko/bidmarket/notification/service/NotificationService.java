@@ -8,4 +8,9 @@ import com.saiko.bidmarket.notification.controller.dto.NotificationSelectRespons
 
 public interface NotificationService {
   List<NotificationSelectResponse> findAllNotifications(UnsignedLong userId, NotificationSelectRequest request);
+
+  void checkNotification(
+      long userId,
+      long notificationId
+  );
 }
