@@ -7,7 +7,6 @@ import com.saiko.bidmarket.chat.entity.ChatMessage;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
@@ -17,7 +16,7 @@ public class ChatMessageSelectResponse {
   private final String content;
   private final LocalDateTime createdAt;
 
-  public static ChatMessageSelectResponse of(ChatMessage chatMessage) {
+  public static ChatMessageSelectResponse from(ChatMessage chatMessage) {
     return ChatMessageSelectResponse
         .builder()
         .userId(chatMessage.getSender().getId())

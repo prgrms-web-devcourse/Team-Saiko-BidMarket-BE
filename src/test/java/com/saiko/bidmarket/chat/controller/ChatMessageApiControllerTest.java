@@ -69,7 +69,7 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
             .queryParam("offset", "0")
             .queryParam("limit", "10");
 
-        ChatMessageSelectResponse response = ChatMessageSelectResponse.of(chatMessage);
+        ChatMessageSelectResponse response = ChatMessageSelectResponse.from(chatMessage);
 
         given(chatMessageService.findAll(anyLong(), anyLong(), any(ChatMessageSelectRequest.class)))
             .willReturn(List.of(response));
