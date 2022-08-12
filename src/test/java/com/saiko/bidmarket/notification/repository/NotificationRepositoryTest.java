@@ -127,6 +127,7 @@ public class NotificationRepositoryTest {
         assertThat(result.get(0).getTitle()).isEqualTo(product.getTitle());
         assertThat(result.get(0).getThumbnailImage()).isEqualTo(product.getThumbnailImage());
         assertThat(result.get(0).getType()).isEqualTo(notification.getType());
+        assertThat(result.get(0).isChecked()).isFalse();
       }
     }
   }
