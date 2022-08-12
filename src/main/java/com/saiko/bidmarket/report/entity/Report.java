@@ -43,13 +43,12 @@ public class Report extends BaseTime {
   @NotNull
   private long typeId;
 
-
-
   @Builder
   private Report(String reason, User fromUser, User toUser, Type type, long typeId) {
     Assert.hasText(reason, "Reason must contain contexts");
     Assert.notNull(fromUser, "From user must be provided");
     Assert.notNull(toUser, "To user must be provided");
+    // TODO: type, typeId Validation 추가 필요(테스트 수정시에 함께 작업)
 
     this.reason = reason;
     this.fromUser = fromUser;
