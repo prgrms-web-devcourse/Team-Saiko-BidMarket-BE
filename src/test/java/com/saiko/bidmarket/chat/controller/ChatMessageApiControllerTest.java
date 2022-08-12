@@ -34,6 +34,7 @@ import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.util.ControllerSetUp;
+import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
 @WebMvcTest(controllers = ChatMessageApiController.class)
 class ChatMessageApiControllerTest extends ControllerSetUp {
@@ -45,6 +46,7 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
   @DisplayName("getAll 메서드는")
   class DescribeGetAll {
 
+    @WithMockCustomLoginUser
     @Nested
     @DisplayName("유효한 값이 전달되면")
     class ContextWithCall {
@@ -104,6 +106,7 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
       }
     }
 
+    @WithMockCustomLoginUser
     @Nested
     @DisplayName("메시지 조회 시작번호 가 숫자가 아닌경우")
     class ContextWithNonNumberOffset {
@@ -126,6 +129,7 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
       }
     }
 
+    @WithMockCustomLoginUser
     @Nested
     @DisplayName("메시지 조회 시작번호가 음수인 경우")
     class ContextWithNegativeNumberOffset {
@@ -152,6 +156,7 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
     @DisplayName("메시지 조회 개수 가 숫자가 아닌경우")
     class ContextWithNonNumberLimit {
 
+      @WithMockCustomLoginUser
       @Test
       @DisplayName("BadRequest 를 응답한다")
       void ItResponseBadRequest() throws Exception {
@@ -169,6 +174,7 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
       }
     }
 
+    @WithMockCustomLoginUser
     @Nested
     @DisplayName("메시지 조회 개수가 양수가 아닌 경우")
     class ContextWithNonPositiveNumberLimit {
@@ -188,6 +194,27 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
 
         //then
         perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("유저가 권한이 없는 경우")
+    class ContextWithNonAuthorizedMember {
+
+      @Test
+      @DisplayName("forbidden 을 응답한다")
+      void ItResponseForbidden() throws Exception {
+        String requestUri = "/api/v1/chatRooms/{chatRoomId}/messages";
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(requestUri, 1)
+            .queryParam("offset", "0")
+            .queryParam("limit", "10");
+
+        //when
+        ResultActions perform = mockMvc.perform(request);
+
+        //then
+        perform.andExpect(status().isForbidden());
       }
     }
   }
