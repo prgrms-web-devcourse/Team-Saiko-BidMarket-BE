@@ -10,5 +10,9 @@ import com.saiko.bidmarket.chat.service.dto.ChatMessageCreateParam;
 public interface ChatMessageService {
   ChatPublishMessage create(ChatMessageCreateParam createParam);
 
-  List<ChatMessageSelectResponse> findAll(long chatRoomId, ChatMessageSelectRequest request);
+  List<ChatMessageSelectResponse> findAll(
+      long userId,
+      long chatRoomId,
+      ChatMessageSelectRequest request
+  );
 }
