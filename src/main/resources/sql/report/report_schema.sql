@@ -6,8 +6,8 @@ CREATE TABLE `report`
     reason          text         not null,
     from_user_id    bigint       not null,
     to_user_id      bigint       not null,
-    `type`          varchar(16)  not null,
-    type_id         bigint       not null,
+    `type`          varchar(16),
+    type_id         bigint,
     created_at      timestamp    not null,
     updated_at      timestamp
 );
