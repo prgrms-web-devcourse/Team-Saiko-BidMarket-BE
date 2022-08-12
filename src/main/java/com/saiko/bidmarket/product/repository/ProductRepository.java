@@ -16,5 +16,5 @@ public interface ProductRepository extends ProductCustomRepository, JpaRepositor
   @Query("select p from Product p join fetch p.writer where p.id = :id")
   Optional<Product> findByIdJoinWithUser(long id);
 
-  List<Product> findAllByWriterId(long useId);
+  List<Product> findAllByWriterIdAndProgressed(long useId, boolean progressed);
 }
