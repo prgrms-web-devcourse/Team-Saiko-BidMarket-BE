@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.util.Assert;
 
@@ -39,19 +38,31 @@ public class Report extends BaseTime {
   @ManyToOne(fetch = FetchType.LAZY)
   private User toUser;
 
-  @NotNull
   @Enumerated(value = EnumType.STRING)
   private Type type;
 
-  @NotNull
-  private long typeId;
+  private Long typeId;
 
   @Builder
-  private Report(String reason, User fromUser, User toUser, Type type, long typeId) {
+  private Report(
+      String reason,
+      User fromUser,
+      User toUser
+  ) {
+    this(reason, fromUser, toUser, null, null);
+  }
+
+  @Builder(builderMethodName = "builderWithType", buildMethodName = "buildWithType")
+  private Report(
+      String reason,
+      User fromUser,
+      User toUser,
+      Type type,
+      Long typeId
+  ) {
     Assert.hasText(reason, "Reason must contain contexts");
     Assert.notNull(fromUser, "From user must be provided");
     Assert.notNull(toUser, "To user must be provided");
-    // TODO: type, typeId Validation 추가 필요(테스트 수정시에 함께 작업)
 
     this.reason = reason;
     this.fromUser = fromUser;
@@ -59,7 +70,22 @@ public class Report extends BaseTime {
     this.type = type;
     this.typeId = typeId;
 
+    validate();
+  }
+
+  private void validate() {
     validateUsers();
+    validateTypeAndTypeId();
+  }
+
+  private void validateTypeAndTypeId() {
+    if ((type == null) != (typeId == null)) {
+      throw new IllegalArgumentException("type과 typeId 둘 중 하나만 null일 수 없습니다.");
+    }
+
+    if (typeId != null && typeId < 1) {
+      throw new IllegalArgumentException("typeId는 null이 아니라면 양수입니다.");
+    }
   }
 
   private void validateUsers() {
