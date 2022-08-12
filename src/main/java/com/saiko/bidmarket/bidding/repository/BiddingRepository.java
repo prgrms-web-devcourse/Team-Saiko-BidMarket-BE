@@ -11,4 +11,6 @@ public interface BiddingRepository extends BiddingCustomRepository, JpaRepositor
   List<Bidding> findAllByProductOrderByBiddingPriceDesc(Product product);
 
   void deleteAllBatchByBidderId(long bidderId);
+
+  void deleteAllBatchByProductId(long productId);
 }
