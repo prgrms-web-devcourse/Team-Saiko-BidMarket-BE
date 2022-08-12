@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.util.Assert;
 
@@ -36,8 +37,16 @@ public class Report extends BaseTime {
   @ManyToOne(fetch = FetchType.LAZY)
   private User toUser;
 
+  @NotNull
+  private Type type;
+
+  @NotNull
+  private long typeId;
+
+
+
   @Builder
-  private Report(String reason, User fromUser, User toUser) {
+  private Report(String reason, User fromUser, User toUser, Type type, long typeId) {
     Assert.hasText(reason, "Reason must contain contexts");
     Assert.notNull(fromUser, "From user must be provided");
     Assert.notNull(toUser, "To user must be provided");
@@ -45,6 +54,8 @@ public class Report extends BaseTime {
     this.reason = reason;
     this.fromUser = fromUser;
     this.toUser = toUser;
+    this.type = type;
+    this.typeId = typeId;
 
     validateUsers();
   }
@@ -53,5 +64,10 @@ public class Report extends BaseTime {
     if (fromUser.equals(toUser)) {
       throw new IllegalArgumentException("신고자와 피신고자는 같을 수 없습니다");
     }
+  }
+
+  public enum Type {
+    PRODUCT,
+    COMMENT
   }
 }
