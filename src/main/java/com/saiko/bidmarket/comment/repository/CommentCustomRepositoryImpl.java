@@ -38,8 +38,7 @@ public class CommentCustomRepositoryImpl
         .fetchJoin()
         .where(
             comment.product.id.eq(commentSelectRequest
-                                      .getProductId()
-                                      .getValue()))
+                                      .getProductId()))
         .orderBy(getOrderSpecifier(commentSelectRequest.getSort()))
         .fetch();
   }
