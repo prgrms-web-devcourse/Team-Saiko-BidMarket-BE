@@ -2,9 +2,7 @@ package com.saiko.bidmarket.chat.repository;
 
 import static java.lang.Thread.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.awaitility.Awaitility.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,13 +10,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectRequest;
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.common.config.QueryDslConfig;
@@ -60,12 +57,12 @@ public class ChatMessageRepositoryTest {
   }
 
   @Nested
-  @DisplayName("")
-  class Describe {
+  @DisplayName("findLastChatMessageOfChatRoom 메서드는")
+  class DescribeFindLastChatMessageOfChatRoom {
 
     @Nested
-    @DisplayName("")
-    class ContextWith {
+    @DisplayName("호출되면")
+    class ContextWithCall {
 
       @Test
       @DisplayName("해당 채팅방의 마지막 채팅 메시지를 반환한다")
@@ -77,14 +74,14 @@ public class ChatMessageRepositoryTest {
         productRepository.save(product);
 
         ChatRoom chatRoom = getChatRoom(seller, winner, product);
-        long chatRoomId = chatRoomRepository.save(chatRoom).getId();
+        long chatRoomId = chatRoomRepository
+            .save(chatRoom)
+            .getId();
 
         ChatMessage sellerMsg1 = getChatMessage(chatRoom, seller, "팜");
         ChatMessage winnerMsg1 = getChatMessage(chatRoom, winner, "삼");
         chatMessageRepository.save(sellerMsg1);
-
-        ReflectionTestUtils.setField(sellerMsg1, "createdAt", LocalDateTime.of(2022, 2,2,2,2));
-        ReflectionTestUtils.setField(winnerMsg1, "createdAt", LocalDateTime.of(2022, 2,2,2,30));
+        sleep(1000);
         chatMessageRepository.save(winnerMsg1);
 
         @SuppressWarnings("all")
@@ -92,6 +89,39 @@ public class ChatMessageRepositoryTest {
             .findLastChatMessageOfChatRoom(chatRoomId)
             .get();
         assertThat(lastMessage.getMessage()).isEqualTo("삼");
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findAllChatMessage 메서드는")
+  class DescribeFindAllChatMessage {
+
+    @Nested
+    @DisplayName("호출되면")
+    class ContextWithCall {
+
+      @Test
+      @DisplayName("해당 채팅방의 메시지를 페이지 범위만큼 반환한다")
+      void ItResponseChatMessages() throws InterruptedException {
+        User seller = userRepository.save(getUser("1", getUserGroup()));
+        User winner = userRepository.save(getUser("2", getUserGroup()));
+
+        Product product = productRepository.save(getProduct(seller));
+        ChatRoom chatRoom = chatRoomRepository.save(getChatRoom(seller, winner, product));
+
+        generateAndSaveTestMessage(chatRoom, seller, winner);
+
+        ChatMessageSelectRequest request = new ChatMessageSelectRequest(0, 10);
+
+        //when
+        List<ChatMessage> chatMessages = chatMessageRepository.findAllChatMessage(
+            chatRoom.getId(),
+            request
+        );
+
+        //then
+        assertThat(chatMessages.size()).isEqualTo(10);
       }
     }
   }
@@ -154,5 +184,37 @@ public class ChatMessageRepositoryTest {
         .sender(sender)
         .message(content)
         .build();
+  }
+
+  private List<String> getSellerChatMessages() {
+    return List.of("팔게요", "어디심", "너무 멀어요", "역삼 어때요", "잠실은?", "낼 가능하신가요?");
+  }
+
+  private List<String> getWinnerChatMessages() {
+    return List.of("살게요", "강남이요", "그럼 어디로", "음..", "좋습니다", "넵 2시에 뵙죠");
+  }
+
+
+  private void generateAndSaveTestMessage(
+      ChatRoom chatRoom,
+      User seller,
+      User winner
+  ) throws InterruptedException {
+    List<String> sellerChatMessages = getSellerChatMessages();
+    List<String> winnerChatMessages = getWinnerChatMessages();
+
+    for (int i = 0; i < sellerChatMessages.size(); i++) {
+      saveMessageWithTimeTerm(chatRoom, seller, sellerChatMessages.get(i));
+      saveMessageWithTimeTerm(chatRoom, winner, winnerChatMessages.get(i));
+    }
+  }
+
+  private void saveMessageWithTimeTerm(
+      ChatRoom chatRoom,
+      User user,
+      String msg
+  ) throws InterruptedException {
+    chatMessageRepository.save(getChatMessage(chatRoom, user, msg));
+    sleep(1000);
   }
 }
