@@ -33,6 +33,7 @@ import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
@@ -594,13 +595,27 @@ class DefaultUserServiceTest {
         ReflectionTestUtils.setField(seller, "id", 1L);
         final long sellerId = seller.getId();
 
+        final Product product = Product
+            .builder()
+            .title("test")
+            .category(Category.BEAUTY)
+            .description("test")
+            .minimumPrice(2000)
+            .location("test")
+            .writer(seller)
+            .images(List.of("ss"))
+            .build();
+
+        ReflectionTestUtils.setField(product, "id", 1L);
+
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(seller));
+        when(productRepository.findAllByWriterId(anyLong())).thenReturn(List.of(product));
 
         //when
         defaultUserService.deleteUser(sellerId);
 
         //then
-        verify(biddingRepository).deleteAllByWriterId(anyLong());
+        verify(biddingRepository).deleteAllBatchByProductId(anyLong());
         verify(productRepository).finishByUserId(anyLong());
       }
     }
