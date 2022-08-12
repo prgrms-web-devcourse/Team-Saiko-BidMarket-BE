@@ -18,15 +18,14 @@ import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("api/v1/biddings")
+@RequiredArgsConstructor
 public class BiddingApiController {
 
   private final BiddingService biddingService;
-
-  public BiddingApiController(BiddingService biddingService) {
-    this.biddingService = biddingService;
-  }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)

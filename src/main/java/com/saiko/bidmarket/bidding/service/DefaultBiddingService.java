@@ -15,7 +15,10 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class DefaultBiddingService implements BiddingService {
 
   private final BiddingRepository biddingRepository;
@@ -23,16 +26,6 @@ public class DefaultBiddingService implements BiddingService {
   private final UserRepository userRepository;
 
   private final ProductRepository productRepository;
-
-  public DefaultBiddingService(
-      BiddingRepository biddingRepository,
-      UserRepository userRepository,
-      ProductRepository productRepository
-  ) {
-    this.biddingRepository = biddingRepository;
-    this.userRepository = userRepository;
-    this.productRepository = productRepository;
-  }
 
   @Transactional
   @Override

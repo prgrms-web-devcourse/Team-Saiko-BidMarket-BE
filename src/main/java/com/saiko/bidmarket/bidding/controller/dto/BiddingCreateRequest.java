@@ -3,8 +3,10 @@ package com.saiko.bidmarket.bidding.controller.dto;
 import javax.validation.constraints.Positive;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class BiddingCreateRequest {
 
   @Positive
@@ -12,13 +14,5 @@ public class BiddingCreateRequest {
 
   @Positive
   private final long biddingPrice;
-
-  public BiddingCreateRequest(
-      long productId,
-      long biddingPrice
-  ) {
-    this.productId = productId;
-    this.biddingPrice = biddingPrice;
-  }
 
 }
