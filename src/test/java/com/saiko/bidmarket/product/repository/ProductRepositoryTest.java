@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -718,6 +719,56 @@ public class ProductRepositoryTest {
         assertThat(foundProduct
                        .getWriter()
                        .getClass()).isEqualTo(User.class);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("finishByUserId 메서드는")
+  class DescribeFinishByUserId {
+
+    @Nested
+    @DisplayName("호출되면")
+    class ContextCall {
+
+      @Test
+      @DisplayName("해당 userId 상품들의 progressed를 false로 변경한다.")
+      void itUpdateProgressedToFalse() {
+        //given
+        Group group = groupRepository
+            .findById(1L)
+            .get();
+
+        final User user = userRepository.save(
+            User
+                .builder()
+                .username("test")
+                .provider("test")
+                .providerId("test")
+                .group(group)
+                .profileImage("test")
+                .build()
+        );
+
+        final Product firstProduct = productRepository.save(
+            Product
+                .builder()
+                .title("test")
+                .category(Category.BEAUTY)
+                .description("test")
+                .minimumPrice(2000)
+                .location("test")
+                .writer(user)
+                .images(List.of("ss"))
+                .build()
+        );
+
+        //when
+        productRepository.finishByUserId(user.getId());
+        Product product = productRepository.findById(firstProduct.getId()).get();
+
+        //then
+        Assertions.assertThat(product.isProgressed()).isEqualTo(false);
       }
     }
   }
