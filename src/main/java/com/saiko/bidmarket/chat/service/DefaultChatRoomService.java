@@ -29,6 +29,7 @@ public class DefaultChatRoomService implements ChatRoomService {
   private final UserRepository userRepository;
 
   @Override
+  @Transactional
   public long create(Product product) {
     Assert.notNull(product, "Product must be provided");
 
