@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
@@ -228,10 +230,10 @@ class DefaultBiddingServiceTest {
         given(biddingRepository.save(any())).willReturn(bidding);
 
         // when
-        long actualBiddingId = biddingService.create(bidderId, createRequest);
+        BiddingCreateResponse actualBiddingId = biddingService.create(bidderId, createRequest);
 
         // then
-        assertThat(actualBiddingId).isEqualTo(expectBiddingId);
+        assertThat(actualBiddingId.getId()).isEqualTo(expectBiddingId);
       }
 
     }
@@ -286,13 +288,13 @@ class DefaultBiddingServiceTest {
             .willReturn(Optional.of(bidding));
 
         // when
-        long actualBiddingPrice = biddingService.findBiddingPriceByProductIdAndUserId(
+        BiddingPriceResponse actualBiddingPrice = biddingService.findBiddingPriceByProductIdAndUserId(
             productId,
             biddingId
         );
 
         // then
-        assertThat(actualBiddingPrice).isEqualTo(biddingPrice);
+        assertThat(actualBiddingPrice.getBiddingPrice()).isEqualTo(biddingPrice);
 
       }
     }

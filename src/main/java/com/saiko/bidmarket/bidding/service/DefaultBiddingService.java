@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
@@ -34,7 +36,7 @@ public class DefaultBiddingService implements BiddingService {
 
   @Transactional
   @Override
-  public long create(
+  public BiddingCreateResponse create(
       long userId,
       BiddingCreateRequest createRequest
   ) {
@@ -49,14 +51,15 @@ public class DefaultBiddingService implements BiddingService {
         .orElseThrow(NotFoundException::new);
 
     Bidding bidding = new Bidding(createRequest.getBiddingPrice(), bidder, product);
-
-    return biddingRepository
+    long createdBiddingId = biddingRepository
         .save(bidding)
         .getId();
+
+    return new BiddingCreateResponse(createdBiddingId);
   }
 
   @Override
-  public long findBiddingPriceByProductIdAndUserId(
+  public BiddingPriceResponse findBiddingPriceByProductIdAndUserId(
       long productId,
       long userId
   ) {
@@ -64,6 +67,6 @@ public class DefaultBiddingService implements BiddingService {
         .findByBidderIdAndProductId(userId, productId)
         .orElseThrow(NotFoundException::new);
 
-    return bidding.getBiddingPrice();
+    return new BiddingPriceResponse(bidding.getBiddingPrice());
   }
 }

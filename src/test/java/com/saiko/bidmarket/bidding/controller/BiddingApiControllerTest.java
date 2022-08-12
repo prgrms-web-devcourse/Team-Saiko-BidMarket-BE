@@ -28,6 +28,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 import com.saiko.bidmarket.bidding.service.BiddingService;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.util.ControllerSetUp;
@@ -146,7 +148,7 @@ class BiddingApiControllerTest extends ControllerSetUp {
 
         long biddingId = 1L;
         given(biddingService.create(anyLong(), any(BiddingCreateRequest.class)))
-            .willReturn(biddingId);
+            .willReturn(new BiddingCreateResponse(biddingId));
 
         // when
         ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
@@ -218,7 +220,7 @@ class BiddingApiControllerTest extends ControllerSetUp {
         long productId = 1L;
 
         given(biddingService.findBiddingPriceByProductIdAndUserId(anyLong(), anyLong()))
-            .willReturn(10000L);
+            .willReturn(new BiddingPriceResponse(10000L));
 
         // when
         ResultActions response = mockMvc.perform(
