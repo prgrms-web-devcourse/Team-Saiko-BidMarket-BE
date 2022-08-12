@@ -133,6 +133,7 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.GET, "/api/v1/products/{productId}/result").hasAnyRole("USER", "ADMIN")
         .antMatchers(HttpMethod.GET, "/api/v1/biddings/products/{productId}").hasAnyRole("USER", "ADMIN")
         .antMatchers(HttpMethod.GET, "/api/v1/chatRooms").hasAnyRole("USER", "ADMIN")
+        .antMatchers(HttpMethod.GET, "/api/v1/chatRooms/**").hasAnyRole("USER", "ADMIN")
         .anyRequest().permitAll()
         .and()
         .cors()

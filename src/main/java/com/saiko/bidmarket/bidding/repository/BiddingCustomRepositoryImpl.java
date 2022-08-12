@@ -16,7 +16,6 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.saiko.bidmarket.bidding.entity.Bidding;
-import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 
@@ -30,14 +29,18 @@ public class BiddingCustomRepositoryImpl
   }
 
   @Override
-  public List<Bidding> findAllUserBidding(long userId, UserBiddingSelectRequest request) {
-    Assert.isTrue(userId > 0, "User id must be positive");
+  public List<Bidding> findAllUserBidding(
+      long userId,
+      UserBiddingSelectRequest request
+  ) {
     Assert.notNull(request, "Request must be provided");
 
     return jpaQueryFactory
         .selectFrom(bidding)
-        .join(bidding.product, product).fetchJoin()
-        .join(bidding.bidder, user).fetchJoin()
+        .join(bidding.product, product)
+        .fetchJoin()
+        .join(bidding.bidder, user)
+        .fetchJoin()
         .where(bidding.bidder.id.eq(userId))
         .offset(request.getOffset())
         .limit(request.getLimit())
@@ -46,21 +49,24 @@ public class BiddingCustomRepositoryImpl
   }
 
   @Override
-  public Optional<Bidding> findByBidderIdAndProductId(BiddingPriceFindingRepoDto findingRepoDto) {
-    Assert.notNull(findingRepoDto, "findingRepoDto id must be provided");
-
+  public Optional<Bidding> findByBidderIdAndProductId(
+      long bidderId,
+      long productId
+  ) {
     return Optional.ofNullable(
         jpaQueryFactory
             .selectFrom(bidding)
-            .where(bidding.bidder.id.eq(findingRepoDto.getBidderId().getValue()),
-                   bidding.product.id.eq(findingRepoDto.getProductId().getValue()))
+            .where(
+                bidding.bidder.id.eq(bidderId),
+                bidding.product.id.eq(productId)
+            )
             .fetchFirst());
   }
 
   private OrderSpecifier getOrderSpecifier(Sort sort) {
     if (sort == END_DATE_ASC) {
-      Path<Object> fieldPath = Expressions.path(Object.class, product,
-                                                END_DATE_ASC.getProperty());
+      Path<Object> fieldPath = Expressions.path(Object.class, product, END_DATE_ASC.getProperty());
+
       return new OrderSpecifier(END_DATE_ASC.getOrder(), fieldPath);
     }
     return null;

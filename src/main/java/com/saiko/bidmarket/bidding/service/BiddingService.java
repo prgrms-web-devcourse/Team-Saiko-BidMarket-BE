@@ -1,14 +1,19 @@
 package com.saiko.bidmarket.bidding.service;
 
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
-import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
-import com.saiko.bidmarket.bidding.service.dto.BiddingPriceFindingDto;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 
 public interface BiddingService {
 
-  UnsignedLong create(BiddingCreateDto createDto);
+  BiddingCreateResponse create(
+      long userId,
+      BiddingCreateRequest createRequest
+  );
 
-  BiddingPrice findBiddingPriceByProductIdAndUserId(BiddingPriceFindingDto biddingPriceFindingDto);
+  BiddingPriceResponse findBiddingPriceByProductIdAndUserId(
+      long userId,
+      long productId
+  );
 
 }

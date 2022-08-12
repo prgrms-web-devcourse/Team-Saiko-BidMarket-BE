@@ -228,4 +228,57 @@ public class NotificationApiControllerTest extends ControllerSetUp {
       }
     }
   }
+
+  @Nested
+  @DisplayName("checkNotification 메소드는")
+  @WithMockCustomLoginUser
+  class DescribeCheckNotification {
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidData {
+
+      @Test
+      @DisplayName("유저의 알림 조회 상태를 변경한다")
+      void ItCheckNotification() throws Exception {
+        //given
+        long notificationId = 1L;
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .put(BASE_URL + "/{id}", notificationId)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Check notification", preprocessRequest(
+                                prettyPrint()), preprocessResponse(prettyPrint()), pathParameters(
+                                parameterWithName("id").description("알림 아이디")
+                            )
+            ));
+      }
+    }
+
+    @Nested
+    @DisplayName("notificationId 에 숫자 외에 다른 문자가 들어온다면")
+    class ContextNotNumberNotificationId {
+
+      @Test
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+        String notificationId = "NotNumber";
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders.put(BASE_URL + "/{id}", notificationId));
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+  }
 }

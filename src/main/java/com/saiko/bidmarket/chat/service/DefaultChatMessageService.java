@@ -1,8 +1,14 @@
 package com.saiko.bidmarket.chat.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectRequest;
+import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectResponse;
 import com.saiko.bidmarket.chat.controller.dto.ChatPublishMessage;
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
@@ -44,5 +50,25 @@ public class DefaultChatMessageService implements ChatMessageService {
     ChatMessage savedChatMessage = chatMessageRepository.save(chatMessage);
 
     return ChatPublishMessage.of(savedChatMessage);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<ChatMessageSelectResponse> findAll(
+      long userId,
+      long chatRoomId,
+      ChatMessageSelectRequest request
+  ) {
+    Assert.notNull(request, "Request must be provided");
+    chatRoomRepository
+        .findById(chatRoomId)
+        .orElseThrow(() -> new NotFoundException("ChatRoom not exists"))
+        .checkParticipant(userId);
+
+    return chatMessageRepository
+        .findAllChatMessage(chatRoomId, request)
+        .stream()
+        .map(ChatMessageSelectResponse::from)
+        .collect(Collectors.toUnmodifiableList());
   }
 }

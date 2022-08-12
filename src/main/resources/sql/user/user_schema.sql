@@ -26,8 +26,8 @@ CREATE TABLE `user`
 (
     id            bigint      NOT NULL,
     username      varchar(20) NOT NULL,
-    provider      varchar(20) NOT NULL,
-    provider_id   varchar(80) NOT NULL,
+    provider      varchar(20) DEFAULT NULL,
+    provider_id   varchar(80) DEFAULT NULL,
     profile_image varchar(512) DEFAULT NULL,
     group_id      bigint      NOT NULL,
     created_at    timestamp   NOT NULL,

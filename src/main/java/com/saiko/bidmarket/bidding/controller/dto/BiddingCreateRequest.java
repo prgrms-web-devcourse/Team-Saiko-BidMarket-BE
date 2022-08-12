@@ -1,24 +1,17 @@
 package com.saiko.bidmarket.bidding.controller.dto;
 
-import javax.validation.constraints.NotNull;
-
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
+import javax.validation.constraints.Positive;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class BiddingCreateRequest {
 
-  @NotNull
-  private final UnsignedLong productId;
+  private final long productId;
 
-  @NotNull
-  private final BiddingPrice biddingPrice;
-
-  public BiddingCreateRequest(long productId, long biddingPrice) {
-    this.productId = UnsignedLong.valueOf(productId);
-    this.biddingPrice = BiddingPrice.valueOf(biddingPrice);
-  }
+  @Positive
+  private final long biddingPrice;
 
 }

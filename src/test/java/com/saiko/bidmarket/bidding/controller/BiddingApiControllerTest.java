@@ -27,10 +27,10 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
+import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
 import com.saiko.bidmarket.bidding.service.BiddingService;
-import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
@@ -64,18 +64,6 @@ class BiddingApiControllerTest extends ControllerSetUp {
     }
   }
 
-  static class IdSourceOutOfRange implements ArgumentsProvider {
-
-    @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-      return Stream.of(
-          Arguments.of(Long.MIN_VALUE),
-          Arguments.of(-1),
-          Arguments.of(0)
-      );
-    }
-  }
-
   @Nested
   @DisplayName("create 함수는")
   @WithMockCustomLoginUser
@@ -96,11 +84,14 @@ class BiddingApiControllerTest extends ControllerSetUp {
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
+        given(biddingService.create(anyLong(), any())).willThrow(IllegalArgumentException.class);
+
         // when
         ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.post(BASE_URL)
-                                            .contentType(MediaType.APPLICATION_JSON)
-                                            .content(requestBody));
+            RestDocumentationRequestBuilders
+                .post(BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -124,7 +115,7 @@ class BiddingApiControllerTest extends ControllerSetUp {
 
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
-        given(biddingService.create(any(BiddingCreateDto.class)))
+        given(biddingService.create(anyLong(), any(BiddingCreateRequest.class)))
             .willThrow(NotFoundException.class);
 
         // when
@@ -156,8 +147,8 @@ class BiddingApiControllerTest extends ControllerSetUp {
         String requestBody = objectMapper.writeValueAsString(requestMap);
 
         long biddingId = 1L;
-        given(biddingService.create(any(BiddingCreateDto.class)))
-            .willReturn(UnsignedLong.valueOf(biddingId));
+        given(biddingService.create(anyLong(), any(BiddingCreateRequest.class)))
+            .willReturn(BiddingCreateResponse.from(biddingId));
 
         // when
         ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
@@ -166,23 +157,25 @@ class BiddingApiControllerTest extends ControllerSetUp {
                                                      .content(requestBody));
 
         // then
-        response.andExpect(status().isCreated())
-                .andDo(document("create bidding",
-                                preprocessResponse(prettyPrint()),
-                                requestFields(
-                                    fieldWithPath("productId")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("비딩할 상품 식별자"),
-                                    fieldWithPath("biddingPrice")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("비딩하려는 금액")
-                                ),
-                                responseFields(
-                                    fieldWithPath("id")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("생성된 비딩의 식별자")
-                                )
-                ));
+        response
+            .andExpect(status().isCreated())
+            .andDo(document(
+                "create bidding",
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("productId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("비딩할 상품 식별자"),
+                    fieldWithPath("biddingPrice")
+                        .type(JsonFieldType.NUMBER)
+                        .description("비딩하려는 금액")
+                ),
+                responseFields(
+                    fieldWithPath("id")
+                        .type(JsonFieldType.NUMBER)
+                        .description("생성된 비딩의 식별자")
+                )
+            ));
 
       }
     }
@@ -195,25 +188,6 @@ class BiddingApiControllerTest extends ControllerSetUp {
     private final static String API_PATH = "/products/{productId}";
 
     @Nested
-    @DisplayName("잘못된 상품 id가 들어올 경우")
-    class ContextInvalidProductId {
-
-      @ParameterizedTest
-      @ArgumentsSource(IdSourceOutOfRange.class)
-      @DisplayName("BadRequest로 응답한다.")
-      void ItResponseWithBadRequest(long productId) throws Exception {
-        // given
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL + API_PATH, productId));
-
-        // then
-        response.andExpect(status().isBadRequest());
-
-      }
-    }
-
-    @Nested
     @DisplayName("요청자가 비더가 아니라면")
     class ContextWithNotBidder {
 
@@ -222,7 +196,7 @@ class BiddingApiControllerTest extends ControllerSetUp {
       void ItResponseWithNotFound() throws Exception {
         // given
         long productId = 1L;
-        given(biddingService.findBiddingPriceByProductIdAndUserId(any()))
+        given(biddingService.findBiddingPriceByProductIdAndUserId(anyLong(), anyLong()))
             .willThrow(NotFoundException.class);
 
         // when
@@ -245,23 +219,25 @@ class BiddingApiControllerTest extends ControllerSetUp {
         // given
         long productId = 1L;
 
-        given(biddingService.findBiddingPriceByProductIdAndUserId(any()))
-            .willReturn(BiddingPrice.valueOf(10000L));
+        given(biddingService.findBiddingPriceByProductIdAndUserId(anyLong(), anyLong()))
+            .willReturn(BiddingPriceResponse.from(10000L));
 
         // when
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders.get(BASE_URL + API_PATH, productId));
 
         // then
-        response.andExpect(status().isOk())
-                .andDo(document("find bidding price by product id and bidder Id",
-                                preprocessResponse(prettyPrint()),
-                                responseFields(
-                                    fieldWithPath("biddingPrice")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("요청자가 해당 상품에비딩한 금액")
-                                )
-                ));
+        response
+            .andExpect(status().isOk())
+            .andDo(document(
+                "find bidding price by product id and bidder Id",
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                    fieldWithPath("biddingPrice")
+                        .type(JsonFieldType.NUMBER)
+                        .description("요청자가 해당 상품에비딩한 금액")
+                )
+            ));
 
       }
     }

@@ -55,4 +55,12 @@ public class Notification extends BaseTime {
     this.product = product;
     this.user = user;
   }
+
+  public boolean isNotPossibleToAccessNotification(long userId) {
+    return !this.user.isSameUser(userId);
+  }
+
+  public void check() {
+    checked = true;
+  }
 }

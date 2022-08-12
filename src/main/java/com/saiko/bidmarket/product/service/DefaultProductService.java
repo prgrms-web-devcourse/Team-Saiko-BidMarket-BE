@@ -14,10 +14,8 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
-import com.saiko.bidmarket.bidding.repository.dto.BiddingPriceFindingRepoDto;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.notification.event.NotificationCreateEvent;
 import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
@@ -138,14 +136,11 @@ public class DefaultProductService implements ProductService {
 
   @Override
   public BiddingResultResponse getBiddingResult(
-      UnsignedLong productId,
-      UnsignedLong userId
+      long productId,
+      long userId
   ) {
-    Assert.notNull(productId, "ProductId must be provided");
-    Assert.notNull(userId, "UserId must be provided");
-
     Product product = productRepository
-        .findByIdJoinWithUser(productId.getValue())
+        .findByIdJoinWithUser(productId)
         .orElseThrow(() -> new NotFoundException(
             "Product not exist"));
 
@@ -156,7 +151,7 @@ public class DefaultProductService implements ProductService {
             .getId()
     );
 
-    if (isSeller(product, userId.getValue())) {
+    if (isSeller(product, userId)) {
       return generateResponseForSeller(product, chatRoom);
     }
 
@@ -176,37 +171,31 @@ public class DefaultProductService implements ProductService {
   ) {
     if (product.hasWinner()) {
       ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
-      return BiddingResultResponse.responseForSuccessfulSeller(
-          UnsignedLong.valueOf(chatRoom.getId()));
+      return BiddingResultResponse.responseForSuccessfulSeller(chatRoom.getId());
     }
     return BiddingResultResponse.responseForFailedSeller();
   }
 
   private BiddingResultResponse generateResponseForBidder(
-      UnsignedLong productId,
-      UnsignedLong userId,
+      long productId,
+      long userId,
       Optional<ChatRoom> optionalChatRoom
   ) {
     Bidding biddingOfUser = findBiddingOfUser(productId, userId);
     if (biddingOfUser.isWon()) {
       ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
       return BiddingResultResponse.responseForSuccessfulBidder(
-          UnsignedLong.valueOf(chatRoom.getId()));
+          chatRoom.getId());
     }
     return BiddingResultResponse.responseForFailedBidder();
   }
 
   private Bidding findBiddingOfUser(
-      UnsignedLong productId,
-      UnsignedLong userId
+      long productId,
+      long userId
   ) {
-    BiddingPriceFindingRepoDto request = BiddingPriceFindingRepoDto
-        .builder()
-        .bidderId(userId)
-        .productId(productId)
-        .build();
     return biddingRepository
-        .findByBidderIdAndProductId(request)
+        .findByBidderIdAndProductId(userId, productId)
         .orElseThrow(() -> new NotFoundException("Bidding not exist"));
   }
 

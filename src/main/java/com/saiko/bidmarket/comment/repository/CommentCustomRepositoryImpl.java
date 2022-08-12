@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-
 public class CommentCustomRepositoryImpl
     implements CommentCustomRepository {
   private final JPAQueryFactory jpaQueryFactory;
@@ -39,8 +38,7 @@ public class CommentCustomRepositoryImpl
         .fetchJoin()
         .where(
             comment.product.id.eq(commentSelectRequest
-                                      .getProductId()
-                                      .getValue()))
+                                      .getProductId()))
         .orderBy(getOrderSpecifier(commentSelectRequest.getSort()))
         .fetch();
   }

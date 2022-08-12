@@ -1,15 +1,16 @@
 package com.saiko.bidmarket.bidding.controller.dto;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
-
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BiddingCreateResponse {
 
-  private final UnsignedLong id;
+  private final long id;
 
-  public BiddingCreateResponse(UnsignedLong id) {
-    this.id = id;
+  public static BiddingCreateResponse from(long id) {
+    return new BiddingCreateResponse(id);
   }
 }

@@ -15,62 +15,41 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateRequest;
 import com.saiko.bidmarket.bidding.controller.dto.BiddingCreateResponse;
 import com.saiko.bidmarket.bidding.controller.dto.BiddingPriceResponse;
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
 import com.saiko.bidmarket.bidding.service.BiddingService;
-import com.saiko.bidmarket.bidding.service.dto.BiddingCreateDto;
-import com.saiko.bidmarket.bidding.service.dto.BiddingPriceFindingDto;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("api/v1/biddings")
+@RequiredArgsConstructor
 public class BiddingApiController {
 
   private final BiddingService biddingService;
 
-  public BiddingApiController(BiddingService biddingService) {
-    this.biddingService = biddingService;
-  }
-
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public BiddingCreateResponse create(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @RequestBody @Valid BiddingCreateRequest biddingCreateRequest
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @RequestBody @Valid
+      BiddingCreateRequest biddingCreateRequest
   ) {
-    BiddingPrice biddingPrice = biddingCreateRequest.getBiddingPrice();
-    UnsignedLong productId = biddingCreateRequest.getProductId();
-    UnsignedLong bidderId = UnsignedLong.valueOf(authentication.getUserId());
+    return biddingService.create(authentication.getUserId(), biddingCreateRequest);
 
-    BiddingCreateDto createDto = BiddingCreateDto.builder()
-                                                 .biddingPrice(biddingPrice)
-                                                 .productId(productId)
-                                                 .bidderId(bidderId)
-                                                 .build();
-
-    UnsignedLong createdBiddingId = biddingService.create(createDto);
-
-    return new BiddingCreateResponse(createdBiddingId);
   }
 
   @GetMapping("products/{productId}")
   @ResponseStatus(HttpStatus.OK)
   public BiddingPriceResponse findBiddingPriceByUserIdAndProductId(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @PathVariable("productId") long pathProductId
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @PathVariable("productId")
+      long pathProductId
   ) {
-    UnsignedLong bidderId = UnsignedLong.valueOf(authentication.getUserId());
-    UnsignedLong productId = UnsignedLong.valueOf(pathProductId);
-
-    BiddingPriceFindingDto findingDto = BiddingPriceFindingDto.builder()
-                                                              .bidderId(bidderId)
-                                                              .productId(productId)
-                                                              .build();
-
-    BiddingPrice biddingPrice = biddingService.findBiddingPriceByProductIdAndUserId(findingDto);
-
-    return BiddingPriceResponse.builder()
-                               .biddingPrice(biddingPrice)
-                               .build();
+    return biddingService.findBiddingPriceByProductIdAndUserId(
+        authentication.getUserId(),
+        pathProductId
+    );
   }
 }

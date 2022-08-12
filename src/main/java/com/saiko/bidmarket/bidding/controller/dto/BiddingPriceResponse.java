@@ -1,21 +1,16 @@
 package com.saiko.bidmarket.bidding.controller.dto;
 
-import org.springframework.util.Assert;
-
-import com.saiko.bidmarket.bidding.entity.BiddingPrice;
-
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BiddingPriceResponse {
 
-  private final BiddingPrice biddingPrice;
+  private final long biddingPrice;
 
-  @Builder
-  private BiddingPriceResponse(BiddingPrice biddingPrice) {
-    Assert.notNull(biddingPrice, "Bidding price must be provided");
-
-    this.biddingPrice = biddingPrice;
+  public static BiddingPriceResponse from(long biddingPrice) {
+    return new BiddingPriceResponse(biddingPrice);
   }
 }

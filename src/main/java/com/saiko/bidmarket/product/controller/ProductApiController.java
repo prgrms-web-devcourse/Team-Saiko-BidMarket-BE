@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
@@ -72,7 +71,9 @@ public class ProductApiController {
       @PathVariable
       long productId
   ) {
-    return productService.getBiddingResult(UnsignedLong.valueOf(productId), UnsignedLong.valueOf(
-        authentication.getUserId()));
+    return productService.getBiddingResult(
+        productId,
+        authentication.getUserId()
+    );
   }
 }
