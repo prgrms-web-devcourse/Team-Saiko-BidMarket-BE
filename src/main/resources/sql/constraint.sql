@@ -154,3 +154,7 @@ ALTER TABLE `user`
 
 ALTER TABLE `report`
     ADD UNIQUE unq_from_user_id_to_user_id (from_user_id, to_user_id);
+
+-- Index
+ALTER TABLE `report`
+    ADD INDEX idx_type_id_type (type_id, `type`);
