@@ -91,8 +91,10 @@ public class UserApiController {
   @PutMapping("{productId}/hearts")
   @ResponseStatus(HttpStatus.OK)
   public void toggleHeart(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @PathVariable long productId
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @PathVariable
+      long productId
   ) {
     userService.toggleHeart(authentication.getUserId(), productId);
   }
