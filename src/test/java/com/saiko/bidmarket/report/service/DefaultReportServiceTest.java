@@ -118,7 +118,7 @@ class DefaultReportServiceTest {
         // then
         assertThatThrownBy(() -> reportService.create(
             reporter.getId(),
-            Report.Type.User,
+            Report.Type.USER,
             toUser.getId(),
             createRequest
         )).isInstanceOf(NotFoundException.class);
@@ -162,7 +162,7 @@ class DefaultReportServiceTest {
         // then
         assertThatThrownBy(() -> reportService.create(
             reporter.getId(),
-            Report.Type.User,
+            Report.Type.USER,
             toUser.getId(),
             createRequest
         )).isInstanceOf(NotFoundException.class);
@@ -233,7 +233,7 @@ class DefaultReportServiceTest {
         given(userRepository.findById(reporter.getId())).willReturn(Optional.of(reporter));
         given(reportRepository.existsByReporter_IdAndTypeAndTypeId(
             reporter.getId(),
-            Report.Type.User,
+            Report.Type.USER,
             toUser.getId()
         )).willReturn(true);
 
@@ -241,7 +241,7 @@ class DefaultReportServiceTest {
         // then
         assertThatThrownBy(() -> reportService.create(
             reporter.getId(),
-            Report.Type.User,
+            Report.Type.USER,
             toUser.getId(),
             createRequest
         )).isInstanceOf(IllegalArgumentException.class);
@@ -320,7 +320,7 @@ class DefaultReportServiceTest {
         // then
         assertThatThrownBy(() -> reportService.create(
             reporter.getId(),
-            Report.Type.User,
+            Report.Type.USER,
             reporter.getId(),
             createRequest
         )).isInstanceOf(IllegalArgumentException.class);
@@ -344,7 +344,7 @@ class DefaultReportServiceTest {
 
         given(reportRepository.existsByReporter_IdAndTypeAndTypeId(
             reporter.getId(),
-            Report.Type.User,
+            Report.Type.USER,
             toUser.getId()
         )).willReturn(false);
         given(userRepository.findById(reporter.getId())).willReturn(Optional.of(reporter));
@@ -354,7 +354,7 @@ class DefaultReportServiceTest {
         // when
         ReportCreateResponse actual = reportService.create(
             reporter.getId(),
-            Report.Type.User,
+            Report.Type.USER,
             toUser.getId(),
             createRequest
         );
