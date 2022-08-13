@@ -1,10 +1,15 @@
 package com.saiko.bidmarket.report.controller.dto;
 
-import com.saiko.bidmarket.common.entity.BaseCreateResponse;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-public class ReportCreateResponse extends BaseCreateResponse {
-  public ReportCreateResponse(UnsignedLong id) {
-    super(id);
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class ReportCreateResponse {
+  private final long id;
+
+  public static ReportCreateResponse from(long id) {
+    return new ReportCreateResponse(id);
   }
 }

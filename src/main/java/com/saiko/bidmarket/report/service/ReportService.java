@@ -1,9 +1,12 @@
 package com.saiko.bidmarket.report.service;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
-import com.saiko.bidmarket.report.service.dto.ReportCreateDto;
+import com.saiko.bidmarket.report.controller.dto.ReportCreateRequest;
+import com.saiko.bidmarket.report.controller.dto.ReportCreateResponse;
 
 public interface ReportService {
 
-  UnsignedLong create(ReportCreateDto createDto);
+  ReportCreateResponse create(
+      long fromUserId,
+      ReportCreateRequest createRequest
+  );
 }

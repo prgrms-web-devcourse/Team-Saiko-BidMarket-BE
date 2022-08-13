@@ -1,29 +1,25 @@
 package com.saiko.bidmarket.report.controller.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
+import com.saiko.bidmarket.report.entity.Report;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class ReportCreateRequest {
 
   @NotBlank
   private final String reason;
 
-  @NotNull
-  private final UnsignedLong fromUserId;
+  private final long toUserId;
 
-  @NotNull
-  private final UnsignedLong toUserId;
+  @Null
+  private final Report.Type type;
 
-  @JsonCreator
-  public ReportCreateRequest(String reason, long fromUserId, long toUserId) {
-    this.reason = reason;
-    this.fromUserId = UnsignedLong.valueOf(fromUserId);
-    this.toUserId = UnsignedLong.valueOf(toUserId);
-  }
+  @Null
+  private final Long typeId;
 }

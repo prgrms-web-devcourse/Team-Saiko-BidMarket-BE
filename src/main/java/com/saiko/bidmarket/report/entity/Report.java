@@ -47,15 +47,6 @@ public class Report extends BaseTime {
   private Report(
       String reason,
       User fromUser,
-      User toUser
-  ) {
-    this(reason, fromUser, toUser, null, null);
-  }
-
-  @Builder(builderMethodName = "builderWithType", buildMethodName = "buildWithType")
-  private Report(
-      String reason,
-      User fromUser,
       User toUser,
       Type type,
       Long typeId
@@ -81,10 +72,6 @@ public class Report extends BaseTime {
   private void validateTypeAndTypeId() {
     if ((type == null) != (typeId == null)) {
       throw new IllegalArgumentException("type과 typeId 둘 중 하나만 null일 수 없습니다.");
-    }
-
-    if (typeId != null && typeId < 1) {
-      throw new IllegalArgumentException("typeId는 null이 아니라면 양수입니다.");
     }
   }
 
