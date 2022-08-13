@@ -41,9 +41,7 @@
   </tr>
 </table>
 
-### Front-End Repository
-
-link
+[BidMarket-FrontEnd-Github-Repository](https://github.com/prgrms-web-devcourse/Team-Saiko-BidMarket-FE)
 
 ## BE
 
@@ -103,11 +101,28 @@ link
 ## 🛠️기술 스택
 
 ### 개발
-- `java : 11 `
-- `gradle : 7.5`
-- `springboot : 2.7.2`
-- `junit5`
-- `mysql`
+<div align=left>
+<img src="https://img.shields.io/badge/java 11-007396?style=for-the-badge&logo=java&logoColor=white">
+<img src="https://img.shields.io/badge/springboot 2.7.2-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+<img src="https://img.shields.io/badge/gradle 7.5-02303A?style=for-the-badge&logo=gradle&logoColor=white">
+<img src="https://img.shields.io/badge/junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white">
+<br>
+
+
+
+<img src="https://img.shields.io/badge/mysql 8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+<img src="https://img.shields.io/badge/amazon aws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">
+
+
+<br>
+
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
+<img src="https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white">
+<img src="https://img.shields.io/badge/slack-4A154B?style=for-the-badge&logo=slack&logoColor=white">
+<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
+</div>
+
 ### 협업
 - `jira`
 - `git`
