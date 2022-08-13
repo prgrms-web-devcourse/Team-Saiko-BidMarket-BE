@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -97,5 +99,17 @@ public class UserApiController {
       long productId
   ) {
     userService.toggleHeart(authentication.getUserId(), productId);
+  }
+
+  @GetMapping("hearts")
+  @ResponseStatus(HttpStatus.OK)
+  public List<UserHeartSelectResponse> getAllUserHearts(
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @ModelAttribute @Valid
+      UserHeartSelectRequest request
+  ) {
+    long userId = authentication.getUserId();
+    return userService.findAllUserHearts(userId, request);
   }
 }

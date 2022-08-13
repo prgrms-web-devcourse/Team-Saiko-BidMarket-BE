@@ -2,7 +2,6 @@ package com.saiko.bidmarket.user.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -21,6 +20,8 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -159,6 +160,20 @@ public class DefaultUserService implements UserService {
 
     Heart heart = findHeart(user, product);
     heart.toggle();
+  }
+
+  @Override
+  public List<UserHeartSelectResponse> findAllUserHearts(
+      long userId,
+      UserHeartSelectRequest request
+  ) {
+    Assert.notNull(request, "Request must be provided");
+
+    return heartRepository.findAllUserHeart(userId, request)
+                            .stream()
+                            .map(Heart::getProduct)
+                            .map(UserHeartSelectResponse::from)
+                            .collect(Collectors.toList());
   }
 
   private Heart findHeart(
