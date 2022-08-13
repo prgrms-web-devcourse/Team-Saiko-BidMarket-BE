@@ -31,7 +31,8 @@ public class ReportApiController {
   public ReportCreateResponse createToUser(
       @AuthenticationPrincipal
       JwtAuthentication authentication,
-      @PathVariable long userId,
+      @PathVariable
+      long userId,
       @RequestBody @Valid
       ReportCreateRequest createRequest
   ) {
@@ -48,7 +49,8 @@ public class ReportApiController {
   public ReportCreateResponse createToProduct(
       @AuthenticationPrincipal
       JwtAuthentication authentication,
-      @PathVariable long productId,
+      @PathVariable
+      long productId,
       @RequestBody @Valid
       ReportCreateRequest createRequest
   ) {
@@ -65,7 +67,8 @@ public class ReportApiController {
   public ReportCreateResponse createToComment(
       @AuthenticationPrincipal
       JwtAuthentication authentication,
-      @PathVariable long commentId,
+      @PathVariable
+      long commentId,
       @RequestBody @Valid
       ReportCreateRequest createRequest
   ) {
