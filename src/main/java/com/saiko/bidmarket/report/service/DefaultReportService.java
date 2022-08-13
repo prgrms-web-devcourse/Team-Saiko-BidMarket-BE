@@ -38,12 +38,7 @@ public class DefaultReportService implements ReportService {
         .findById(createRequest.getToUserId())
         .orElseThrow(NotFoundException::new);
 
-    Report report = Report
-        .builder()
-        .reason(createRequest.getReason())
-        .fromUser(fromUser)
-        .toUser(toUser)
-        .build();
+    Report report = Report.toUser(fromUser, toUser, createRequest.getReason());
 
     return ReportCreateResponse.from(reportRepository
                                          .save(report)
