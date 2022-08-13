@@ -650,4 +650,57 @@ class UserApiControllerTest extends ControllerSetUp {
       }
     }
   }
+
+  @Nested
+  @DisplayName("toggleHeart 메소드는")
+  @WithMockCustomLoginUser
+  class DescribeCheckToggleHeart {
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidData {
+
+      @Test
+      @DisplayName("찜 상태를 변경한다")
+      void ItToggleHeart() throws Exception {
+        //given
+        long productId = 1L;
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .put(BASE_URL + "/{productId}/hearts", productId)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Toggle heart", preprocessRequest(
+                                prettyPrint()), preprocessResponse(prettyPrint()), pathParameters(
+                                parameterWithName("productId").description("상품 아이디")
+                            )
+            ));
+      }
+    }
+
+    @Nested
+    @DisplayName("productId 에 숫자 외에 다른 문자가 들어온다면")
+    class ContextNotNumberProductId {
+
+      @Test
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+        String productId = "NotNumber";
+
+        // when
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.put(
+            BASE_URL + "/{productId}/hearts", productId));
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+  }
 }
