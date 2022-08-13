@@ -44,6 +44,7 @@ public class Report extends BaseTime {
   @Column(nullable = false, updatable = false)
   private long typeId;
 
+  @Builder(access = AccessLevel.PRIVATE)
   private Report(
       User reporter,
       Type type,
@@ -59,7 +60,7 @@ public class Report extends BaseTime {
     this.typeId = typeId;
     this.reason = reason;
 
-    validate();
+    validateUsers();
   }
 
   public static Report toUser(
@@ -67,7 +68,13 @@ public class Report extends BaseTime {
       long userId,
       String reason
   ) {
-    return new Report(reporter, Type.User, userId, reason);
+    return Report
+        .builder()
+        .reporter(reporter)
+        .type(Type.USER)
+        .typeId(userId)
+        .reason(reason)
+        .build();
   }
 
   public static Report toProduct(
@@ -75,12 +82,15 @@ public class Report extends BaseTime {
       Product product,
       String reason
   ) {
-    return new Report(
-        reporter,
-        Type.PRODUCT,
-        product.getId(),
-        reason
-    );
+    return Report
+        .builder()
+        .reporter(reporter)
+        .type(Type.PRODUCT)
+        .typeId(product
+                    .getWriter()
+                    .getId())
+        .reason(reason)
+        .build();
   }
 
   public static Report toComment(
@@ -88,16 +98,13 @@ public class Report extends BaseTime {
       Comment comment,
       String reason
   ) {
-    return new Report(
-        reporter,
-        Type.COMMENT,
-        comment.getId(),
-        reason
-    );
-  }
-
-  private void validate() {
-    validateUsers();
+    return Report
+        .builder()
+        .reporter(reporter)
+        .type(Type.PRODUCT)
+        .typeId(comment.getId())
+        .reason(reason)
+        .build();
   }
 
   private void validateUsers() {
