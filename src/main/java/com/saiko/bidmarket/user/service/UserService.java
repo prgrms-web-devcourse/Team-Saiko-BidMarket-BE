@@ -28,4 +28,9 @@ public interface UserService {
                                                       UserBiddingSelectRequest request);
 
   void deleteUser(long userId);
+
+  void toggleHeart(
+      long userId,
+      long productId
+  );
 }
