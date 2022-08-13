@@ -859,16 +859,11 @@ class ProductApiControllerTest extends ControllerSetUp {
       @DisplayName("비딩 결과를 반환한다")
       void ItReturnBiddingResult() throws Exception {
         //given
-        long chatRoomId = 1L;
-        long winningPrice = 15000;
-
         given(productService.getBiddingResult(anyLong(), anyLong()))
             .willReturn(BiddingResultResponse.responseForSuccessfulSeller(
-                chatRoomId,
-                winningPrice
+                1,
+                15000
             ));
-
-        long productId = 1;
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
