@@ -227,6 +227,9 @@ class CommentApiControllerTest extends ControllerSetUp {
                                     .optional()
                             ),
                             responseFields(
+                                fieldWithPath("[].commentId")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("댓글 식별자"),
                                 fieldWithPath("[].userId")
                                     .type(JsonFieldType.NUMBER)
                                     .description("유저 식별자"),
