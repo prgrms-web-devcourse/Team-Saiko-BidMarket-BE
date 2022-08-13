@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.HashMap;
@@ -22,8 +23,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.report.controller.dto.ReportCreateRequest;
 import com.saiko.bidmarket.report.controller.dto.ReportCreateResponse;
 import com.saiko.bidmarket.report.service.ReportService;
 import com.saiko.bidmarket.util.ControllerSetUp;
@@ -38,20 +39,24 @@ class ReportApiControllerTest extends ControllerSetUp {
   @MockBean
   private ReportService reportService;
 
-  public static final String BASE_URL = "/api/v1/reports";
+  private static final String BASE_URL = "/api/v1/reports";
 
-  public static final String BASE_REASON = "신고 이유";
+  private static final String DEFAULT_REASON = "신고 이유";
 
-  public static final long DEFAULT_AUTH_USER_ID = 1L;
+  private static final long DEFAULT_REPORTER_ID = 1L;
 
-  public static final long BASE_FROM_USER_ID = DEFAULT_AUTH_USER_ID;
+  private static final long DEFAULT_TYPE_ID = 1L;
 
-  public static final long BASE_TO_USER_ID = 2L;
+  private static final String REPORT_USER_PATH = "/users/{userId}";
+
+  private static final String REPORT_PRODUCT_PATH = "/products/{productId}";
+
+  private static final String REPORT_COMMENTS_PATH = "/comments/{commentId}";
 
   @Nested
-  @DisplayName("create 메서드는")
+  @DisplayName("createToUser 메서드는")
   @WithMockCustomLoginUser
-  class DescribeCreateMethod {
+  class DescribeCreateToUserMethod {
 
     @Nested
     @DisplayName("신고 이유가 비었거나 공백일 경우")
@@ -62,17 +67,12 @@ class ReportApiControllerTest extends ControllerSetUp {
       @DisplayName("400 Badrequest으로 응답한다.")
       void ItResponseBadRequest(String reason) throws Exception {
         // given
-        HashMap<String, Object> requestMap = new HashMap<>();
-        requestMap.put("reason", reason);
-        requestMap.put("fromUserId", BASE_FROM_USER_ID);
-        requestMap.put("toUserId", BASE_TO_USER_ID);
-
-        String requestBody = objectMapper.writeValueAsString(requestMap);
+        String requestBody = createRequestBody(reason);
 
         // when
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders
-                .post(BASE_URL)
+                .post(BASE_URL + REPORT_USER_PATH, DEFAULT_TYPE_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         );
@@ -90,22 +90,17 @@ class ReportApiControllerTest extends ControllerSetUp {
       @DisplayName("201 Created와 생성된 신고 id를 응답한다.")
       void ItResponseForbidden() throws Exception {
         // given
-        HashMap<String, Object> requestMap = new HashMap<>();
-        requestMap.put("reason", BASE_REASON);
-        requestMap.put("fromUserId", BASE_FROM_USER_ID);
-        requestMap.put("toUserId", BASE_TO_USER_ID);
-
-        String requestBody = objectMapper.writeValueAsString(requestMap);
+        String requestBody = createRequestBody(DEFAULT_REASON);
 
         long createdReportId = 1L;
 
-        given(reportService.create(anyLong(), any(ReportCreateRequest.class)))
+        given(reportService.create(anyLong(), any(), anyLong(), any()))
             .willReturn(ReportCreateResponse.from(createdReportId));
 
         // when
         ResultActions response = mockMvc.perform(
             RestDocumentationRequestBuilders
-                .post(BASE_URL)
+                .post(BASE_URL + REPORT_USER_PATH, DEFAULT_TYPE_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         );
@@ -115,27 +110,16 @@ class ReportApiControllerTest extends ControllerSetUp {
             .andExpect(status().isCreated())
             .andDo(
                 document(
-                    "Create report",
+                    "Create report to user",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("userId").description("피신고자 식별자")
+                    ),
                     requestFields(
                         fieldWithPath("reason")
                             .type(JsonFieldType.STRING)
-                            .description("신고 이유"),
-                        fieldWithPath("fromUserId")
-                            .type(JsonFieldType.NUMBER)
-                            .description("신고자 식별자"),
-                        fieldWithPath("toUserId")
-                            .type(JsonFieldType.NUMBER)
-                            .description("피신고자 식별자"),
-                        fieldWithPath("type")
-                            .type(JsonFieldType.STRING)
-                            .description("신고 객체 종류(옵션)")
-                            .optional(),
-                        fieldWithPath("type")
-                            .type(JsonFieldType.NUMBER)
-                            .description("신고 객체 식별자")
-                            .optional()
+                            .description("신고 이유")
                     ),
                     responseFields(
                         fieldWithPath("id")
@@ -146,5 +130,170 @@ class ReportApiControllerTest extends ControllerSetUp {
 
       }
     }
+  }
+
+  @Nested
+  @DisplayName("createToProduct 메서드는")
+  @WithMockCustomLoginUser
+  class DescribeCreateToProductMethod {
+
+    @Nested
+    @DisplayName("신고 이유가 비었거나 공백일 경우")
+    class ContextEmptyReason {
+
+      @ParameterizedTest
+      @NullAndEmptySource
+      @DisplayName("400 Badrequest으로 응답한다.")
+      void ItResponseBadRequest(String reason) throws Exception {
+        // given
+        String requestBody = createRequestBody(reason);
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(BASE_URL + REPORT_PRODUCT_PATH, DEFAULT_TYPE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("정상적인 요청이 들어올 경우")
+    class ContextValidRequest {
+
+      @Test
+      @DisplayName("201 Created와 생성된 신고 id를 응답한다.")
+      void ItResponseForbidden() throws Exception {
+        // given
+        String requestBody = createRequestBody(DEFAULT_REASON);
+
+        long createdReportId = 1L;
+
+        given(reportService.create(anyLong(), any(), anyLong(), any()))
+            .willReturn(ReportCreateResponse.from(createdReportId));
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(BASE_URL + REPORT_PRODUCT_PATH, DEFAULT_TYPE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        // then
+        response
+            .andExpect(status().isCreated())
+            .andDo(
+                document(
+                    "Create report to product",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("productId").description("상품 식별자")
+                    ),
+                    requestFields(
+                        fieldWithPath("reason")
+                            .type(JsonFieldType.STRING)
+                            .description("신고 이유")
+                    ),
+                    responseFields(
+                        fieldWithPath("id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("신고 식별자"))
+                )
+            );
+
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("createToComment 메서드는")
+  @WithMockCustomLoginUser
+  class DescribeCreateToCommentMethod {
+
+    @Nested
+    @DisplayName("신고 이유가 비었거나 공백일 경우")
+    class ContextEmptyReason {
+
+      @ParameterizedTest
+      @NullAndEmptySource
+      @DisplayName("400 Badrequest으로 응답한다.")
+      void ItResponseBadRequest(String reason) throws Exception {
+        // given
+        String requestBody = createRequestBody(reason);
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(BASE_URL + REPORT_COMMENTS_PATH, DEFAULT_TYPE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("정상적인 요청이 들어올 경우")
+    class ContextValidRequest {
+
+      @Test
+      @DisplayName("201 Created와 생성된 신고 id를 응답한다.")
+      void ItResponseForbidden() throws Exception {
+        // given
+        String requestBody = createRequestBody(DEFAULT_REASON);
+
+        long createdReportId = 1L;
+
+        given(reportService.create(anyLong(), any(), anyLong(), any()))
+            .willReturn(ReportCreateResponse.from(createdReportId));
+
+        // when
+        ResultActions response = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(BASE_URL + REPORT_COMMENTS_PATH, DEFAULT_TYPE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        // then
+        response
+            .andExpect(status().isCreated())
+            .andDo(
+                document(
+                    "Create report to comment",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("commentId").description("댓글 식별자")
+                    ),
+                    requestFields(
+                        fieldWithPath("reason")
+                            .type(JsonFieldType.STRING)
+                            .description("신고 이유")
+                    ),
+                    responseFields(
+                        fieldWithPath("id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("신고 식별자"))
+                )
+            );
+
+      }
+    }
+  }
+
+  private String createRequestBody(String reason) throws JsonProcessingException {
+    HashMap<String, Object> requestMap = new HashMap<>();
+    requestMap.put("reason", reason);
+
+    return objectMapper.writeValueAsString(requestMap);
   }
 }

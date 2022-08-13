@@ -34,90 +34,80 @@ public class Report extends BaseTime {
   private String reason;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private User fromUser;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User toUser;
+  private User reporter;
 
   @Enumerated(value = EnumType.STRING)
+  @Column(nullable = false, updatable = false)
   private Type type;
 
-  private Long typeId;
+  @Column(nullable = false, updatable = false)
+  private long typeId;
 
   private Report(
-      User fromUser,
-      User toUser,
-      String reason,
+      User reporter,
       Type type,
-      Long typeId
+      Long typeId,
+      String reason
   ) {
+    Assert.notNull(reporter, "From user must be provided");
+    Assert.notNull(type, "From user must be provided");
+    Assert.notNull(typeId, "From user must be provided");
     Assert.hasText(reason, "Reason must contain contexts");
-    Assert.notNull(fromUser, "From user must be provided");
-    Assert.notNull(toUser, "To user must be provided");
 
-    this.fromUser = fromUser;
-    this.toUser = toUser;
-    this.reason = reason;
+    this.reporter = reporter;
     this.type = type;
     this.typeId = typeId;
+    this.reason = reason;
 
     validate();
   }
 
   public static Report toUser(
-      User fromUser,
-      User toUser,
+      User reporter,
+      long userId,
       String reason
   ) {
-    return new Report(fromUser, toUser, reason, null, null);
+    return new Report(reporter, Type.User, userId, reason);
   }
 
   public static Report toProduct(
-      User fromUser,
+      User reporter,
       Product product,
       String reason
   ) {
     return new Report(
-        fromUser,
-        product.getWriter(),
-        reason,
+        reporter,
         Type.PRODUCT,
-        product.getId()
+        product.getId(),
+        reason
     );
   }
 
   public static Report toComment(
-      User fromUser,
+      User reporter,
       Comment comment,
       String reason
   ) {
     return new Report(
-        fromUser,
-        comment.getWriter(),
-        reason,
-        Type.PRODUCT,
-        comment.getId()
+        reporter,
+        Type.COMMENT,
+        comment.getId(),
+        reason
     );
   }
 
   private void validate() {
     validateUsers();
-    validateTypeAndTypeId();
-  }
-
-  private void validateTypeAndTypeId() {
-    if ((type == null) != (typeId == null)) {
-      throw new IllegalArgumentException("type과 typeId 둘 중 하나만 null일 수 없습니다.");
-    }
   }
 
   private void validateUsers() {
-    if (fromUser.equals(toUser)) {
+    if (type == Type.User && reporter.getId() == typeId) {
       throw new IllegalArgumentException("신고자와 피신고자는 같을 수 없습니다");
     }
   }
 
   public enum Type {
+    User,
     PRODUCT,
     COMMENT
   }

@@ -130,11 +130,7 @@ ALTER TABLE `user`
 
 ALTER TABLE `report`
     ADD CONSTRAINT `FK_FROM_USER_ID_FOR_REPORT`
-        FOREIGN KEY (`from_user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
-ALTER TABLE `report`
-    ADD CONSTRAINT `FK_TO_USER_ID_FOR_REPORT`
-        FOREIGN KEY (`to_user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+        FOREIGN KEY (`reporter_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 AlTER TABLE `heart`
     ADD CONSTRAINT `FK_USER_ID_FOR_HEART`
@@ -153,7 +149,7 @@ ALTER TABLE `user`
     ADD UNIQUE unq_provider_and_id (provider, provider_id);
 
 ALTER TABLE `report`
-    ADD UNIQUE unq_from_user_id_to_user_id (from_user_id, to_user_id);
+    ADD UNIQUE unq_from_user_id_to_user_id (reporter_id, type, type_id);
 
 -- Index
 ALTER TABLE `report`
