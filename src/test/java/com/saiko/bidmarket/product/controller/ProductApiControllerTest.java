@@ -857,9 +857,9 @@ class ProductApiControllerTest extends ControllerSetUp {
       void ItReturnBiddingResult() throws Exception {
         //given
         long chatRoomId = 1L;
-
+        long winningPrice = 15000;
         given(productService.getBiddingResult(anyLong(), anyLong()))
-            .willReturn(BiddingResultResponse.responseForSuccessfulSeller(chatRoomId));
+            .willReturn(BiddingResultResponse.responseForSuccessfulSeller(chatRoomId, winningPrice));
 
         long productId = 1;
 
@@ -888,6 +888,10 @@ class ProductApiControllerTest extends ControllerSetUp {
                                 fieldWithPath("chatRoomId")
                                     .type(JsonFieldType.NUMBER)
                                     .description("채팅방 아이디")
+                                    .optional(),
+                                fieldWithPath("winningPrice")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("낙찰 금액")
                                     .optional()
                             )
             ));

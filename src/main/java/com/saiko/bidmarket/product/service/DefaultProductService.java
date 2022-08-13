@@ -155,7 +155,7 @@ public class DefaultProductService implements ProductService {
       return generateResponseForSeller(product, chatRoom);
     }
 
-    return generateResponseForBidder(productId, userId, chatRoom);
+    return generateResponseForBidder(product, userId, chatRoom);
   }
 
   private boolean isSeller(
@@ -171,21 +171,24 @@ public class DefaultProductService implements ProductService {
   ) {
     if (product.hasWinner()) {
       ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
-      return BiddingResultResponse.responseForSuccessfulSeller(chatRoom.getId());
+      return BiddingResultResponse.responseForSuccessfulSeller(
+          chatRoom.getId(),
+          product.getWinningPrice()
+      );
     }
     return BiddingResultResponse.responseForFailedSeller();
   }
 
   private BiddingResultResponse generateResponseForBidder(
-      long productId,
+      Product product,
       long userId,
       Optional<ChatRoom> optionalChatRoom
   ) {
-    Bidding biddingOfUser = findBiddingOfUser(productId, userId);
+    Bidding biddingOfUser = findBiddingOfUser(product.getId(), userId);
     if (biddingOfUser.isWon()) {
       ChatRoom chatRoom = verifyChatRoom(optionalChatRoom);
       return BiddingResultResponse.responseForSuccessfulBidder(
-          chatRoom.getId());
+          chatRoom.getId(), product.getWinningPrice());
     }
     return BiddingResultResponse.responseForFailedBidder();
   }

@@ -503,6 +503,7 @@ class DefaultProductServiceTest {
         assertThat(biddingResult
                        .getChatRoomId()).isEqualTo(chatRoom.getId());
         assertThat(biddingResult.getRole()).isEqualTo(Role.SELLER);
+        assertThat(biddingResult.getWinningPrice()).isEqualTo(product.getWinningPrice());
       }
     }
 
@@ -551,6 +552,7 @@ class DefaultProductServiceTest {
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(false);
         assertThat(biddingResult.getChatRoomId()).isEqualTo(null);
         assertThat(biddingResult.getRole()).isEqualTo(Role.SELLER);
+        assertThat(biddingResult.getWinningPrice()).isEqualTo(null);
       }
     }
 
@@ -582,6 +584,7 @@ class DefaultProductServiceTest {
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(true);
         assertThat(biddingResult.getChatRoomId()).isEqualTo(chatRoom.getId());
         assertThat(biddingResult.getRole()).isEqualTo(Role.BIDDER);
+        assertThat(biddingResult.getWinningPrice()).isEqualTo(product.getWinningPrice());
       }
     }
 
@@ -610,6 +613,7 @@ class DefaultProductServiceTest {
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(false);
         assertThat(biddingResult.getChatRoomId()).isEqualTo(null);
         assertThat(biddingResult.getRole()).isEqualTo(Role.BIDDER);
+        assertThat(biddingResult.getWinningPrice()).isEqualTo(null);
       }
     }
 
