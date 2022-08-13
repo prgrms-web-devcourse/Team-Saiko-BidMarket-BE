@@ -676,10 +676,11 @@ class UserApiControllerTest extends ControllerSetUp {
         //then
         response
             .andExpect(status().isOk())
-            .andDo(document("Toggle heart", preprocessRequest(
-                                prettyPrint()), preprocessResponse(prettyPrint()), pathParameters(
-                                parameterWithName("productId").description("상품 아이디")
-                            )
+            .andDo(document(
+                "Toggle heart",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(parameterWithName("productId").description("상품 아이디"))
             ));
       }
     }
