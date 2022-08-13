@@ -14,36 +14,51 @@ public class BiddingResultResponse {
   private final Role role;
   private final boolean biddingSucceed;
   private final Long chatRoomId;
+  private final Long winningPrice;
 
-  public static BiddingResultResponse responseForSuccessfulSeller(long chatRoomId) {
-    return BiddingResultResponse.builder()
-                                .role(Role.SELLER)
-                                .biddingSucceed(true)
-                                .chatRoomId(chatRoomId)
-                                .build();
+  public static BiddingResultResponse responseForSuccessfulSeller(
+      long chatRoomId,
+      long winningPrice
+  ) {
+    return BiddingResultResponse
+        .builder()
+        .role(Role.SELLER)
+        .biddingSucceed(true)
+        .chatRoomId(chatRoomId)
+        .winningPrice(winningPrice)
+        .build();
   }
 
   public static BiddingResultResponse responseForFailedSeller() {
-    return BiddingResultResponse.builder()
-                                .role(Role.SELLER)
-                                .biddingSucceed(false)
-                                .chatRoomId(null)
-                                .build();
+    return BiddingResultResponse
+        .builder()
+        .role(Role.SELLER)
+        .biddingSucceed(false)
+        .chatRoomId(null)
+        .winningPrice(null)
+        .build();
   }
 
-  public static BiddingResultResponse responseForSuccessfulBidder(long chatRoomId) {
-    return BiddingResultResponse.builder()
-                                .role(Role.BIDDER)
-                                .biddingSucceed(true)
-                                .chatRoomId(chatRoomId)
-                                .build();
+  public static BiddingResultResponse responseForSuccessfulBidder(
+      long chatRoomId,
+      long winningPrice
+  ) {
+    return BiddingResultResponse
+        .builder()
+        .role(Role.BIDDER)
+        .biddingSucceed(true)
+        .chatRoomId(chatRoomId)
+        .winningPrice(winningPrice)
+        .build();
   }
 
   public static BiddingResultResponse responseForFailedBidder() {
-    return BiddingResultResponse.builder()
-                                .role(Role.BIDDER)
-                                .biddingSucceed(false)
-                                .chatRoomId(null)
-                                .build();
+    return BiddingResultResponse
+        .builder()
+        .role(Role.BIDDER)
+        .biddingSucceed(false)
+        .chatRoomId(null)
+        .winningPrice(null)
+        .build();
   }
 }
