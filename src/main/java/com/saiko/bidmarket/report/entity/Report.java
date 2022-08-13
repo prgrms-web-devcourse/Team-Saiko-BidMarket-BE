@@ -18,6 +18,7 @@ import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -46,12 +47,11 @@ public class Report extends BaseTime {
   private Report(
       User reporter,
       Type type,
-      Long typeId,
+      long typeId,
       String reason
   ) {
-    Assert.notNull(reporter, "From user must be provided");
-    Assert.notNull(type, "From user must be provided");
-    Assert.notNull(typeId, "From user must be provided");
+    Assert.notNull(reporter, "Reporter must be provided");
+    Assert.notNull(type, "Type must be provided");
     Assert.hasText(reason, "Reason must contain contexts");
 
     this.reporter = reporter;
@@ -101,13 +101,13 @@ public class Report extends BaseTime {
   }
 
   private void validateUsers() {
-    if (type == Type.User && reporter.getId() == typeId) {
+    if (type == Type.USER && reporter.getId() == typeId) {
       throw new IllegalArgumentException("신고자와 피신고자는 같을 수 없습니다");
     }
   }
 
   public enum Type {
-    User,
+    USER,
     PRODUCT,
     COMMENT
   }

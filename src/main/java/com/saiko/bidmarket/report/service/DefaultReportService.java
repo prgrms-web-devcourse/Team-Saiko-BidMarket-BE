@@ -58,7 +58,7 @@ public class DefaultReportService implements ReportService {
   ) {
     validateDuplicate(reporter.getId(), type, typeId);
 
-    if (type == Report.Type.User) {
+    if (type == Report.Type.USER) {
       validateSelfReport(reporter.getId(), typeId);
       User reportedUser = userRepository
           .findById(typeId)

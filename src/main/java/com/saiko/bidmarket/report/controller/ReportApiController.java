@@ -38,7 +38,7 @@ public class ReportApiController {
   ) {
     return reportService.create(
         authentication.getUserId(),
-        Report.Type.User,
+        Report.Type.USER,
         userId,
         createRequest
     );
