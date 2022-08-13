@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,9 +23,9 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
+import com.saiko.bidmarket.report.controller.dto.ReportCreateRequest;
+import com.saiko.bidmarket.report.controller.dto.ReportCreateResponse;
 import com.saiko.bidmarket.report.service.ReportService;
-import com.saiko.bidmarket.report.service.dto.ReportCreateDto;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
@@ -79,67 +78,6 @@ class ReportApiControllerTest extends ControllerSetUp {
         );
 
         // then
-        verify(reportService, never()).create(any(ReportCreateDto.class));
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("fromUserId가 음수 혹은 0일 경우")
-    class ContextZeroOrNegativeFromUserId {
-
-      @ParameterizedTest
-      @ValueSource(longs = {Long.MIN_VALUE, -1, 0})
-      @DisplayName("400 Badrequest으로 응답한다.")
-      void ItResponseBadRequest(long fromUserId) throws Exception {
-        // given
-        HashMap<String, Object> requestMap = new HashMap<>();
-        requestMap.put("reason", BASE_REASON);
-        requestMap.put("fromUserId", fromUserId);
-        requestMap.put("toUserId", BASE_TO_USER_ID);
-
-        String requestBody = objectMapper.writeValueAsString(requestMap);
-
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders
-                .post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-        );
-
-        // then
-        verify(reportService, never()).create(any(ReportCreateDto.class));
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("toUserId가 음수 혹은 0일 경우")
-    class ContextZeroOrNegativeToUserId {
-
-      @ParameterizedTest
-      @ValueSource(longs = {Long.MIN_VALUE, -1, 0})
-      @DisplayName("400 Badrequest으로 응답한다.")
-      void ItResponseBadRequest(long toUserId) throws Exception {
-        // given
-        HashMap<String, Object> requestMap = new HashMap<>();
-        requestMap.put("reason", BASE_REASON);
-        requestMap.put("fromUserId", BASE_FROM_USER_ID);
-        requestMap.put("toUserId", toUserId);
-
-        String requestBody = objectMapper.writeValueAsString(requestMap);
-
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders
-                .post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-        );
-
-        // then
-        verify(reportService, never()).create(any(ReportCreateDto.class));
         response.andExpect(status().isBadRequest());
       }
     }
@@ -161,8 +99,8 @@ class ReportApiControllerTest extends ControllerSetUp {
 
         long createdReportId = 1L;
 
-        given(reportService.create(any(ReportCreateDto.class)))
-            .willReturn(UnsignedLong.valueOf(createdReportId));
+        given(reportService.create(anyLong(), any(ReportCreateRequest.class)))
+            .willReturn(ReportCreateResponse.from(createdReportId));
 
         // when
         ResultActions response = mockMvc.perform(
@@ -173,7 +111,6 @@ class ReportApiControllerTest extends ControllerSetUp {
         );
 
         // then
-        verify(reportService, atLeastOnce()).create(any(ReportCreateDto.class));
         response
             .andExpect(status().isCreated())
             .andDo(
@@ -182,11 +119,28 @@ class ReportApiControllerTest extends ControllerSetUp {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     requestFields(
-                        fieldWithPath("reason").type(JsonFieldType.STRING).description("신고 이유"),
-                        fieldWithPath("fromUserId").type(JsonFieldType.NUMBER).description("신고자 식별자"),
-                        fieldWithPath("toUserId").type(JsonFieldType.NUMBER).description("피신고자 식별자")),
+                        fieldWithPath("reason")
+                            .type(JsonFieldType.STRING)
+                            .description("신고 이유"),
+                        fieldWithPath("fromUserId")
+                            .type(JsonFieldType.NUMBER)
+                            .description("신고자 식별자"),
+                        fieldWithPath("toUserId")
+                            .type(JsonFieldType.NUMBER)
+                            .description("피신고자 식별자"),
+                        fieldWithPath("type")
+                            .type(JsonFieldType.STRING)
+                            .description("신고 객체 종류(옵션)")
+                            .optional(),
+                        fieldWithPath("type")
+                            .type(JsonFieldType.NUMBER)
+                            .description("신고 객체 식별자")
+                            .optional()
+                    ),
                     responseFields(
-                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("신고 식별자"))
+                        fieldWithPath("id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("신고 식별자"))
                 )
             );
 

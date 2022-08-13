@@ -1,14 +1,13 @@
 package com.saiko.bidmarket.report.service;
 
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.report.controller.dto.ReportCreateRequest;
+import com.saiko.bidmarket.report.controller.dto.ReportCreateResponse;
 import com.saiko.bidmarket.report.entity.Report;
 import com.saiko.bidmarket.report.repository.ReportRepository;
-import com.saiko.bidmarket.report.service.dto.ReportCreateDto;
 import com.saiko.bidmarket.user.entity.User;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
@@ -23,38 +22,40 @@ public class DefaultReportService implements ReportService {
   private final UserRepository userRepository;
 
   @Override
-  public UnsignedLong create(ReportCreateDto createDto) {
-    Assert.notNull(createDto, "Report create dto must be provided");
+  public ReportCreateResponse create(
+      long fromUserId,
+      ReportCreateRequest createRequest
+  ) {
+    Assert.notNull(createRequest, "Report create dto must be provided");
 
-    validateProxyReport(createDto.getRequestUserId(), createDto.getFromUserId());
+    validateSameUserWithFromAndTo(fromUserId, createRequest.getToUserId());
 
-    User fromUser = userRepository.findById(createDto.getFromUserId().getValue())
-                                  .orElseThrow(NotFoundException::new);
-    User toUser = userRepository.findById(createDto.getToUserId().getValue())
-                                .orElseThrow(NotFoundException::new);
+    User fromUser = userRepository
+        .findById(fromUserId)
+        .orElseThrow(NotFoundException::new);
 
-    validateSameUserWithFromAndTo(fromUser, toUser);
+    User toUser = userRepository
+        .findById(createRequest.getToUserId())
+        .orElseThrow(NotFoundException::new);
 
-    Report report = Report.builder()
-                          .reason(createDto.getReason())
-                          .fromUser(fromUser)
-                          .toUser(toUser)
-                          .build();
+    Report report = Report
+        .builder()
+        .reason(createRequest.getReason())
+        .fromUser(fromUser)
+        .toUser(toUser)
+        .build();
 
-    return UnsignedLong.valueOf(reportRepository.save(report).getId());
+    return ReportCreateResponse.from(reportRepository
+                                         .save(report)
+                                         .getId());
   }
 
-  private void validateSameUserWithFromAndTo(User fromUser, User toUser) {
-    if (reportRepository.existsByFromUserAndToUser(fromUser, toUser)) {
-      throw new IllegalArgumentException("신고자(id: " + fromUser.getId() + ")는 "
-                                             + "피신고자(id: " + toUser.getId() + ")를 "
-                                             + "이미 신고하였습니다.");
-    }
-  }
-
-  private void validateProxyReport(UnsignedLong requestUserId, UnsignedLong fromUserId) {
-    if (!requestUserId.equals(fromUserId)) {
-      throw new AuthorizationServiceException("다른 유저의 신고를 대신할 수 없습니다.");
+  private void validateSameUserWithFromAndTo(
+      long fromUserId,
+      long toUserId
+  ) {
+    if (reportRepository.existsByFromUser_IdAndToUser_Id(fromUserId, toUserId)) {
+      throw new IllegalArgumentException("이미 신고처리된 요청입니다.");
     }
   }
 
