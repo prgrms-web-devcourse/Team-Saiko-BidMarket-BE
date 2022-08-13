@@ -44,6 +44,7 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 import com.saiko.bidmarket.chat.controller.dto.ChatPublishMessage;
 import com.saiko.bidmarket.chat.controller.dto.ChatSendMessage;
+import com.saiko.bidmarket.chat.controller.dto.ChatUserInfo;
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.service.ChatMessageService;
@@ -173,6 +174,7 @@ class ChatWebSocketControllerTest {
         //then
         ChatPublishMessage publishMessage = (ChatPublishMessage)blockingQueue.poll(10, SECONDS);
         assertNotNull(publishMessage);
+        assertNotNull(publishMessage.getChatUserInfo());
       }
     }
 

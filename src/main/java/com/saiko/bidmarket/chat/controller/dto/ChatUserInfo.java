@@ -9,7 +9,7 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Builder
 @Jacksonized
-class ChatUserInfo {
+public class ChatUserInfo {
 
   private final long userId;
   private final String username;

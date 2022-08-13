@@ -6,32 +6,28 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.chat.entity.ChatMessage;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Jacksonized
 public class ChatPublishMessage {
 
-  private long userId;
-
-  private String content;
-
-  private LocalDateTime createdAt;
+  private final ChatUserInfo chatUserInfo;
+  private final String content;
+  private final LocalDateTime createdAt;
 
   public static ChatPublishMessage of(ChatMessage chatMessage) {
     Assert.notNull(chatMessage, "ChatMessage must be provided");
 
-    return ChatPublishMessage.builder()
-                             .userId(chatMessage.getSender().getId())
-                             .content(chatMessage.getMessage())
-                             .createdAt(chatMessage.getCreatedAt())
-                             .build();
+    ChatUserInfo chatUserInfo = ChatUserInfo.from(chatMessage.getSender());
+    return ChatPublishMessage
+        .builder()
+        .chatUserInfo(chatUserInfo)
+        .content(chatMessage.getMessage())
+        .createdAt(chatMessage.getCreatedAt())
+        .build();
   }
 }
-
