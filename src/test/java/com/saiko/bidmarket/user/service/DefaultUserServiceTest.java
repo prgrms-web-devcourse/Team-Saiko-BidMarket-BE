@@ -32,6 +32,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.heart.entity.Heart;
+import com.saiko.bidmarket.heart.repository.HeartRepository;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -61,6 +63,9 @@ class DefaultUserServiceTest {
 
   @Mock
   GroupService groupService;
+
+  @Mock
+  HeartRepository heartRepository;
 
   @InjectMocks
   DefaultUserService defaultUserService;
@@ -602,6 +607,162 @@ class DefaultUserServiceTest {
         //then
         verify(biddingRepository).deleteAllBatchByProductId(anyLong());
         verify(productRepository).finishByUserId(anyLong());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("toggleHeart 메소드는")
+  class DescribeToggleHeart {
+
+    @Nested
+    @DisplayName("userId에 해당하는 유저가 없다면")
+    class ContextNotFoundUserById {
+
+      @Test
+      @DisplayName("NotFoundException을 발생시킨다.")
+      void ItThrowsNotFoundException() {
+        // given
+        long userId = Long.MAX_VALUE;
+        long productId = Long.MAX_VALUE;
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when, then
+        assertThatThrownBy(() -> defaultUserService.toggleHeart(userId, productId))
+            .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("productId에 해당하는 유저가 없다면")
+    class ContextNotFoundProductById {
+
+      @Test
+      @DisplayName("NotFoundException을 발생시킨다.")
+      void ItThrowsNotFoundException() {
+        // given
+        long userId = Long.MAX_VALUE;
+        long productId = Long.MAX_VALUE;
+
+        User user = User
+            .builder()
+            .username("test")
+            .profileImage("s")
+            .provider("test")
+            .providerId("test")
+            .group(new Group())
+            .build();
+        ReflectionTestUtils.setField(user, "id", userId);
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(productRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when, then
+        assertThatThrownBy(() -> defaultUserService.toggleHeart(userId, productId))
+            .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("userId와 productId에 해당하는 찜이 없다면")
+    class ContextNotFoundHeartByUserIdAndProductId {
+
+      @Test
+      @DisplayName("찜 객체를 만들고 상태를 변경한다.")
+      void ItCreateHeartAndUpdateState() {
+        // given
+        long userId = Long.MAX_VALUE;
+        long productId = Long.MAX_VALUE;
+
+        User user = User
+            .builder()
+            .username("test")
+            .profileImage("s")
+            .provider("test")
+            .providerId("test")
+            .group(new Group())
+            .build();
+        ReflectionTestUtils.setField(user, "id", userId);
+
+        Product product = Product
+            .builder()
+            .title("test")
+            .category(Category.BEAUTY)
+            .description("test")
+            .minimumPrice(2000)
+            .location("test")
+            .writer(user)
+            .images(List.of("ss"))
+            .build();
+        ReflectionTestUtils.setField(product, "id", productId);
+
+        Heart heart = Heart.of(user, product);
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+        given(heartRepository.findByUserAndProduct(any(User.class), any(Product.class))).willReturn(
+            Optional.empty());
+        given(heartRepository.save(any(Heart.class))).willReturn(heart);
+
+        // when
+        defaultUserService.toggleHeart(userId, productId);
+
+        // then
+        verify(heartRepository).save(any(Heart.class));
+        assertThat(heart).extracting("actived").isEqualTo(true);
+      }
+    }
+
+    @Nested
+    @DisplayName("userId와 productId에 해당하는 찜이 있다면")
+    class ContextFoundHeartByUserIdAndProductId {
+
+      @Test
+      @DisplayName("상태를 변경한다.")
+      void ItUpdateState() {
+        // given
+        long userId = Long.MAX_VALUE;
+        long productId = Long.MAX_VALUE;
+
+        User user = User
+            .builder()
+            .username("test")
+            .profileImage("s")
+            .provider("test")
+            .providerId("test")
+            .group(new Group())
+            .build();
+        ReflectionTestUtils.setField(user, "id", userId);
+
+        Product product = Product
+            .builder()
+            .title("test")
+            .category(Category.BEAUTY)
+            .description("test")
+            .minimumPrice(2000)
+            .location("test")
+            .writer(user)
+            .images(List.of("ss"))
+            .build();
+        ReflectionTestUtils.setField(product, "id", productId);
+
+        Heart heart = Heart.of(user, product);
+        ReflectionTestUtils.setField(heart, "actived", true);
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+        given(heartRepository.findByUserAndProduct(any(User.class), any(Product.class))).willReturn(
+            Optional.of(heart));
+
+        // when
+        defaultUserService.toggleHeart(userId, productId);
+
+        // when, then
+        verify(heartRepository, never()).save(any(Heart.class));
+        assertThat(heart)
+            .extracting("actived")
+            .isEqualTo(false);
       }
     }
   }
