@@ -203,12 +203,7 @@ class DefaultReportServiceTest {
             null,
             null
         );
-        Report createdReport = Report
-            .builder()
-            .reason(reason)
-            .fromUser(fromUser)
-            .toUser(toUser)
-            .build();
+        Report createdReport = Report.toUser(fromUser, toUser, reason);
         long reportId = 1L;
         ReflectionTestUtils.setField(createdReport, "id", reportId);
 

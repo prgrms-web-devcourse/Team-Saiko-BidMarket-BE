@@ -12,11 +12,12 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.common.entity.BaseTime;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,11 +44,10 @@ public class Report extends BaseTime {
 
   private Long typeId;
 
-  @Builder
   private Report(
-      String reason,
       User fromUser,
       User toUser,
+      String reason,
       Type type,
       Long typeId
   ) {
@@ -55,13 +55,49 @@ public class Report extends BaseTime {
     Assert.notNull(fromUser, "From user must be provided");
     Assert.notNull(toUser, "To user must be provided");
 
-    this.reason = reason;
     this.fromUser = fromUser;
     this.toUser = toUser;
+    this.reason = reason;
     this.type = type;
     this.typeId = typeId;
 
     validate();
+  }
+
+  public static Report toUser(
+      User fromUser,
+      User toUser,
+      String reason
+  ) {
+    return new Report(fromUser, toUser, reason, null, null);
+  }
+
+  public static Report toProduct(
+      User fromUser,
+      Product product,
+      String reason
+  ) {
+    return new Report(
+        fromUser,
+        product.getWriter(),
+        reason,
+        Type.PRODUCT,
+        product.getId()
+    );
+  }
+
+  public static Report toComment(
+      User fromUser,
+      Comment comment,
+      String reason
+  ) {
+    return new Report(
+        fromUser,
+        comment.getWriter(),
+        reason,
+        Type.PRODUCT,
+        comment.getId()
+    );
   }
 
   private void validate() {
