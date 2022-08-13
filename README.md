@@ -128,7 +128,7 @@
 
 
 ## 👟회고
-
+[프로젝트 회고 페이지](https://www.notion.so/backend-devcourse/6fef398f020e4780a2260169398e56b0)
 
 ## 팀 프로젝트 노션 링크
-<a href="https://www.notion.so/backend-devcourse/08-0de3b72d52fa4b81ac882a87252cc0a4?v=7d934d4840294fb998e5131218d83b38" target="_blank"> 팀 프로젝트 슬랙 클론 </a>
+<a href="https://www.notion.so/backend-devcourse/08-0de3b72d52fa4b81ac882a87252cc0a4?v=7d934d4840294fb998e5131218d83b38" target="_blank"> 08팀 비드마켓 노션 </a>
