@@ -124,6 +124,10 @@
 <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
 </div>
 
+## 프로젝트 구조도
+![image](https://user-images.githubusercontent.com/57293011/184505107-0d3dc124-1c1f-4c03-81a9-4136ab05b12b.png)
+
+
 ## 📑ERD
 ![bidmarket](https://user-images.githubusercontent.com/57293011/184479885-b3003aa0-a5d8-4251-b6de-8fbec2e0fa3f.png)
 
