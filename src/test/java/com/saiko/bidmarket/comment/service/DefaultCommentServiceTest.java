@@ -13,8 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -129,21 +127,6 @@ class DefaultCommentServiceTest {
         verify(userRepository).findById(anyLong());
         verify(commentRepository).save(any(Comment.class));
         assertThat(response.getId()).isEqualTo(comment.getId());
-      }
-    }
-
-    @Nested
-    @DisplayName("user id 값이 양수가 아니면")
-    class ContextWithNotPositiveUserId {
-
-      @ParameterizedTest
-      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
-      @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
-      void ItThrowsIllegalArgumentException(long userId) {
-        //given
-        //when, then
-        assertThatThrownBy(() -> commentService.create(userId, commentCreateRequest))
-            .isInstanceOf(IllegalArgumentException.class);
       }
     }
 

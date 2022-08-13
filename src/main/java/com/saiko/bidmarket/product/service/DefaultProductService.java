@@ -54,7 +54,6 @@ public class DefaultProductService implements ProductService {
       long userId
   ) {
     Assert.notNull(productCreateRequest, "Request must be provided");
-    Assert.isTrue(userId > 0, "User id must be positive");
 
     final User writer = userRepository
         .findById(userId)
