@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 public class CommentSelectResponse {
+  private final long commentId;
   private final long userId;
   private final String username;
   private final String profileImage;
@@ -21,6 +22,7 @@ public class CommentSelectResponse {
   public static CommentSelectResponse from(Comment comment) {
     return CommentSelectResponse
         .builder()
+        .commentId(comment.getId())
         .userId(comment
                     .getWriter()
                     .getId())
