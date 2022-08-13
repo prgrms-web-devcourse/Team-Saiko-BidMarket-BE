@@ -162,21 +162,6 @@ class DefaultProductServiceTest {
     }
 
     @Nested
-    @DisplayName("user id 값이 양수가 아니면")
-    class ContextWithNotPositiveUserId {
-
-      @ParameterizedTest
-      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
-      @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
-      void ItThrowsIllegalArgumentException(long userId) {
-        //given
-        //when, then
-        assertThatThrownBy(() -> productService.create(productCreateRequest, userId))
-            .isInstanceOf(IllegalArgumentException.class);
-      }
-    }
-
-    @Nested
     @DisplayName("유효한 값이 전달되면")
     class ContextWithValidArg {
 
