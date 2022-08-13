@@ -2,6 +2,7 @@ package com.saiko.bidmarket.chat.repository;
 
 import static com.saiko.bidmarket.chat.entity.QChatMessage.*;
 import static com.saiko.bidmarket.chat.entity.QChatRoom.*;
+import static com.saiko.bidmarket.user.entity.QUser.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,8 @@ public class ChatMessageCustomRepositoryImpl implements ChatMessageCustomReposit
     return jpaQueryFactory
         .selectFrom(chatMessage)
         .join(chatMessage.chatRoom, chatRoom)
+        .join(chatMessage.sender, user)
+        .fetchJoin()
         .where(chatMessage.chatRoom.id.eq(chatRoomId))
         .orderBy(chatMessage.createdAt.desc())
         .offset(request.getOffset())

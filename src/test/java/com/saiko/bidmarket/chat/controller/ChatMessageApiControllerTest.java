@@ -92,9 +92,15 @@ class ChatMessageApiControllerTest extends ControllerSetUp {
                     parameterWithName("limit").description("메시지 조회 개수")
                 ),
                 responseFields(
-                    fieldWithPath("[].userId")
+                    fieldWithPath("[].userInfo.userId")
                         .type(JsonFieldType.NUMBER)
                         .description("유저 번호"),
+                    fieldWithPath("[].userInfo.username")
+                        .type(JsonFieldType.STRING)
+                        .description("유저 닉네임"),
+                    fieldWithPath("[].userInfo.profileImage")
+                        .type(JsonFieldType.STRING)
+                        .description("유저 프로필 이미지"),
                     fieldWithPath("[].content")
                         .type(JsonFieldType.STRING)
                         .description("채팅 내용"),
