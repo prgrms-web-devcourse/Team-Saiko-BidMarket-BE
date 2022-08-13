@@ -33,6 +33,8 @@ import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -698,6 +700,152 @@ class UserApiControllerTest extends ControllerSetUp {
         // when
         ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.put(
             BASE_URL + "/{productId}/hearts", productId));
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+  }
+
+  @WithMockCustomLoginUser
+  @Nested
+  @DisplayName("getAllUserHearts 메서드는")
+  class DescribeGetAllUserHearts {
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidData {
+
+      @Test
+      @DisplayName("찜한 상품을 조회하고 결과를 반환한다")
+      void ItReturnProductList() throws Exception {
+        //given
+        User user = User.builder()
+                        .username("제로")
+                        .profileImage("image")
+                        .provider("google")
+                        .providerId("123")
+                        .group(new Group())
+                        .build();
+        Product product = Product.builder()
+                                 .title("감자팜")
+                                 .description("가격 선제")
+                                 .category(FOOD)
+                                 .images(List.of("image1"))
+                                 .location("강원도")
+                                 .minimumPrice(1000)
+                                 .writer(user)
+                                 .build();
+        ReflectionTestUtils.setField(product, "id", 1L);
+        ReflectionTestUtils.setField(product, "createdAt", LocalDateTime.now());
+
+        given(userService.findAllUserHearts(anyLong(), any(UserHeartSelectRequest.class)))
+            .willReturn(List.of(UserHeartSelectResponse.from(product)));
+
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL + "/hearts")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .queryParam("offset", "1")
+            .queryParam("limit", "1")
+            .queryParam("sort", Sort.END_DATE_ASC.name());
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).findAllUserHearts(anyLong(), any(UserHeartSelectRequest.class));
+        response.andExpect(status().isOk())
+                .andDo(document("Select bidding", preprocessRequest(
+                    prettyPrint()), preprocessResponse(prettyPrint()), requestParameters(
+                    parameterWithName("offset").description("상품 조회 시작 번호"),
+                    parameterWithName("limit").description("상품 조회 개수"),
+                    parameterWithName("sort").description("상품 정렬 기준").optional()), responseFields(
+                    fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                    fieldWithPath("[].title").type(JsonFieldType.STRING).description("상품 제목"),
+                    fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
+                                                      .description("상품 썸네일 이미지"),
+                    fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
+                                                    .description("최소주문금액"),
+                    fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
+                    fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
+                    fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
+                                                 .description("수정 시간").optional())));
+      }
+    }
+
+    @Nested
+    @DisplayName("offset 에 숫자 외에 다른 문자가 들어온다면")
+    class ContextNotNumberOffset {
+
+      @Test
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+        String offset = "NotNumber";
+
+        // when
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL + "/hearts")
+                                                     .param("offset", offset));
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("offset 에 음수가 들어온다면")
+    class ContextNegativeNumberOffset {
+
+      @Test
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+
+        // when
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL + "/hearts")
+                                                     .param("offset", "-1"));
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("limit 에 숫자 외에 다른 문자가 들어온다면")
+    class ContextNotNumberLimit {
+
+      @Test
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest() throws Exception {
+        // given
+        String limit = "NotNumber";
+
+        // when
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL + "/hearts")
+                                                     .param("offset", "1")
+                                                     .param("limit", limit));
+
+        // then
+        response.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("limit 에 양수가 아닌 숫자가 들어오면")
+    class ContextNegativeOrZeroNumberLimit {
+
+      @ParameterizedTest
+      @ValueSource(strings = {"0", "-1"})
+      @DisplayName("BadRequest 로 응답한다.")
+      void itResponseBadRequest(String limit) throws Exception {
+        // when
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL + "/hearts")
+                                                     .param("offset", "1")
+                                                     .param("limit", limit));
 
         // then
         response.andExpect(status().isBadRequest());

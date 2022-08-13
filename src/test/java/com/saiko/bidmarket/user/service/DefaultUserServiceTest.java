@@ -40,6 +40,8 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
+import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
@@ -763,6 +765,80 @@ class DefaultUserServiceTest {
         assertThat(heart)
             .extracting("actived")
             .isEqualTo(false);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("findAllUserHearts 메서드는")
+  class DescribeFindAllUserHearts {
+
+    @Nested
+    @DisplayName("request 가 null이면")
+    class ContextWithNullRequest {
+
+      @ParameterizedTest
+      @ValueSource(longs = {1, Long.MAX_VALUE})
+      @DisplayName("IllegalArgumentException 에러를 발생시킨다")
+      void ItIllegalArgumentException(long src) {
+        assertThatThrownBy(() -> defaultUserService.findAllUserHearts(src, null)).isInstanceOf(
+            IllegalArgumentException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 전달되면")
+    class ContextWithValidParameters {
+
+      @Test
+      @DisplayName("UserHeartSelectResponse 리스트를 반환한다")
+      void ItResponseUserUserHeartSelectResponse() {
+        //given
+        User user = User
+            .builder()
+            .username("test")
+            .provider("test")
+            .providerId("testId")
+            .profileImage("test")
+            .group(new Group())
+            .build();
+        long userId = 1L;
+        ReflectionTestUtils.setField(user, "id", userId);
+
+        UserHeartSelectRequest request = new UserHeartSelectRequest(0, 1, END_DATE_ASC);
+
+        Product product = Product
+            .builder()
+            .title("감자 팜")
+            .description("zz")
+            .location("강원도")
+            .category(ETC)
+            .minimumPrice(15000)
+            .images(List.of("testUrl"))
+            .writer(user)
+            .build();
+        long productId = 1L;
+        ReflectionTestUtils.setField(product, "id", productId);
+
+        Heart heart = Heart.of(user, product);
+
+        given(heartRepository.findAllUserHeart(
+            anyLong(),
+            any(UserHeartSelectRequest.class)
+        )).willReturn(
+            List.of(heart));
+
+        //when
+        List<UserHeartSelectResponse> result = defaultUserService.findAllUserHearts(
+            userId,
+            request
+        );
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result
+                       .get(0)
+                       .getId()).isEqualTo(productId);
       }
     }
   }
