@@ -2,6 +2,7 @@ package com.saiko.bidmarket.user.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -13,6 +14,9 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
+import com.saiko.bidmarket.heart.entity.Heart;
+import com.saiko.bidmarket.heart.repository.HeartRepository;
+import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
@@ -38,6 +42,7 @@ public class DefaultUserService implements UserService {
   private final ProductRepository productRepository;
   private final BiddingRepository biddingRepository;
   private final UserRepository userRepository;
+  private final HeartRepository heartRepository;
   private final GroupService groupService;
 
   @Override
@@ -137,6 +142,32 @@ public class DefaultUserService implements UserService {
     biddingRepository.deleteAllBatchByBidderId(userId);
     finishUserProducts(userId);
     user.delete();
+  }
+
+  @Override
+  public void toggleHeart(
+      long userId,
+      long productId
+  ) {
+    User user = userRepository
+        .findById(userId)
+        .orElseThrow(() -> new NotFoundException("Product does not exist"));
+
+    Product product = productRepository
+        .findById(productId)
+        .orElseThrow(() -> new NotFoundException("Product does not exist"));
+
+    Heart heart = findHeart(user, product);
+    heart.toggle();
+  }
+
+  private Heart findHeart(
+      User user,
+      Product product
+  ) {
+    return heartRepository
+        .findByUserAndProduct(user, product)
+        .orElseGet(() -> heartRepository.save(Heart.of(user, product)));
   }
 
   private void finishUserProducts(long userId) {

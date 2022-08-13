@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -85,5 +86,14 @@ public class UserApiController {
       JwtAuthentication authentication
   ) {
     userService.deleteUser(authentication.getUserId());
+  }
+
+  @PutMapping("{productId}/hearts")
+  @ResponseStatus(HttpStatus.OK)
+  public void toggleHeart(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @PathVariable long productId
+  ) {
+    userService.toggleHeart(authentication.getUserId(), productId);
   }
 }

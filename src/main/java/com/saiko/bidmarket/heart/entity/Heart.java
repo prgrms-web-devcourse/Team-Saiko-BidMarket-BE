@@ -36,12 +36,28 @@ public class Heart extends BaseTime {
   @JoinColumn(name = "product_id")
   private Product product;
 
+  private boolean actived;
+
   @Builder
-  public Heart(User user, Product product) {
-    Assert.notNull(user, "User must be provided");
+  private Heart(User user, Product product) {
     Assert.notNull(product, "Product must be provided");
 
     this.user = user;
     this.product = product;
+  }
+
+  public static Heart of(
+      User user,
+      Product product
+  ) {
+    return Heart
+        .builder()
+        .user(user)
+        .product(product)
+        .build();
+  }
+
+  public void toggle() {
+    actived = !actived;
   }
 }
