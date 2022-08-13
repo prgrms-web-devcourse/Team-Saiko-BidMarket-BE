@@ -24,7 +24,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -189,49 +188,6 @@ class CommentApiControllerTest extends ControllerSetUp {
         response.andExpect(status().isBadRequest());
       }
     }
-
-    @Nested
-    @DisplayName("productId 에 숫자 외에 다른 문자가 들어온다면")
-    class ContextNotNumberProductId {
-
-      @Test
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest() throws Exception {
-        // given
-        String productId = "NotNumber";
-
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders
-                .post(BASE_URL)
-                .param("productId", productId)
-                .param("content", "제가 살래요")
-        );
-
-        // then
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("productId 에 양수가 아닌 숫자가 들어오면")
-    class ContextNegativeOrZeroNumberProductId {
-
-      @ParameterizedTest
-      @ValueSource(strings = {"0", "-1"})
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest(String productId) throws Exception {
-        // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders
-                .post(BASE_URL)
-                .param("productId", productId)
-                .param("content", "깨끗한가요?")
-        );
-        // then
-        response.andExpect(status().isBadRequest());
-      }
-    }
   }
 
   @Nested
@@ -292,58 +248,6 @@ class CommentApiControllerTest extends ControllerSetUp {
                                     .optional()
                             )
             ));
-      }
-    }
-
-    @Nested
-    @DisplayName("productId 에 숫자 외에 다른 문자가 들어온다면")
-    class ContextNotNumberProductId {
-
-      @Test
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest() throws Exception {
-        // given
-        String productId = "NotNumber";
-
-        // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
-                                                     .get(BASE_URL)
-                                                     .queryParam(
-                                                         "productId",
-                                                         productId
-                                                     )
-                                                     .queryParam(
-                                                         "sort",
-                                                         CREATED_AT_ASC.name()
-                                                     ));
-
-        // then
-        response.andExpect(status().isBadRequest());
-      }
-    }
-
-    @Nested
-    @DisplayName("productId 에 음수 나 0이 들어온다면")
-    class ContextNegativeOrZeroNumberProductId {
-
-      @ParameterizedTest
-      @ValueSource(strings = {"0", "-1"})
-      @DisplayName("BadRequest 로 응답한다.")
-      void itResponseBadRequest(String productId) throws Exception {
-        // given
-        // when
-        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
-                                                     .get(BASE_URL)
-                                                     .queryParam(
-                                                         "productId",
-                                                         productId
-                                                     )
-                                                     .queryParam(
-                                                         "sort",
-                                                         CREATED_AT_ASC.name()
-                                                     ));
-        // then
-        response.andExpect(status().isBadRequest());
       }
     }
 

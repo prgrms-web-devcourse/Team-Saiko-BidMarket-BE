@@ -36,7 +36,6 @@ public class DefaultCommentService implements CommentService {
       long userId,
       CommentCreateRequest request
   ) {
-    Assert.isTrue(userId > 0, "User id must be positive");
     Assert.notNull(request, "Request must be provided");
 
     User writer = userRepository
