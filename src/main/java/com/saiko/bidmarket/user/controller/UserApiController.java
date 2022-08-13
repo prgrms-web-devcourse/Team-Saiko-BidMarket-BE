@@ -30,15 +30,14 @@ import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("api/v1/users")
+@RequiredArgsConstructor
 public class UserApiController {
 
   private final UserService userService;
-
-  public UserApiController(UserService userService) {
-    this.userService = userService;
-  }
 
   @PatchMapping
   @ResponseStatus(HttpStatus.OK)
@@ -76,11 +75,12 @@ public class UserApiController {
   @GetMapping("biddings")
   @ResponseStatus(HttpStatus.OK)
   public List<UserBiddingSelectResponse> getAllUserBidding(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @ModelAttribute @Valid UserBiddingSelectRequest request
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @ModelAttribute @Valid
+      UserBiddingSelectRequest request
   ) {
-    long userId = authentication.getUserId();
-    return userService.findAllUserBiddings(userId, request);
+    return userService.findAllUserBiddings(authentication.getUserId(), request);
   }
 
   @DeleteMapping

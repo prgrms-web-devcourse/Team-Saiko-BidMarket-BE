@@ -35,7 +35,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class DefaultUserService implements UserService {
 
@@ -48,7 +48,6 @@ public class DefaultUserService implements UserService {
   private final GroupService groupService;
 
   @Override
-  @Transactional(readOnly = true)
   public User findByProviderAndProviderId(String provider, String providerId) {
     Assert.hasText(provider, "Provider must be provided");
     Assert.hasText(providerId, "ProviderId must be provided");
@@ -58,6 +57,7 @@ public class DefaultUserService implements UserService {
   }
 
   @Override
+  @Transactional
   public User join(OAuth2User oAuth2User, String authorizedClientRegistrationId) {
     Assert.notNull(oAuth2User, "OAuth2User must be provided");
     Assert.hasText(authorizedClientRegistrationId,
@@ -94,6 +94,7 @@ public class DefaultUserService implements UserService {
   }
 
   @Override
+  @Transactional
   public void updateUser(long id, UserUpdateRequest request) {
     Assert.notNull(request, "request must be provide");
 
@@ -121,19 +122,22 @@ public class DefaultUserService implements UserService {
   }
 
   @Override
-  public List<UserBiddingSelectResponse> findAllUserBiddings(long userId,
-                                                             UserBiddingSelectRequest request) {
-    Assert.isTrue(userId > 0, "User id must be positive");
+  public List<UserBiddingSelectResponse> findAllUserBiddings(
+      long userId,
+      UserBiddingSelectRequest request
+  ) {
     Assert.notNull(request, "Request must be provided");
 
-    return biddingRepository.findAllUserBidding(userId, request)
-                            .stream()
-                            .map((bidding) -> bidding.getProduct())
-                            .map(UserBiddingSelectResponse::from)
-                            .collect(Collectors.toList());
+    return biddingRepository
+        .findAllUserBidding(userId, request)
+        .stream()
+        .map((bidding) -> bidding.getProduct())
+        .map(UserBiddingSelectResponse::from)
+        .collect(Collectors.toList());
   }
 
   @Override
+  @Transactional
   public void deleteUser(long userId) {
     Assert.isTrue(userId > 0, "User id must be positive");
 

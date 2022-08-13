@@ -37,5 +37,4 @@ public class UserBiddingSelectResponse {
         .updatedAt(product.getUpdatedAt())
         .build();
   }
-
 }

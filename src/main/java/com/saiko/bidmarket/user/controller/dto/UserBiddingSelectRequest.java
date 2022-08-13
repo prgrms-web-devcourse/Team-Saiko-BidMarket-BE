@@ -19,7 +19,11 @@ public class UserBiddingSelectRequest {
 
   private final Sort sort;
 
-  public UserBiddingSelectRequest(long offset, int limit, Sort sort) {
+  public UserBiddingSelectRequest(
+      long offset,
+      int limit,
+      Sort sort
+  ) {
     this.offset = offset;
     this.limit = limit;
     this.sort = sort != null ? sort : END_DATE_ASC;

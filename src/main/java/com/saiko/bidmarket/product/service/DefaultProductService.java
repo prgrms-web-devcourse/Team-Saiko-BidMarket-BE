@@ -95,6 +95,7 @@ public class DefaultProductService implements ProductService {
   }
 
   @Override
+  @Transactional
   public void executeClosingProduct(Product product) {
     Assert.notNull(product, "Product must be provided");
 
