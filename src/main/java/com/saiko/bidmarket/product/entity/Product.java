@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -75,6 +76,7 @@ public class Product extends BaseTime {
 
   private Long winningPrice;
 
+  @Basic(fetch = FetchType.LAZY)
   @Formula("(select count(1) from heart h where h.product_id = id and h.actived = true)")
   private long heartCount;
 
