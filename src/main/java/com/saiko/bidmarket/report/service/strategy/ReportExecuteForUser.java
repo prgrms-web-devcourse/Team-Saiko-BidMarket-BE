@@ -40,7 +40,6 @@ public class ReportExecuteForUser implements ReportExecuteStrategy {
         .findById(userId)
         .orElseThrow(NotFoundException::new);
 
-    validator.validateSelfReport(reporter.getId(), reportedUser.getId());
     validator.validateDuplicate(reporter.getId(), REPORT_TYPE, reportedUser.getId());
 
     reportRepository.save(Report.of(reporter, REPORT_TYPE, reportedUser.getId(), reason));

@@ -137,9 +137,6 @@ public class ReportExecuteForUserTest {
       void ItThrowIllegalArgumentException() {
         // given
         given(userRepository.findById(reporterId)).willReturn(Optional.of(reporter));
-        doThrow(IllegalArgumentException.class)
-            .when(validator)
-            .validateSelfReport(reporterId, reporterId);
 
         // when
         // then

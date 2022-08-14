@@ -73,44 +73,6 @@ class ReportValidatorTest {
   }
 
   @Nested
-  @DisplayName("validateSelfReport 함수는")
-  class DescribeValidateSelfReportMethod {
-
-    @Nested
-    @DisplayName("신고자 식별자와 피 신고자 식별자가 같다면")
-    class ContextSameValueWithReportIdAndReportedUserId {
-
-      @Test
-      @DisplayName("IllegalArgumentException 예외를 발생시킨다.")
-      void ItThrowIllegalArgumentException() {
-        // given
-        long userId = reporterId;
-
-        // when
-        // then
-        assertThatThrownBy(() -> reportValidator.validateSelfReport(reporterId, userId))
-            .isInstanceOf(IllegalArgumentException.class);
-      }
-    }
-
-    @Nested
-    @DisplayName("신고자 식별자와 피 신고자 식별자가 다르다면")
-    class ContextNotSameValueWithReportIdAndReportedUserId {
-
-      @Test
-      @DisplayName("아무런 응답을 하지 않는다.")
-      void ItReturnNothing() {
-        // given
-        long userId = Long.MAX_VALUE - reporterId;
-
-        // when
-        // then
-        assertDoesNotThrow(() -> reportValidator.validateSelfReport(reporterId, userId));
-      }
-    }
-  }
-
-  @Nested
   @DisplayName("isOverMaxReportCount 함수는")
   class DescribeIsOverMaxReportCountMethod {
 
