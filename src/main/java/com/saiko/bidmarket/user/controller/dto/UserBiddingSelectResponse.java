@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import com.saiko.bidmarket.product.entity.Product;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class UserBiddingSelectResponse {
   private final long id;
 
@@ -26,10 +26,16 @@ public class UserBiddingSelectResponse {
   private final LocalDateTime updatedAt;
 
   public static UserBiddingSelectResponse from(Product product) {
-    return new UserBiddingSelectResponse(product.getId(), product.getTitle(),
-                                         product.getThumbnailImage(),
-                                         product.getMinimumPrice(), product.getExpireAt(),
-                                         product.getCreatedAt(), product.getUpdatedAt());
+    return UserBiddingSelectResponse
+        .builder()
+        .id(product.getId())
+        .title(product.getTitle())
+        .thumbnailImage(product.getThumbnailImage())
+        .minimumPrice(product.getMinimumPrice())
+        .expireAt(product.getExpireAt())
+        .createdAt(product.getCreatedAt())
+        .updatedAt(product.getUpdatedAt())
+        .build();
   }
 
 }
