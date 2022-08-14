@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartCheckResponse;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
@@ -111,5 +113,18 @@ public class UserApiController {
   ) {
     long userId = authentication.getUserId();
     return userService.findAllUserHearts(userId, request);
+  }
+
+  @GetMapping("{productId}/hearts")
+  public UserHeartCheckResponse isUserHearts(
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @PathVariable
+      long productId
+  ) {
+    return userService.isUserHearts(
+        authentication.getUserId(),
+        productId
+    );
   }
 }
