@@ -33,6 +33,7 @@ import com.saiko.bidmarket.common.Sort;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartCheckResponse;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
@@ -849,6 +850,72 @@ class UserApiControllerTest extends ControllerSetUp {
 
         // then
         response.andExpect(status().isBadRequest());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("isUserHeart 메서드는")
+  @WithMockCustomLoginUser
+  class DescribeIsUserHeart {
+
+    @Nested
+    @DisplayName("유효한 값을 받아 호출되면")
+    class ContextValidCall {
+
+      @Test
+      @DisplayName("200 ok와 서비스 isUaerHeart 메서드를 호출한다.")
+      void itCallServiceIsUserHeart() throws Exception {
+        //given
+        final long productId = 1;
+        final UserHeartCheckResponse responseDto = new UserHeartCheckResponse(true);
+
+        when(userService.isUserHearts(anyLong(), anyLong())).thenReturn(responseDto);
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL + "/" + productId + "/hearts");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).isUserHearts(anyLong(), anyLong());
+        response
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "isUserHeart",
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("heart")
+                            .type(JsonFieldType.BOOLEAN)
+                            .description("유저 찜 여부")
+                    )
+                )
+            );
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않는 상품 id를 받으면")
+    class ContextNotExistProductId {
+
+      @Test
+      @DisplayName("NotFound Exception을 반환한다.")
+      void itThrowNotFoundException() throws Exception {
+        //given
+        final long productId = 1;
+
+        when(userService.isUserHearts(anyLong(), anyLong())).thenThrow(NotFoundException.class);
+        //when
+        MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
+            .get(BASE_URL + "/" + productId + "/hearts");
+
+        ResultActions response = mockMvc.perform(request);
+
+        //then
+        verify(userService).isUserHearts(anyLong(), anyLong());
+        response
+            .andExpect(status().isNotFound());
       }
     }
   }
