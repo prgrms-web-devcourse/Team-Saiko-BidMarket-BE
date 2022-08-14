@@ -23,15 +23,6 @@ public class ReportValidator {
     }
   }
 
-  public void validateSelfReport(
-      long reporterId,
-      long userId
-  ) {
-    if (reporterId == userId) {
-      throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다.");
-    }
-  }
-
   public boolean isOverMaxReportCount(
       Report.Type type,
       long typeId
