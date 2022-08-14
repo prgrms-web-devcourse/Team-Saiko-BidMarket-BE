@@ -686,6 +686,9 @@ class ProductApiControllerTest extends ControllerSetUp {
                                 fieldWithPath("[].minimumPrice")
                                     .type(JsonFieldType.NUMBER)
                                     .description("최소주문금액"),
+                                fieldWithPath("[].heartCount")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("찜된 갯수"),
                                 fieldWithPath("[].expireAt")
                                     .type(JsonFieldType.STRING)
                                     .description("비딩 종료 시간"),
