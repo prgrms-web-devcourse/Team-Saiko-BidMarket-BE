@@ -15,7 +15,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class ChatPublishMessage {
 
-  private final ChatUserInfo chatUserInfo;
+  private final ChatUserInfo userInfo;
   private final String content;
   private final LocalDateTime createdAt;
 
@@ -25,7 +25,7 @@ public class ChatPublishMessage {
     ChatUserInfo chatUserInfo = ChatUserInfo.from(chatMessage.getSender());
     return ChatPublishMessage
         .builder()
-        .chatUserInfo(chatUserInfo)
+        .userInfo(chatUserInfo)
         .content(chatMessage.getMessage())
         .createdAt(chatMessage.getCreatedAt())
         .build();
