@@ -75,7 +75,7 @@ public class Product extends BaseTime {
 
   private Long winningPrice;
 
-  @Formula("(select count(1) from heart h where h.product_id = id)")
+  @Formula("(select count(1) from heart h where h.product_id = id and h.actived = true)")
   private long heartCount;
 
   @NotNull
