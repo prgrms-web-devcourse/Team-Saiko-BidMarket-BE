@@ -99,4 +99,8 @@ public class User extends BaseTime {
   public String getProfileImage() {
     return profileImage;
   }
+
+  public void reportPenalty() {
+    delete();
+  }
 }

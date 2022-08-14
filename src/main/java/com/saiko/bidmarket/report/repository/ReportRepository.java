@@ -12,4 +12,9 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
       Report.Type type,
       long typeId
   );
+
+  int countByTypeAndTypeId(
+      Report.Type type,
+      long typeId
+  );
 }

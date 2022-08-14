@@ -21,12 +21,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Formula;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
@@ -93,6 +91,10 @@ public class Product extends BaseTime {
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy(value = "biddingPrice desc")
   private List<Bidding> biddings = new ArrayList<>();
+
+  public static final String DELETE_DESCRIPTION = "삭제된 상품입니다.";
+
+  public static final String DELETED_TITLE = "삭제된 상품입니다.";
 
   @Builder
   private Product(
@@ -225,5 +227,16 @@ public class Product extends BaseTime {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  public void reportPenalty() {
+    if (progressed) {
+      biddings = new ArrayList<>();
+      progressed = false;
+    }
+
+    title = DELETED_TITLE;
+    description = DELETE_DESCRIPTION;
+    // TODO: 사진 처리
   }
 }

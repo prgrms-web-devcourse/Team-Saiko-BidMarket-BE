@@ -12,9 +12,7 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.common.entity.BaseTime;
-import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
 
 import lombok.AccessLevel;
@@ -63,46 +61,17 @@ public class Report extends BaseTime {
     validateUsers();
   }
 
-  public static Report toUser(
+  public static Report of(
       User reporter,
-      long userId,
+      Type type,
+      long targetId,
       String reason
   ) {
     return Report
         .builder()
         .reporter(reporter)
-        .type(Type.USER)
-        .typeId(userId)
-        .reason(reason)
-        .build();
-  }
-
-  public static Report toProduct(
-      User reporter,
-      Product product,
-      String reason
-  ) {
-    return Report
-        .builder()
-        .reporter(reporter)
-        .type(Type.PRODUCT)
-        .typeId(product
-                    .getWriter()
-                    .getId())
-        .reason(reason)
-        .build();
-  }
-
-  public static Report toComment(
-      User reporter,
-      Comment comment,
-      String reason
-  ) {
-    return Report
-        .builder()
-        .reporter(reporter)
-        .type(Type.PRODUCT)
-        .typeId(comment.getId())
+        .type(type)
+        .typeId(targetId)
         .reason(reason)
         .build();
   }
@@ -114,8 +83,14 @@ public class Report extends BaseTime {
   }
 
   public enum Type {
-    USER,
-    PRODUCT,
-    COMMENT
+    USER(25),
+    PRODUCT(10),
+    COMMENT(5);
+
+    public final int MAX_COUNT;
+
+    Type(int max_count) {
+      MAX_COUNT = max_count;
+    }
   }
 }
