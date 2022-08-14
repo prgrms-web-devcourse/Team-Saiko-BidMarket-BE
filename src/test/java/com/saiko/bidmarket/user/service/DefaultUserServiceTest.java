@@ -878,14 +878,16 @@ class DefaultUserServiceTest {
         //given
         final long userId = 1;
         final long productId = 1;
-        final User user = User.builder()
+        final User user = User
+            .builder()
             .username("test")
             .group(new Group())
             .providerId("test")
             .provider("test")
             .profileImage("t")
             .build();
-        final Product product = Product.builder()
+        final Product product = Product
+            .builder()
             .title("test")
             .writer(user)
             .description("test")
@@ -905,7 +907,9 @@ class DefaultUserServiceTest {
         UserHeartCheckResponse response = defaultUserService.isUserHearts(userId, productId);
 
         //then
-        Assertions.assertThat(response.isHeart()).isTrue();
+        Assertions
+            .assertThat(response.isHeart())
+            .isTrue();
       }
     }
 
@@ -919,21 +923,23 @@ class DefaultUserServiceTest {
         //given
         final long userId = 1;
         final long productId = 1;
-        final User user = User.builder()
-                              .username("test")
-                              .group(new Group())
-                              .providerId("test")
-                              .provider("test")
-                              .profileImage("t")
-                              .build();
-        final Product product = Product.builder()
-                                       .title("test")
-                                       .writer(user)
-                                       .description("test")
-                                       .minimumPrice(10000)
-                                       .category(BOOK_TICKET_RECORD)
-                                       .location("test")
-                                       .build();
+        final User user = User
+            .builder()
+            .username("test")
+            .group(new Group())
+            .providerId("test")
+            .provider("test")
+            .profileImage("t")
+            .build();
+        final Product product = Product
+            .builder()
+            .title("test")
+            .writer(user)
+            .description("test")
+            .minimumPrice(10000)
+            .category(BOOK_TICKET_RECORD)
+            .location("test")
+            .build();
         final Heart heart = Heart.of(user, product);
 
         when(productRepository.findById(anyLong()))
@@ -945,7 +951,9 @@ class DefaultUserServiceTest {
         UserHeartCheckResponse response = defaultUserService.isUserHearts(userId, productId);
 
         //then
-        Assertions.assertThat(response.isHeart()).isFalse();
+        Assertions
+            .assertThat(response.isHeart())
+            .isFalse();
       }
     }
   }
