@@ -40,6 +40,7 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartCheckResponse;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
@@ -839,6 +840,112 @@ class DefaultUserServiceTest {
         assertThat(result
                        .get(0)
                        .getId()).isEqualTo(productId);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("isUserHeart 메서드는")
+  class DescribeIsUserHeart {
+
+    @Nested
+    @DisplayName("존재하지 않는 상품의 id를 인자로 받으면")
+    class ContextNotExistProductId {
+
+      @Test
+      @DisplayName("NotFoundException을 반환한다.")
+      void itThrowNotFoundException() {
+        //given
+        final long userId = 1;
+        final long notExistProductId = 1;
+
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        //then
+        Assertions
+            .assertThatThrownBy(() -> defaultUserService.isUserHearts(userId, notExistProductId))
+            .isInstanceOf(NotFoundException.class);
+      }
+    }
+
+    @Nested
+    @DisplayName("유저가 찜한 상품의 id를 인자로 받으면")
+    class ContextProductHeartByUser {
+
+      @Test
+      @DisplayName("true값을 갖고있는 UserHeartsCheckResponse 반환한다.")
+      void itReturnTrue() {
+        //given
+        final long userId = 1;
+        final long productId = 1;
+        final User user = User.builder()
+            .username("test")
+            .group(new Group())
+            .providerId("test")
+            .provider("test")
+            .profileImage("t")
+            .build();
+        final Product product = Product.builder()
+            .title("test")
+            .writer(user)
+            .description("test")
+            .minimumPrice(10000)
+            .category(BOOK_TICKET_RECORD)
+            .location("test")
+            .build();
+        final Heart heart = Heart.of(user, product);
+        heart.toggle();
+
+        when(productRepository.findById(anyLong()))
+            .thenReturn(Optional.of(product));
+        when(heartRepository.findByUserIdAndProductId(anyLong(), anyLong()))
+            .thenReturn(Optional.of(heart));
+
+        //when
+        UserHeartCheckResponse response = defaultUserService.isUserHearts(userId, productId);
+
+        //then
+        Assertions.assertThat(response.isHeart()).isTrue();
+      }
+    }
+
+    @Nested
+    @DisplayName("유저가 찜하지 않은 상품의 id를 인자로 받으면")
+    class ContextProductCancelHeartByUser {
+
+      @Test
+      @DisplayName("false값을 갖고있는 UserHeartsCheckResponse 반환한다.")
+      void itReturnFalse() {
+        //given
+        final long userId = 1;
+        final long productId = 1;
+        final User user = User.builder()
+                              .username("test")
+                              .group(new Group())
+                              .providerId("test")
+                              .provider("test")
+                              .profileImage("t")
+                              .build();
+        final Product product = Product.builder()
+                                       .title("test")
+                                       .writer(user)
+                                       .description("test")
+                                       .minimumPrice(10000)
+                                       .category(BOOK_TICKET_RECORD)
+                                       .location("test")
+                                       .build();
+        final Heart heart = Heart.of(user, product);
+
+        when(productRepository.findById(anyLong()))
+            .thenReturn(Optional.of(product));
+        when(heartRepository.findByUserIdAndProductId(anyLong(), anyLong()))
+            .thenReturn(Optional.of(heart));
+
+        //when
+        UserHeartCheckResponse response = defaultUserService.isUserHearts(userId, productId);
+
+        //then
+        Assertions.assertThat(response.isHeart()).isFalse();
       }
     }
   }
