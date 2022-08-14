@@ -20,9 +20,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Formula;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
@@ -71,6 +74,9 @@ public class Product extends BaseTime {
   private boolean progressed;
 
   private Long winningPrice;
+
+  @Formula("(select count(1) from heart h where h.product_id = id)")
+  private long heartCount;
 
   @NotNull
   private LocalDateTime expireAt;
