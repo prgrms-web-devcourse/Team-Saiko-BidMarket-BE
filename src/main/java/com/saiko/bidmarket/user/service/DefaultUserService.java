@@ -187,7 +187,8 @@ public class DefaultUserService implements UserService {
         .findById(productId)
         .orElseThrow(() -> new NotFoundException("Product does not exist"));
 
-    return heartRepository.findByUserIdAndProductId(userId, productId)
+    return heartRepository
+        .findByUserIdAndProductId(userId, productId)
         .map(Heart::isActived)
         .map(UserHeartCheckResponse::from)
         .orElseGet(() -> UserHeartCheckResponse.from(false));
