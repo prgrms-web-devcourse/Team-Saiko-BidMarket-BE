@@ -20,6 +20,7 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartCheckResponse;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
@@ -174,6 +175,22 @@ public class DefaultUserService implements UserService {
                             .map(Heart::getProduct)
                             .map(UserHeartSelectResponse::from)
                             .collect(Collectors.toList());
+  }
+
+  @Override
+  public UserHeartCheckResponse isUserHearts(
+      long userId,
+      long productId
+  ) {
+
+    productRepository
+        .findById(productId)
+        .orElseThrow(() -> new NotFoundException("Product does not exist"));
+
+    return heartRepository.findByUserIdAndProductId(userId, productId)
+        .map(Heart::isActived)
+        .map(UserHeartCheckResponse::from)
+        .orElseGet(() -> UserHeartCheckResponse.from(false));
   }
 
   private Heart findHeart(

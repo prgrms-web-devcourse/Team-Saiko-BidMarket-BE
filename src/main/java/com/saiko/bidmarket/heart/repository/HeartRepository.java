@@ -10,4 +10,6 @@ import com.saiko.bidmarket.user.entity.User;
 
 public interface HeartRepository extends HeartCustomRepository, JpaRepository<Heart, Long> {
   Optional<Heart> findByUserAndProduct(User user, Product product);
+
+  Optional<Heart> findByUserIdAndProductId(long userId, long productId);
 }
