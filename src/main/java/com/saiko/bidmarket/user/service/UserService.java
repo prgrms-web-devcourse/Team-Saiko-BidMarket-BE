@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectResponse;
+import com.saiko.bidmarket.user.controller.dto.UserHeartCheckResponse;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
@@ -40,4 +41,6 @@ public interface UserService {
       long userId,
       UserHeartSelectRequest request
   );
+
+  UserHeartCheckResponse isUserHearts(long userId, long productId);
 }
