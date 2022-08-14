@@ -1,13 +1,10 @@
 package com.saiko.bidmarket.report.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.comment.entity.Comment;
-import com.saiko.bidmarket.comment.repository.CommentRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
-import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.report.controller.dto.ReportCreateRequest;
 import com.saiko.bidmarket.report.controller.dto.ReportCreateResponse;
 import com.saiko.bidmarket.report.entity.Report;
@@ -21,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DefaultReportService implements ReportService {
 
-  private final ReportRepository reportRepository;
-
   private final UserRepository userRepository;
 
   private final ProductRepository productRepository;
@@ -30,13 +25,11 @@ public class DefaultReportService implements ReportService {
   private final CommentRepository commentRepository;
 
   @Override
-  public ReportCreateResponse create(
+  @Transactional
+  public void create(
       long reporterId,
-      Report.Type type,
-      long typeId,
       ReportCreateRequest createRequest
   ) {
-    Assert.notNull(type, "ReportType must be provided");
     Assert.notNull(createRequest, "Report create dto must be provided");
 
     User reporter = userRepository
