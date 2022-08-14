@@ -37,8 +37,6 @@ public class HeartCustomRepositoryImpl implements HeartCustomRepository {
         .selectFrom(heart)
         .join(heart.product, product)
         .fetchJoin()
-        .join(heart.user, user)
-        .fetchJoin()
         .where(heart.user.id.eq(userId)
         .and(heart.actived.eq(true)))
         .offset(request.getOffset())
