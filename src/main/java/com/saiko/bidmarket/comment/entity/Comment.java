@@ -41,6 +41,8 @@ public class Comment extends BaseTime {
   @JoinColumn(name = "user_id")
   private User writer;
 
+  public static final String DELETED_CONTENT = "삭제된 댓글입니다.";
+
   @Builder
   private Comment(
       String content,
@@ -67,5 +69,9 @@ public class Comment extends BaseTime {
         .product(product)
         .content(content)
         .build();
+  }
+
+  public void reportPenalty() {
+    this.content = DELETED_CONTENT;
   }
 }
