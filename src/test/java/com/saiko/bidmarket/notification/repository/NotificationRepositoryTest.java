@@ -16,7 +16,6 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.saiko.bidmarket.common.config.QueryDslConfig;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectRequest;
 import com.saiko.bidmarket.notification.entity.Notification;
 import com.saiko.bidmarket.notification.repository.dto.NotificationRepoDto;
@@ -45,25 +44,51 @@ public class NotificationRepositoryTest {
   @Autowired
   private NotificationRepository notificationRepository;
 
+  private User user(
+      String name,
+      Group group,
+      String providerId
+  ) {
+    return User
+        .builder()
+        .username(name)
+        .provider("test")
+        .providerId(providerId)
+        .profileImage("test")
+        .group(group)
+        .build();
+  }
+
+  private Product product(
+      String title,
+      User writer
+  ) {
+    return Product
+        .builder()
+        .title(title)
+        .description("test")
+        .images(List.of("image"))
+        .writer(writer)
+        .category(Category.BEAUTY)
+        .build();
+  }
+
+  private Notification notification(
+      User user,
+      Product product
+  ) {
+    return Notification
+        .builder()
+        .user(user)
+        .product(product)
+        .type(
+            END_PRODUCT_FOR_WRITER_WITH_WINNER)
+        .build();
+  }
+
   @Nested
   @DisplayName("findAllNotification 메소드는")
   class DescribeFindAllNotification {
-
-    @DisplayName("userId 가 null 이라면")
-    class ContextWithUserIdNull {
-
-      @Test
-      @DisplayName("InvalidDataAccessApiUsageException 에러를 발생시킨다")
-      void ItThrowsInvalidDataAccessApiUsageException() {
-        //given
-        NotificationSelectRequest request = new NotificationSelectRequest(0, 1);
-
-        //when, then
-        assertThatThrownBy(
-            () -> notificationRepository.findAllNotification(null, request))
-            .isInstanceOf(InvalidDataAccessApiUsageException.class);
-      }
-    }
 
     @Nested
     @DisplayName("notificationSelectRequest 가 null 이라면")
@@ -74,7 +99,7 @@ public class NotificationRepositoryTest {
       void ItThrowsInvalidDataAccessApiUsageException() {
         //when, then
         assertThatThrownBy(
-            () -> notificationRepository.findAllNotification(UnsignedLong.valueOf(1L), null))
+            () -> notificationRepository.findAllNotification(1L, null))
             .isInstanceOf(InvalidDataAccessApiUsageException.class);
       }
     }
@@ -87,38 +112,21 @@ public class NotificationRepositoryTest {
       @DisplayName("페이징 처리된 알림 전체 목록을 반환한다")
       void ItReturnNotificationList() {
         //given
-        Group group = groupRepository.findById(1L).get();
+        Group userGroup = groupRepository
+            .findByName("USER_GROUP")
+            .get();
 
-        User user = userRepository.save(User.builder()
-                                            .username("제로")
-                                            .profileImage("image")
-                                            .provider("google")
-                                            .providerId("123")
-                                            .group(group)
-                                            .build());
-
-        Product product = productRepository.save(Product.builder()
-                                                        .title("노트북 팝니다1")
-                                                        .description("싸요")
-                                                        .category(Category.DIGITAL_DEVICE)
-                                                        .minimumPrice(10000)
-                                                        .images(List.of("thumbnailImage"))
-                                                        .location(null)
-                                                        .writer(user)
-                                                        .build());
-
-        Notification notification = notificationRepository.save(Notification.builder()
-                                                                            .user(user)
-                                                                            .product(product)
-                                                                            .type(
-                                                                                END_PRODUCT_FOR_WRITER_WITH_WINNER)
-                                                                            .build());
+        User user = userRepository.save(user("test1", userGroup, "test1"));
+        Product product = productRepository.save(product("test", user));
+        Notification notification = notificationRepository.save(notification(user, product));
 
         NotificationSelectRequest request = new NotificationSelectRequest(0, 1);
 
         //when
         List<NotificationRepoDto> result = notificationRepository.findAllNotification(
-            UnsignedLong.valueOf(user.getId()), request);
+            user.getId(),
+            request
+        );
 
         //then
         assertThat(result.size()).isEqualTo(1);

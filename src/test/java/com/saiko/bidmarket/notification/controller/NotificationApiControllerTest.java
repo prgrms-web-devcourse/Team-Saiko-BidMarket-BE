@@ -1,7 +1,6 @@
 package com.saiko.bidmarket.notification.controller;
 
 import static com.saiko.bidmarket.notification.NotificationType.*;
-import static com.saiko.bidmarket.product.Category.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
@@ -29,12 +28,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectRequest;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectResponse;
 import com.saiko.bidmarket.notification.entity.Notification;
 import com.saiko.bidmarket.notification.repository.dto.NotificationRepoDto;
 import com.saiko.bidmarket.notification.service.NotificationService;
+import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
@@ -51,6 +50,42 @@ public class NotificationApiControllerTest extends ControllerSetUp {
 
   public static final String BASE_URL = "/api/v1/notifications";
 
+  private User user(String name) {
+    return User
+        .builder()
+        .username(name)
+        .profileImage("imageURL")
+        .provider("provider")
+        .providerId("providerId")
+        .group(new Group())
+        .build();
+  }
+
+  private Product product(
+      User writer,
+      int minimumPrice
+  ) {
+    return Product
+        .builder()
+        .title("title")
+        .description("description")
+        .images(List.of("image"))
+        .minimumPrice(minimumPrice)
+        .writer(writer)
+        .category(Category.ETC)
+        .build();
+  }
+
+  private Notification notification(User user, Product product) {
+    return Notification
+        .builder()
+        .user(user)
+        .product(product)
+        .type(
+            END_PRODUCT_FOR_WRITER_WITH_WINNER)
+        .build();
+  }
+
   @Nested
   @DisplayName("getAllNotification 메소드는")
   @WithMockCustomLoginUser
@@ -64,55 +99,35 @@ public class NotificationApiControllerTest extends ControllerSetUp {
       @DisplayName("유저의 모든 알림을 조회하고 결과를 반환한다")
       void ItResponseNotificationList() throws Exception {
         //given
-        User writer = User.builder()
-                          .username("제로")
-                          .profileImage("image")
-                          .provider("google")
-                          .providerId("123")
-                          .group(new Group())
-                          .build();
+        User writer = user("제로");
         ReflectionTestUtils.setField(writer, "id", 1L);
 
-        User user = User.builder()
-                          .username("마틴")
-                          .profileImage("image")
-                          .provider("google")
-                          .providerId("123")
-                          .group(new Group())
-                          .build();
+        User user = user("마틴");
         ReflectionTestUtils.setField(user, "id", 2L);
 
-        Product product = Product.builder()
-                                 .title("귤 팔아요")
-                                 .description("맛있어요")
-                                 .category(FOOD)
-                                 .images(List.of("image1"))
-                                 .location("제주도")
-                                 .minimumPrice(1000)
-                                 .writer(writer)
-                                 .build();
+        Product product = product(writer, 1000);
         ReflectionTestUtils.setField(product, "id", 1L);
 
-        Notification notification = Notification.builder()
-                                                .user(user)
-                                                .type(END_PRODUCT_FOR_BIDDER)
-                                                .product(product)
-                                                .build();
+        Notification notification = notification(user, product);
         ReflectionTestUtils.setField(notification, "createdAt", LocalDateTime.now());
 
-        NotificationRepoDto notificationRepoDto = new NotificationRepoDto(1L, product.getId(),
-                                                                          product.getTitle(),
-                                                                          product.getThumbnailImage(),
-                                                                          notification.getType(),
-                                                                          notification.isChecked(),
-                                                                          notification.getCreatedAt(),
-                                                                          notification.getUpdatedAt());
+        NotificationRepoDto notificationRepoDto = new NotificationRepoDto(
+            1L,
+            product.getId(),
+            product.getTitle(),
+            product.getThumbnailImage(),
+            notification.getType(),
+            notification.isChecked(),
+            notification.getCreatedAt(),
+            notification.getUpdatedAt());
 
         NotificationSelectResponse notificationSelectResponse = NotificationSelectResponse.from(
             notificationRepoDto);
 
-        given(notificationService.findAllNotifications(any(UnsignedLong.class), any(NotificationSelectRequest.class)))
-            .willReturn(List.of(notificationSelectResponse));
+        given(notificationService.findAllNotifications(
+            anyLong(),
+            any(NotificationSelectRequest.class)
+        )).willReturn(List.of(notificationSelectResponse));
 
         //when
         MockHttpServletRequestBuilder request = RestDocumentationRequestBuilders
@@ -124,29 +139,42 @@ public class NotificationApiControllerTest extends ControllerSetUp {
         ResultActions response = mockMvc.perform(request);
 
         //then
-        response.andExpect(status().isOk())
-                .andDo(document("Select notification", preprocessRequest(
-                    prettyPrint()), preprocessResponse(prettyPrint()), requestParameters(
-                    parameterWithName("offset").description("알림 조회 시작 번호"),
-                    parameterWithName("limit").description("알림 조회 개수")), responseFields(
-                    fieldWithPath("[].id").type(JsonFieldType.NUMBER)
-                                          .description("알림 식별자"),
-                    fieldWithPath("[].productId").type(JsonFieldType.NUMBER)
-                                                 .description("상품 식별자"),
-                    fieldWithPath("[].title").type(JsonFieldType.STRING)
-                                             .description("상품 제목"),
-                    fieldWithPath("[].thumbnailImage").type(JsonFieldType.STRING)
-                                                      .description("상품 썸네일 이미지"),
-                    fieldWithPath("[].type").type(JsonFieldType.STRING)
-                                            .description("알림 타입"),
-                    fieldWithPath("[].content").type(JsonFieldType.STRING)
-                                            .description("알림 메세지"),
-                    fieldWithPath("[].checked").type(JsonFieldType.BOOLEAN)
-                                               .description("알림 조회 여부"),
-                    fieldWithPath("[].createdAt").type(JsonFieldType.STRING)
-                                                 .description("알림 생성 시간"),
-                    fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
-                                                 .description("알림 수정 시간").optional())));
+        response
+            .andExpect(status().isOk())
+            .andDo(document("Select notification", preprocessRequest(
+                prettyPrint()), preprocessResponse(prettyPrint()), requestParameters(
+                parameterWithName("offset").description("알림 조회 시작 번호"),
+                parameterWithName("limit").description("알림 조회 개수")
+            ), responseFields(
+                fieldWithPath("[].id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("알림 식별자"),
+                fieldWithPath("[].productId")
+                    .type(JsonFieldType.NUMBER)
+                    .description("상품 식별자"),
+                fieldWithPath("[].title")
+                    .type(JsonFieldType.STRING)
+                    .description("상품 제목"),
+                fieldWithPath("[].thumbnailImage")
+                    .type(JsonFieldType.STRING)
+                    .description("상품 썸네일 이미지"),
+                fieldWithPath("[].type")
+                    .type(JsonFieldType.STRING)
+                    .description("알림 타입"),
+                fieldWithPath("[].content")
+                    .type(JsonFieldType.STRING)
+                    .description("알림 메세지"),
+                fieldWithPath("[].checked")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("알림 조회 여부"),
+                fieldWithPath("[].createdAt")
+                    .type(JsonFieldType.STRING)
+                    .description("알림 생성 시간"),
+                fieldWithPath("[].updatedAt")
+                    .type(JsonFieldType.STRING)
+                    .description("알림 수정 시간")
+                    .optional()
+            )));
       }
     }
 
@@ -161,8 +189,9 @@ public class NotificationApiControllerTest extends ControllerSetUp {
         String offset = "NotNumber";
 
         // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL).param("offset", offset));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .param("offset", offset));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -179,8 +208,9 @@ public class NotificationApiControllerTest extends ControllerSetUp {
         // given
 
         // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL).param("offset", "-1"));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .param("offset", "-1"));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -198,11 +228,10 @@ public class NotificationApiControllerTest extends ControllerSetUp {
         String limit = "NotNumber";
 
         // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL)
-                                            .param("offset", "1")
-                                            .param("limit", limit)
-        );
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .param("offset", "1")
+                                                     .param("limit", limit));
 
         // then
         response.andExpect(status().isBadRequest());
@@ -218,11 +247,11 @@ public class NotificationApiControllerTest extends ControllerSetUp {
       @DisplayName("BadRequest 로 응답한다.")
       void itResponseBadRequest(String limit) throws Exception {
         // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(BASE_URL)
-                                            .param("offset", "1")
-                                            .param("limit", limit)
-        );
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders
+                                                     .get(BASE_URL)
+                                                     .param("offset", "1")
+                                                     .param("limit", limit));
+
         // then
         response.andExpect(status().isBadRequest());
       }
@@ -254,10 +283,11 @@ public class NotificationApiControllerTest extends ControllerSetUp {
         //then
         response
             .andExpect(status().isOk())
-            .andDo(document("Check notification", preprocessRequest(
-                                prettyPrint()), preprocessResponse(prettyPrint()), pathParameters(
-                                parameterWithName("id").description("알림 아이디")
-                            )
+            .andDo(document(
+                "Check notification",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(parameterWithName("id").description("알림 아이디"))
             ));
       }
     }
@@ -273,8 +303,8 @@ public class NotificationApiControllerTest extends ControllerSetUp {
         String notificationId = "NotNumber";
 
         // when
-        ResultActions response = mockMvc.perform(
-            RestDocumentationRequestBuilders.put(BASE_URL + "/{id}", notificationId));
+        ResultActions response = mockMvc.perform(RestDocumentationRequestBuilders.put(
+            BASE_URL + "/{id}", notificationId));
 
         // then
         response.andExpect(status().isBadRequest());
