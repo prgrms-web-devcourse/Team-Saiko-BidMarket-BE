@@ -4,7 +4,7 @@
 --- 
 
 
-## 👨‍👨‍👧‍👧 사이코팀 소개
+##  <img height="25px" src="https://user-images.githubusercontent.com/50071076/184506573-ed624123-2e8f-430c-9165-0bce79d1e13d.png" /> 사이코팀 소개
 ### FE
 
 <table>
@@ -92,7 +92,7 @@
   </tr>
 </table>
 
-## 💡 프로젝트 소개
+##  <img height="25px" src="https://user-images.githubusercontent.com/50071076/184506573-ed624123-2e8f-430c-9165-0bce79d1e13d.png" /> 프로젝트 소개
 ### 프로젝트 기간
 
 - 기획 및 설계 : 22.07.20 ~ 22.07.24
@@ -100,9 +100,13 @@
 - 버그 수정 및 리팩토링 : 22.08.15 ~
 
 ### 프로젝트 기획, 설명
+- 비딩을 통해 사고파는 중고 거래
+    - 판매자는 중고 물품을 올릴 때 시작가를 정해 놓고 올린다.
+    - 구매자는 구매하고 싶은 가격을 설정하여 낙찰받아 거래할 수 있다.
+    - 판매자는 자신이 원하는 최소가보다 높게 상품을 판매할 수 있다.
+    - 구매자는 자신이 지불하고 싶은 금액 이하로 상품을 구매할 수 있다
 
-
-## 🛠️ 기술 스택
+##  <img height="25px" src="https://user-images.githubusercontent.com/50071076/184506573-ed624123-2e8f-430c-9165-0bce79d1e13d.png" /> 기술 스택
 <div align=left>
 <img src="https://img.shields.io/badge/java 11-007396?style=for-the-badge&logo=java&logoColor=white">
 <img src="https://img.shields.io/badge/springboot 2.7.2-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
@@ -136,18 +140,23 @@
 </div>
 
 
-## 📐 프로젝트 구조도
-![image](https://user-images.githubusercontent.com/57293011/184505107-0d3dc124-1c1f-4c03-81a9-4136ab05b12b.png)
+##  <img height="25px" src="https://user-images.githubusercontent.com/50071076/184506573-ed624123-2e8f-430c-9165-0bce79d1e13d.png" /> 프로젝트 구조도
+
+### BackEnd
+![image](https://user-images.githubusercontent.com/57293011/184611589-c2385d10-08e3-4e35-b58f-8b924f2704f9.png)
+### CI/CD
+![image](https://user-images.githubusercontent.com/57293011/184611613-0f44dd04-bc45-4a87-91ee-1772612aca4c.png)
 
 
-## 📑 ERD
+
+##  <img height="25px" src="https://user-images.githubusercontent.com/50071076/184506573-ed624123-2e8f-430c-9165-0bce79d1e13d.png" /> ERD
 ![bidmarket](https://user-images.githubusercontent.com/57293011/184479885-b3003aa0-a5d8-4251-b6de-8fbec2e0fa3f.png)
 
 
-## 👟 회고
+##  <img height="25px" src="https://user-images.githubusercontent.com/50071076/184506573-ed624123-2e8f-430c-9165-0bce79d1e13d.png" /> 회고
 [프로젝트 회고 페이지](https://www.notion.so/backend-devcourse/6fef398f020e4780a2260169398e56b0)
 
-## 📌 팀 프로젝트 노션 링크 
+##  <img height="25px" src="https://user-images.githubusercontent.com/50071076/184506573-ed624123-2e8f-430c-9165-0bce79d1e13d.png" /> 팀 프로젝트 노션 링크 
 <a href="https://www.notion.so/backend-devcourse/08-0de3b72d52fa4b81ac882a87252cc0a4?v=7d934d4840294fb998e5131218d83b38" target="_blank"> 08팀 비드마켓 노션 </a>
 
 ![image](https://user-images.githubusercontent.com/60775067/184595870-0f5870f1-3f99-4dc8-9b83-f2f63e4e620a.png)
