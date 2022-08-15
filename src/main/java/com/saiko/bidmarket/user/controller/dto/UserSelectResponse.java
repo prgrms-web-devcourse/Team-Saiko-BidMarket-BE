@@ -2,28 +2,31 @@ package com.saiko.bidmarket.user.controller.dto;
 
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.user.entity.User;
 
 public class UserSelectResponse {
 
-  private final UnsignedLong id;
+  private final long id;
 
   private final String username;
 
   private final String profileImage;
 
-  public UserSelectResponse(long id, String username, String profileImage) {
+  public UserSelectResponse(
+      long id,
+      String username,
+      String profileImage
+  ) {
     Assert.notNull(username, "User name must be provided");
     Assert.notNull(profileImage, "User name must be provided");
 
-    this.id = UnsignedLong.valueOf(id);
+    this.id = id;
     this.username = username;
     this.profileImage = profileImage;
   }
 
   public long getId() {
-    return id.getValue();
+    return id;
   }
 
   public String getUsername() {
