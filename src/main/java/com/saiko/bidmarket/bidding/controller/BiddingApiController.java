@@ -45,11 +45,11 @@ public class BiddingApiController {
       @AuthenticationPrincipal
       JwtAuthentication authentication,
       @PathVariable("productId")
-      long pathProductId
+      long productId
   ) {
     return biddingService.findBiddingPriceByProductIdAndUserId(
         authentication.getUserId(),
-        pathProductId
+        productId
     );
   }
 }
