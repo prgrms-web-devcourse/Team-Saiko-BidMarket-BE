@@ -19,6 +19,8 @@ public class UserBiddingSelectResponse {
 
   private final int minimumPrice;
 
+  private final long heartCount;
+
   private final LocalDateTime expireAt;
 
   private final LocalDateTime createdAt;
@@ -32,6 +34,7 @@ public class UserBiddingSelectResponse {
         .title(product.getTitle())
         .thumbnailImage(product.getThumbnailImage())
         .minimumPrice(product.getMinimumPrice())
+        .heartCount(product.getHeartCount())
         .expireAt(product.getExpireAt())
         .createdAt(product.getCreatedAt())
         .updatedAt(product.getUpdatedAt())
