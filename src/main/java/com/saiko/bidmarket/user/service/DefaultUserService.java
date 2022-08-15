@@ -148,6 +148,7 @@ public class DefaultUserService implements UserService {
     biddingRepository.deleteAllBatchByBidderId(userId);
     finishUserProducts(userId);
     user.delete();
+    userRepository.save(user);
   }
 
   @Override
