@@ -12,15 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectRequest;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectResponse;
@@ -31,36 +28,53 @@ import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class DefaultNotificationServiceTest {
-
   @Mock
   NotificationRepository notificationRepository;
 
   @InjectMocks
   DefaultNotificationService notificationService;
 
+  private User user(String name) {
+    return User
+        .builder()
+        .username(name)
+        .profileImage("imageURL")
+        .provider("provider")
+        .providerId("providerId")
+        .group(new Group())
+        .build();
+  }
+
+  private Product product(
+      User writer,
+      int minimumPrice
+  ) {
+    return Product
+        .builder()
+        .title("title")
+        .description("description")
+        .minimumPrice(minimumPrice)
+        .writer(writer)
+        .category(Category.ETC)
+        .build();
+  }
+
+  private Notification notification(User user, Product product) {
+    return Notification
+        .builder()
+        .user(user)
+        .product(product)
+        .type(
+            END_PRODUCT_FOR_WRITER_WITH_WINNER)
+        .build();
+  }
+
   @Nested
   @DisplayName("findAllNotifications 메서드는")
   class DescribeFindAllNotifications {
-
-    @Nested
-    @DisplayName("userId가 null이면")
-    class ContextWithUserIdNull {
-
-      @Test
-      @DisplayName("IllegalArgumentException 예외를 던진다")
-      void ItThrowsIllegalArgumentException() {
-        //given
-        NotificationSelectRequest request = new NotificationSelectRequest(0, 1);
-
-        //when, then
-        assertThatThrownBy(() -> notificationService.findAllNotifications(null, request))
-            .isInstanceOf(IllegalArgumentException.class);
-      }
-    }
 
     @Nested
     @DisplayName("request가 null이면")
@@ -70,8 +84,7 @@ public class DefaultNotificationServiceTest {
       @DisplayName("IllegalArgumentException 에러를 발생시킨다")
       void ItIllegalArgumentException() {
         //when, then
-        assertThatThrownBy(
-            () -> notificationService.findAllNotifications(UnsignedLong.valueOf(1L), null))
+        assertThatThrownBy(() -> notificationService.findAllNotifications(1L, null))
             .isInstanceOf(IllegalArgumentException.class);
       }
     }
@@ -93,43 +106,49 @@ public class DefaultNotificationServiceTest {
         Notification notification = notification(user, product);
         ReflectionTestUtils.setField(notification, "id", 1L);
 
-        NotificationRepoDto notificationRepoDto = new NotificationRepoDto(notification.getId(),
-                                                                          product.getId(),
-                                                                          product.getTitle(),
-                                                                          product.getThumbnailImage(),
-                                                                          notification.getType(),
-                                                                          notification.isChecked(),
-                                                                          notification.getCreatedAt(),
-                                                                          notification.getUpdatedAt());
+        NotificationRepoDto notificationRepoDto = new NotificationRepoDto(
+            notification.getId(),
+            product.getId(),
+            product.getTitle(),
+            product.getThumbnailImage(),
+            notification.getType(),
+            notification.isChecked(),
+            notification.getCreatedAt(),
+            notification.getUpdatedAt()
+        );
         NotificationSelectResponse notificationSelectResponse = NotificationSelectResponse.from(
             notificationRepoDto);
 
         NotificationSelectRequest request = new NotificationSelectRequest(0, 1);
 
-        given(notificationRepository.findAllNotification(any(UnsignedLong.class),
-                                                         any(NotificationSelectRequest.class)))
-            .willReturn(List.of(notificationRepoDto));
+        given(notificationRepository.findAllNotification(
+            anyLong(),
+            any(NotificationSelectRequest.class)
+        )).willReturn(List.of(notificationRepoDto));
 
         //when
-        final List<NotificationSelectResponse> notificationSelectResponses =
-            notificationService.findAllNotifications(UnsignedLong.valueOf(user.getId()), request);
+        List<NotificationSelectResponse> responses = notificationService.findAllNotifications(
+            user.getId(),
+            request
+        );
 
         //then
-        assertThat(notificationSelectResponses.size()).isEqualTo(1);
-        assertThat(notificationSelectResponses.get(0).getId()).isEqualTo(
-            notificationSelectResponse.getId());
-        assertThat(notificationSelectResponses.get(0).getProductId()).isEqualTo(
-            notificationSelectResponse.getProductId());
-        assertThat(notificationSelectResponses.get(0).getTitle()).isEqualTo(
-            notificationSelectResponse.getTitle());
-        assertThat(notificationSelectResponses.get(0).getThumbnailImage()).isEqualTo(
-            notificationSelectResponse.getThumbnailImage());
-        assertThat(notificationSelectResponses.get(0).getType()).isEqualTo(
-            notificationSelectResponse.getType());
-        assertThat(notificationSelectResponses.get(0).getContent()).isEqualTo(
-            notificationSelectResponse.getContent());
-        assertThat(notificationSelectResponses.get(0).isChecked()).isEqualTo(
-            notificationSelectResponse.isChecked());
+        assertThat(responses.size())
+            .isEqualTo(1);
+        assertThat(responses.get(0).getId())
+            .isEqualTo(notificationSelectResponse.getId());
+        assertThat(responses.get(0).getProductId())
+            .isEqualTo(notificationSelectResponse.getProductId());
+        assertThat(responses.get(0).getTitle())
+            .isEqualTo(notificationSelectResponse.getTitle());
+        assertThat(responses.get(0).getThumbnailImage())
+            .isEqualTo(notificationSelectResponse.getThumbnailImage());
+        assertThat(responses.get(0).getType())
+            .isEqualTo(notificationSelectResponse.getType());
+        assertThat(responses.get(0).getContent())
+            .isEqualTo(notificationSelectResponse.getContent());
+        assertThat(responses.get(0).isChecked())
+            .isEqualTo(notificationSelectResponse.isChecked());
       }
     }
   }
@@ -137,34 +156,6 @@ public class DefaultNotificationServiceTest {
   @Nested
   @DisplayName("checkNotification 메서드는")
   class DescribeCheckNotification {
-
-    @Nested
-    @DisplayName("userId가 양수가 아니면")
-    class ContextWithUserIdNegative {
-
-      @ParameterizedTest
-      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
-      @DisplayName("IllegalArgumentException 예외를 던진다")
-      void ItThrowsIllegalArgumentException(long userId) {
-        //when, then
-        assertThatThrownBy(() -> notificationService.checkNotification(userId, 1L))
-            .isInstanceOf(IllegalArgumentException.class);
-      }
-    }
-
-    @Nested
-    @DisplayName("notificationId가 양수가 아니면")
-    class ContextWithNotificationIdNegative {
-
-      @ParameterizedTest
-      @ValueSource(longs = {0, -1, Long.MIN_VALUE})
-      @DisplayName("IllegalArgumentException 예외를 던진다")
-      void ItThrowsIllegalArgumentException(long notificationId) {
-        //when, then
-        assertThatThrownBy(() -> notificationService.checkNotification(1L, notificationId))
-            .isInstanceOf(IllegalArgumentException.class);
-      }
-    }
 
     @Nested
     @DisplayName("notificationId에 해당하는 알림이 없다면")
@@ -246,40 +237,5 @@ public class DefaultNotificationServiceTest {
         assertThat(notification.isChecked()).isTrue();
       }
     }
-  }
-
-  private User user(String name) {
-    return User
-        .builder()
-        .username(name)
-        .profileImage("imageURL")
-        .provider("provider")
-        .providerId("providerId")
-        .group(new Group())
-        .build();
-  }
-
-  private Product product(
-      User writer,
-      int minimumPrice
-  ) {
-    return Product
-        .builder()
-        .title("title")
-        .description("description")
-        .minimumPrice(minimumPrice)
-        .writer(writer)
-        .category(Category.ETC)
-        .build();
-  }
-
-  private Notification notification(User user, Product product) {
-    return Notification
-        .builder()
-        .user(user)
-        .product(product)
-        .type(
-            END_PRODUCT_FOR_WRITER_WITH_WINNER)
-        .build();
   }
 }
