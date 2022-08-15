@@ -53,8 +53,8 @@ public class DefaultBiddingService implements BiddingService {
 
   @Override
   public BiddingPriceResponse findBiddingPriceByProductIdAndUserId(
-      long productId,
-      long userId
+      long userId,
+      long productId
   ) {
     Bidding bidding = biddingRepository
         .findByBidderIdAndProductId(userId, productId)
