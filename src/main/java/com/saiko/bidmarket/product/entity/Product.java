@@ -92,7 +92,7 @@ public class Product extends BaseTime {
   @OrderBy(value = "biddingPrice desc")
   private List<Bidding> biddings = new ArrayList<>();
 
-  public static final String DELETE_DESCRIPTION = "삭제된 상품입니다.";
+  public static final String DELETED_DESCRIPTION = "삭제된 상품입니다.";
 
   public static final String DELETED_TITLE = "삭제된 상품입니다.";
 
@@ -235,7 +235,7 @@ public class Product extends BaseTime {
     }
 
     title = DELETED_TITLE;
-    description = DELETE_DESCRIPTION;
+    description = DELETED_DESCRIPTION;
     // TODO: 사진 처리
   }
 }
