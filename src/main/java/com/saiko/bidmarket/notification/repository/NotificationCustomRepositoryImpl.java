@@ -25,10 +25,9 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
 
   @Override
   public List<NotificationRepoDto> findAllNotification(
-      UnsignedLong userId,
+      long userId,
       NotificationSelectRequest request
   ) {
-    Assert.notNull(userId, "UserId must be provided");
     Assert.notNull(request, "Request must be provided");
 
     return jpaQueryFactory
@@ -40,7 +39,7 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
             ))
         .from(notification)
         .join(notification.product, product)
-        .where(notification.user.id.eq(userId.getValue()))
+        .where(notification.user.id.eq(userId))
         .offset(request.getOffset())
         .limit(request.getLimit())
         .fetch();

@@ -8,14 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectRequest;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectResponse;
 import com.saiko.bidmarket.notification.entity.Notification;
 import com.saiko.bidmarket.notification.repository.NotificationRepository;
-import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.UserRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +23,12 @@ import lombok.RequiredArgsConstructor;
 public class DefaultNotificationService implements NotificationService {
 
   private final NotificationRepository notificationRepository;
-  private final UserRepository userRepository;
 
   @Override
-  public List<NotificationSelectResponse> findAllNotifications(UnsignedLong userId,
-                                                               NotificationSelectRequest request) {
-    Assert.notNull(userId, "UserId must be provided");
+  public List<NotificationSelectResponse> findAllNotifications(
+      long userId,
+      NotificationSelectRequest request
+  ) {
     Assert.notNull(request, "Request must be provided");
 
     return notificationRepository.findAllNotification(userId, request)
@@ -45,9 +42,6 @@ public class DefaultNotificationService implements NotificationService {
       long userId,
       long id
   ) {
-    Assert.isTrue(userId > 0, "UserId must be positive");
-    Assert.isTrue(id > 0, "NotificationId must be positive");
-
     Notification notification = notificationRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("Notification not exist"));
