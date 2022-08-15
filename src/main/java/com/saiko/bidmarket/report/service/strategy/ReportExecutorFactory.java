@@ -16,16 +16,15 @@ public class ReportExecutorFactory {
 
   public ReportExecuteStrategy findExecuteStrategyByType(Report.Type type) {
 
-    if (type == Report.Type.COMMENT) {
-      return reportExecuteForComment;
-    }
+    switch (type) {
+      case PRODUCT:
+        return reportExecuteForProduct;
 
-    if (type == Report.Type.PRODUCT) {
-      return reportExecuteForProduct;
-    }
+      case COMMENT:
+        return reportExecuteForComment;
 
-    if (type == Report.Type.USER) {
-      return reportExecuteForUser;
+      case USER:
+        return reportExecuteForUser;
     }
 
     throw new IllegalArgumentException("신고 타입이 아닙니다.");
