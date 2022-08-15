@@ -36,7 +36,7 @@ public class ReportExecutorFactoryTest {
     class ContextCommentReportType {
 
       @Test
-      @DisplayName("댓글 실행 전략 객체를 반환한다")
+      @DisplayName("댓글 신고 실행 전략 객체를 반환한다")
       void ItReturnReportExecuteForComment() {
         // given
         // when
@@ -53,7 +53,7 @@ public class ReportExecutorFactoryTest {
     class ContextProductReportType {
 
       @Test
-      @DisplayName("댓글 실행 전략 객체를 반환한다")
+      @DisplayName("댓글 신고 실행 전략 객체를 반환한다")
       void ItReturnReportExecuteForProduct() {
         // given
         // when
@@ -70,7 +70,7 @@ public class ReportExecutorFactoryTest {
     class ContextUserReportType {
 
       @Test
-      @DisplayName("댓글 실행 전략 객체를 반환한다")
+      @DisplayName("사용자 신고 실행 전략 객체를 반환한다")
       void ItReturnReportExecuteForUser() {
         // given
         // when
