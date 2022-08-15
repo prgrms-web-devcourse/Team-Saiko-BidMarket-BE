@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
@@ -24,6 +25,8 @@ public class ReportExecuteForProduct implements ReportExecuteStrategy {
   private final ReportRepository reportRepository;
 
   private final ProductRepository productRepository;
+
+  private final BiddingRepository biddingRepository;
 
   private final ReportExecuteForUser reportExecuteForUser;
 
@@ -63,6 +66,7 @@ public class ReportExecuteForProduct implements ReportExecuteStrategy {
 
   private void checkPenalty(Product product) {
     if (validator.isOverMaxReportCount(REPORT_TYPE, product.getId())) {
+      biddingRepository.deleteAllBatchByProductId(product.getId());
       product.reportPenalty();
     }
   }

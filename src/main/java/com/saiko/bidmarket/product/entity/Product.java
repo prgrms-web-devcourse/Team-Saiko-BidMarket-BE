@@ -231,7 +231,6 @@ public class Product extends BaseTime {
 
   public void reportPenalty() {
     if (progressed) {
-      biddings = new ArrayList<>();
       progressed = false;
     }
 
