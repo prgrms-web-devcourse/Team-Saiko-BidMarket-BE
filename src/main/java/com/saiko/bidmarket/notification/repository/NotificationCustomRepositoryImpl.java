@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectRequest;
 import com.saiko.bidmarket.notification.repository.dto.NotificationRepoDto;
 

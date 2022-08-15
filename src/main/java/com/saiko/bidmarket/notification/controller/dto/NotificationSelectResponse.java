@@ -2,11 +2,7 @@ package com.saiko.bidmarket.notification.controller.dto;
 
 import java.time.LocalDateTime;
 
-import com.saiko.bidmarket.comment.controller.dto.CommentSelectResponse;
-import com.saiko.bidmarket.comment.entity.Comment;
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.notification.repository.dto.NotificationRepoDto;
-import com.saiko.bidmarket.product.entity.Product;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,9 +13,9 @@ import lombok.RequiredArgsConstructor;
 @Builder(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class NotificationSelectResponse {
-  private final UnsignedLong id;
+  private final long id;
 
-  private final UnsignedLong productId;
+  private final long productId;
 
   private final String title;
 
@@ -38,12 +34,16 @@ public class NotificationSelectResponse {
   public static NotificationSelectResponse from(NotificationRepoDto notificationRepoDto) {
     return NotificationSelectResponse
         .builder()
-        .id(UnsignedLong.valueOf(notificationRepoDto.getId()))
-        .productId(UnsignedLong.valueOf(notificationRepoDto.getProductId()))
+        .id(notificationRepoDto.getId())
+        .productId(notificationRepoDto.getProductId())
         .title(notificationRepoDto.getTitle())
         .thumbnailImage(notificationRepoDto.getThumbnailImage())
-        .type(notificationRepoDto.getType().getType())
-        .content(notificationRepoDto.getType().getMessage())
+        .type(notificationRepoDto
+                  .getType()
+                  .getType())
+        .content(notificationRepoDto
+                     .getType()
+                     .getMessage())
         .checked(notificationRepoDto.isChecked())
         .createdAt(notificationRepoDto.getCreatedAt())
         .updatedAt(notificationRepoDto.getUpdatedAt())
