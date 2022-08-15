@@ -36,6 +36,11 @@ public class DefaultReportService implements ReportService {
         .findById(reporterId)
         .orElseThrow(NotFoundException::new);
 
-    executeStrategy.execute(reporter, createRequest.getTypeId(), createRequest.getReason());
+    boolean reportIsCompleted
+        = executeStrategy.execute(reporter, createRequest.getTypeId(), createRequest.getReason());
+
+    if (!reportIsCompleted) {
+      throw new IllegalArgumentException("신고가 진행되지 않았습니다");
+    }
   }
 }

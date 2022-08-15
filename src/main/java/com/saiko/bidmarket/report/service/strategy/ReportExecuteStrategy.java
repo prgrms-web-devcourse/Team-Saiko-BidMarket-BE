@@ -4,7 +4,7 @@ import com.saiko.bidmarket.user.entity.User;
 
 public interface ReportExecuteStrategy {
 
-  void execute(
+  boolean execute(
       User reporter,
       long targetId,
       String reason

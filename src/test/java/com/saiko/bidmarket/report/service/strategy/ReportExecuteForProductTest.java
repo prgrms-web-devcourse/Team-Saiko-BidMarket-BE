@@ -167,7 +167,7 @@ public class ReportExecuteForProductTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.of(reportedProduct));
         doThrow(IllegalArgumentException.class)
             .when(validator)
-            .validateDuplicate(reporterId, Report.Type.PRODUCT, reportedProductId);
+            .isDuplicatedReport(reporterId, Report.Type.PRODUCT, reportedProductId);
 
         // when
         // then

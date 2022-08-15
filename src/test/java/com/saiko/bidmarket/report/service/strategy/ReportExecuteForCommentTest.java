@@ -172,7 +172,7 @@ public class ReportExecuteForCommentTest {
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(reportedComment));
         doThrow(IllegalArgumentException.class)
             .when(validator)
-            .validateDuplicate(reporterId, Report.Type.COMMENT, reportedCommentId);
+            .isDuplicatedReport(reporterId, Report.Type.COMMENT, reportedCommentId);
 
         // when
         // then

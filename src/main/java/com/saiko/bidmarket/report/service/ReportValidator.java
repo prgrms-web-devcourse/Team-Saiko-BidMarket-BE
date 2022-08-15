@@ -13,14 +13,12 @@ public class ReportValidator {
 
   private final ReportRepository reportRepository;
 
-  public void validateDuplicate(
+  public boolean isDuplicatedReport(
       long reporterId,
       Report.Type type,
       long typeId
   ) {
-    if (reportRepository.existsByReporter_IdAndTypeAndTypeId(reporterId, type, typeId)) {
-      throw new IllegalArgumentException("중복된 신고입니다.");
-    }
+    return reportRepository.existsByReporter_IdAndTypeAndTypeId(reporterId, type, typeId);
   }
 
   public boolean isOverMaxReportCount(
@@ -29,6 +27,6 @@ public class ReportValidator {
   ) {
     int reportCount = reportRepository.countByTypeAndTypeId(type, typeId);
 
-    return (type.MAX_COUNT <= reportCount);
+    return type.MAX_COUNT <= reportCount;
   }
 }
