@@ -28,7 +28,7 @@ public class ReportExecuteForUser implements ReportExecuteStrategy {
 
   @Override
   @Transactional
-  public void execute(
+  public boolean execute(
       User reporter,
       long userId,
       String reason
@@ -40,11 +40,17 @@ public class ReportExecuteForUser implements ReportExecuteStrategy {
         .findById(userId)
         .orElseThrow(NotFoundException::new);
 
-    validator.validateDuplicate(reporter.getId(), REPORT_TYPE, reportedUser.getId());
+    boolean reportIsDuplicated
+        = validator.isDuplicatedReport(reporter.getId(), REPORT_TYPE, reportedUser.getId());
+
+    if (reportIsDuplicated) {
+      return false;
+    }
 
     reportRepository.save(Report.of(reporter, REPORT_TYPE, reportedUser.getId(), reason));
-
     checkPenalty(reportedUser);
+
+    return true;
   }
 
   private void checkPenalty(User reportedUser) {

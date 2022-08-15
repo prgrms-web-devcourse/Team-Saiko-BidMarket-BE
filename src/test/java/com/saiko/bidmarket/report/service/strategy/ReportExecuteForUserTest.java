@@ -159,7 +159,7 @@ public class ReportExecuteForUserTest {
         given(userRepository.findById(anyLong())).willReturn(Optional.of(reportedUser));
         doThrow(IllegalArgumentException.class)
             .when(validator)
-            .validateDuplicate(reporterId, Report.Type.USER, reportedUserId);
+            .isDuplicatedReport(reporterId, Report.Type.USER, reportedUserId);
 
         // when
         // then

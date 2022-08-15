@@ -34,7 +34,7 @@ public class ReportExecuteForProduct implements ReportExecuteStrategy {
 
   @Override
   @Transactional
-  public void execute(
+  public boolean execute(
       User reporter,
       long productId,
       String reason
@@ -46,22 +46,25 @@ public class ReportExecuteForProduct implements ReportExecuteStrategy {
         .findById(productId)
         .orElseThrow(NotFoundException::new);
 
-    validator.validateDuplicate(reporter.getId(), REPORT_TYPE, product.getId());
+    boolean reportIsDuplicated
+        = validator.isDuplicatedReport(reporter.getId(), REPORT_TYPE, product.getId());
+
+    if (reportIsDuplicated) {
+      return false;
+    }
 
     reportRepository.save(Report.of(reporter, REPORT_TYPE, product.getId(), reason));
-
     checkPenalty(product);
 
-    try {
-      reportExecuteForUser.execute(
-          reporter,
-          product
-              .getWriter()
-              .getId(),
-          reason
-      );
-    } catch (IllegalArgumentException ignored) {
-    }
+    reportExecuteForUser.execute(
+        reporter,
+        product
+            .getWriter()
+            .getId(),
+        reason
+    );
+
+    return true;
   }
 
   private void checkPenalty(Product product) {

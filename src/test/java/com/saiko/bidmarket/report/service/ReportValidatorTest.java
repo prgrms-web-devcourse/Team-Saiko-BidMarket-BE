@@ -1,7 +1,6 @@
 package com.saiko.bidmarket.report.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -31,24 +30,27 @@ class ReportValidatorTest {
   private final long typeId = 1L;
 
   @Nested
-  @DisplayName("validateDuplicate 함수는")
-  class DescribeValidateDuplicateMethod {
+  @DisplayName("isDuplicatedReport 함수는")
+  class DescribeIsDuplicatedReport {
 
     @Nested
     @DisplayName("입력된 인자로된 신고가 존재한다면")
     class ContextExistInputArguments {
 
       @Test
-      @DisplayName("IllegalArgumentException 예외를 발생시킨다.")
+      @DisplayName("true를 반환한다")
       void ItThrowIllegalArgumentException() {
         // given
         given(reportRepository.existsByReporter_IdAndTypeAndTypeId(anyLong(), any(), anyLong()))
             .willReturn(true);
 
         // when
+        boolean actual = reportValidator.isDuplicatedReport(reporterId, type, typeId);
+
         // then
-        assertThatThrownBy(() -> reportValidator.validateDuplicate(reporterId, type, typeId))
-            .isInstanceOf(IllegalArgumentException.class);
+        verify(reportRepository, atLeastOnce())
+            .existsByReporter_IdAndTypeAndTypeId(anyLong(), any(), anyLong());
+        assertThat(actual).isTrue();
       }
     }
 
@@ -57,17 +59,19 @@ class ReportValidatorTest {
     class ContextNotExistInputArguments {
 
       @Test
-      @DisplayName("아무런 응답하지 않는다.")
+      @DisplayName("false를 반환한다")
       void ItReturnNothing() {
         // given
         given(reportRepository.existsByReporter_IdAndTypeAndTypeId(anyLong(), any(), anyLong()))
             .willReturn(false);
 
         // when
+        boolean actual = reportValidator.isDuplicatedReport(reporterId, type, typeId);
+
         // then
-        assertDoesNotThrow(() -> reportValidator.validateDuplicate(reporterId, type, typeId));
         verify(reportRepository, atLeastOnce())
             .existsByReporter_IdAndTypeAndTypeId(anyLong(), any(), anyLong());
+        assertThat(actual).isFalse();
       }
     }
   }

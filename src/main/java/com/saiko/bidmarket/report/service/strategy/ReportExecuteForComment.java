@@ -31,7 +31,7 @@ public class ReportExecuteForComment implements ReportExecuteStrategy {
 
   @Override
   @Transactional
-  public void execute(
+  public boolean execute(
       User reporter,
       long commentId,
       String reason
@@ -43,22 +43,25 @@ public class ReportExecuteForComment implements ReportExecuteStrategy {
         .findById(commentId)
         .orElseThrow(NotFoundException::new);
 
-    validator.validateDuplicate(reporter.getId(), REPORT_TYPE, comment.getId());
+    boolean reportIsDuplicated
+        = validator.isDuplicatedReport(reporter.getId(), REPORT_TYPE, comment.getId());
+
+    if (reportIsDuplicated) {
+      return false;
+    }
 
     reportRepository.save(Report.of(reporter, REPORT_TYPE, commentId, reason));
-
     checkPenalty(comment);
 
-    try {
-      reportExecuteForUser.execute(
-          reporter,
-          comment
-              .getWriter()
-              .getId(),
-          reason
-      );
-    } catch (IllegalArgumentException ignored) {
-    }
+    reportExecuteForUser.execute(
+        reporter,
+        comment
+            .getWriter()
+            .getId(),
+        reason
+    );
+
+    return true;
   }
 
   private void checkPenalty(Comment comment) {
