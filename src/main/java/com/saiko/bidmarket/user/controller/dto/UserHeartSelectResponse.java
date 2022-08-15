@@ -19,6 +19,8 @@ public class UserHeartSelectResponse {
 
   private final int minimumPrice;
 
+  private final long heartCount;
+
   private final LocalDateTime expireAt;
 
   private final LocalDateTime createdAt;
@@ -31,6 +33,7 @@ public class UserHeartSelectResponse {
         product.getTitle(),
         product.getThumbnailImage(),
         product.getMinimumPrice(),
+        product.getHeartCount(),
         product.getExpireAt(),
         product.getCreatedAt(),
         product.getUpdatedAt()

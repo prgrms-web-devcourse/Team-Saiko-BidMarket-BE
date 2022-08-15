@@ -399,6 +399,8 @@ class UserApiControllerTest extends ControllerSetUp {
                                                       .description("상품 썸네일 이미지"),
                     fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
                                                     .description("최소주문금액"),
+                    fieldWithPath("[].heartCount").type(JsonFieldType.NUMBER)
+                                                    .description("찜 갯수"),
                     fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
                     fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
                     fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
@@ -544,6 +546,8 @@ class UserApiControllerTest extends ControllerSetUp {
                                                       .description("상품 썸네일 이미지"),
                     fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
                                                     .description("최소주문금액"),
+                    fieldWithPath("[].heartCount").type(JsonFieldType.NUMBER)
+                                                    .description("찜 갯수"),
                     fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
                     fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
                     fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
@@ -767,6 +771,8 @@ class UserApiControllerTest extends ControllerSetUp {
                                                       .description("상품 썸네일 이미지"),
                     fieldWithPath("[].minimumPrice").type(JsonFieldType.NUMBER)
                                                     .description("최소주문금액"),
+                    fieldWithPath("[].heartCount").type(JsonFieldType.NUMBER)
+                                                    .description("찜갯수"),
                     fieldWithPath("[].expireAt").type(JsonFieldType.STRING).description("비딩 종료 시간"),
                     fieldWithPath("[].createdAt").type(JsonFieldType.STRING).description("생성 시간"),
                     fieldWithPath("[].updatedAt").type(JsonFieldType.STRING)
