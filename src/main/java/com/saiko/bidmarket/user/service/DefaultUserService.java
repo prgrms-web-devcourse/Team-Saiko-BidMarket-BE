@@ -148,6 +148,7 @@ public class DefaultUserService implements UserService {
     biddingRepository.deleteAllBatchByBidderId(userId);
     finishUserProducts(userId);
     user.delete();
+    //TODO: productRepository를 변경하도록 수정해야함
     userRepository.save(user);
   }
 
