@@ -1,8 +1,11 @@
-# Team-Saiko-BidMarket-BE
+# 비딩을 통해 사고 파는 중고거래 서비스, [비드마켓](https://bidmarket.vercel.app)
+![image](https://user-images.githubusercontent.com/60775067/184595581-65cb7be0-63bc-4962-9c2c-b0c92146c962.png)
 
-## 🧚🏻사이코팀 소개
+--- 
 
-## FE
+
+## 👨‍👨‍👧‍👧 사이코팀 소개
+### FE
 
 <table>
   <tr>
@@ -43,7 +46,7 @@
 
 [BidMarket-FrontEnd-Github-Repository](https://github.com/prgrms-web-devcourse/Team-Saiko-BidMarket-FE)
 
-## BE
+### BE
 
 <table>
   <tr>
@@ -89,7 +92,7 @@
   </tr>
 </table>
 
-## 💡프로젝트 소개
+## 💡 프로젝트 소개
 ### 프로젝트 기간
 
 - 기획 및 설계 : 22.07.20 ~ 22.07.24
@@ -98,7 +101,8 @@
 
 ### 프로젝트 기획, 설명
 
-## 🛠️기술 스택
+
+## 🛠️ 기술 스택
 <div align=left>
 <img src="https://img.shields.io/badge/java 11-007396?style=for-the-badge&logo=java&logoColor=white">
 <img src="https://img.shields.io/badge/springboot 2.7.2-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
@@ -131,16 +135,20 @@
 <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
 </div>
 
-## 프로젝트 구조도
+
+## 📐 프로젝트 구조도
 ![image](https://user-images.githubusercontent.com/57293011/184505107-0d3dc124-1c1f-4c03-81a9-4136ab05b12b.png)
 
 
-## 📑ERD
+## 📑 ERD
 ![bidmarket](https://user-images.githubusercontent.com/57293011/184479885-b3003aa0-a5d8-4251-b6de-8fbec2e0fa3f.png)
 
 
-## 👟회고
+## 👟 회고
 [프로젝트 회고 페이지](https://www.notion.so/backend-devcourse/6fef398f020e4780a2260169398e56b0)
 
-## 팀 프로젝트 노션 링크
+## 📌 팀 프로젝트 노션 링크 
 <a href="https://www.notion.so/backend-devcourse/08-0de3b72d52fa4b81ac882a87252cc0a4?v=7d934d4840294fb998e5131218d83b38" target="_blank"> 08팀 비드마켓 노션 </a>
+
+![image](https://user-images.githubusercontent.com/60775067/184595870-0f5870f1-3f99-4dc8-9b83-f2f63e4e620a.png)
+
