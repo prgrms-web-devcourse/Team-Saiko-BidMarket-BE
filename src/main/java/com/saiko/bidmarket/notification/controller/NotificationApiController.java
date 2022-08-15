@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.saiko.bidmarket.common.entity.UnsignedLong;
 import com.saiko.bidmarket.common.jwt.JwtAuthentication;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectRequest;
 import com.saiko.bidmarket.notification.controller.dto.NotificationSelectResponse;
@@ -38,15 +37,16 @@ public class NotificationApiController {
       @ModelAttribute @Valid
       NotificationSelectRequest request
       ) {
-    UnsignedLong userId = UnsignedLong.valueOf(authentication.getUserId());
-    return notificationService.findAllNotifications(userId, request);
+    return notificationService.findAllNotifications(authentication.getUserId(), request);
   }
 
   @PutMapping("{id}")
   @ResponseStatus(HttpStatus.OK)
   public void checkNotification(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @PathVariable long id
+      @AuthenticationPrincipal
+      JwtAuthentication authentication,
+      @PathVariable
+      long id
   ) {
     notificationService.checkNotification(authentication.getUserId(), id);
   }
