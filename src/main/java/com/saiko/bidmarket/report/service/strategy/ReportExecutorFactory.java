@@ -1,6 +1,7 @@
 package com.saiko.bidmarket.report.service.strategy;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.report.entity.Report;
 
@@ -15,6 +16,7 @@ public class ReportExecutorFactory {
   private final ReportExecuteForUser reportExecuteForUser;
 
   public ReportExecuteStrategy findExecuteStrategyByType(Report.Type type) {
+    Assert.notNull(type, "type은 null일 수 없습니다.");
 
     switch (type) {
       case PRODUCT:
@@ -25,8 +27,9 @@ public class ReportExecutorFactory {
 
       case USER:
         return reportExecuteForUser;
-    }
 
-    throw new IllegalArgumentException("신고 타입이 아닙니다.");
+      default:
+        throw new IllegalArgumentException("상품의 유형이 아닙니다.");
+    }
   }
 }
