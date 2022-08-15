@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
@@ -37,6 +38,9 @@ public class ReportExecuteForProductTest {
 
   @Mock
   private ReportRepository reportRepository;
+
+  @Mock
+  private BiddingRepository biddingRepository;
 
   @Mock
   private ProductRepository productRepository;
