@@ -151,6 +151,7 @@ public class DefaultUserService implements UserService {
   }
 
   @Override
+  @Transactional
   public void toggleHeart(
       long userId,
       long productId
