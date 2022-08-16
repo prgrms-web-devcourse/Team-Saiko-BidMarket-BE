@@ -107,21 +107,24 @@ public class DefaultProductService implements ProductService {
                                  .user(product.getWriter())
                                  .notificationType(
                                      END_PRODUCT_FOR_WRITER_NOT_WITH_WINNER)
-                                 .product(product));
+                                 .product(product)
+                                 .build());
     } else {
       publisher.publishEvent(NotificationCreateEvent
                                  .builder()
                                  .user(product.getWriter())
                                  .notificationType(
                                      END_PRODUCT_FOR_WRITER_WITH_WINNER)
-                                 .product(product));
+                                 .product(product)
+                                 .build());
 
       publisher.publishEvent(NotificationCreateEvent
                                  .builder()
                                  .user(winner)
                                  .notificationType(
                                      END_PRODUCT_FOR_WINNER)
-                                 .product(product));
+                                 .product(product)
+                                 .build());
       product
           .getBiddersExceptWinner()
           .forEach(bidder ->
@@ -130,7 +133,8 @@ public class DefaultProductService implements ProductService {
                                                   .user(bidder)
                                                   .notificationType(
                                                       END_PRODUCT_FOR_BIDDER)
-                                                  .product(product)));
+                                                  .product(product)
+                                                  .build()));
     }
   }
 
