@@ -39,22 +39,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class DefaultUserService implements UserService {
 
-  private final Logger log = LoggerFactory.getLogger(getClass());
-
   private final ProductRepository productRepository;
   private final BiddingRepository biddingRepository;
   private final UserRepository userRepository;
   private final HeartRepository heartRepository;
   private final GroupService groupService;
-
-  @Override
-  public User findByProviderAndProviderId(String provider, String providerId) {
-    Assert.hasText(provider, "Provider must be provided");
-    Assert.hasText(providerId, "ProviderId must be provided");
-
-    return userRepository.findByProviderAndProviderId(provider, providerId)
-                         .orElseThrow(() -> new NotFoundException("User does not exist"));
-  }
 
   @Override
   @Transactional
@@ -65,17 +54,15 @@ public class DefaultUserService implements UserService {
 
     String providerId = oAuth2User.getName();
     try {
-      User user = findByProviderAndProviderId(authorizedClientRegistrationId, providerId);
-      log.warn("Already exists: {} for (provider: {}, providerId: {})", user,
-               authorizedClientRegistrationId, providerId);
-      return user;
+      return userRepository
+          .findByProviderAndProviderId(authorizedClientRegistrationId, providerId)
+          .orElseThrow(NotFoundException::new);
     } catch (NotFoundException e) {
       Map<String, Object> attributes = oAuth2User.getAttributes();
 
       String username = (String)attributes.get("name");
       String profileImage = (String)attributes.get("picture");
 
-      log.info("username : {} profileImage : {}", username, profileImage);
       Group group = groupService.findByName("USER_GROUP");
 
       User user = new User(username, profileImage, authorizedClientRegistrationId, providerId,
