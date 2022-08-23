@@ -2,6 +2,8 @@ package com.saiko.bidmarket.user.entity;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
@@ -50,8 +53,13 @@ public class User extends BaseTime {
   protected User() {/*no-op*/}
 
   @Builder
-  public User(String username, String profileImage, String provider, String providerId,
-              Group group) {
+  public User(
+      String username,
+      String profileImage,
+      String provider,
+      String providerId,
+      Group group
+  ) {
     Assert.isTrue(isNotBlank(username), "Username must be provided");
     Assert.isTrue(isNotBlank(profileImage), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(provider), "ProfileImage must be provided");
@@ -69,7 +77,10 @@ public class User extends BaseTime {
     return this.id == id;
   }
 
-  public void update(String username, String profileImage) {
+  public void update(
+      String username,
+      String profileImage
+  ) {
     Assert.notNull(username, "username must be provide");
     Assert.notNull(profileImage, "profileImage must be provide");
 
@@ -102,5 +113,27 @@ public class User extends BaseTime {
 
   public void reportPenalty() {
     delete();
+  }
+
+  public static User of(
+      OAuth2User oAuth2User,
+      String provider,
+      Group group
+  ) {
+    Map<String, Object> attributes = oAuth2User.getAttributes();
+
+    String providerId = oAuth2User.getName();
+    String username = (String)attributes.get("name");
+    String profileImage = (String)attributes.get("picture");
+
+    return User
+        .builder()
+        .username(username)
+        .profileImage(profileImage)
+        .provider(provider)
+        .providerId(providerId)
+        .group(group)
+        .build();
+
   }
 }
