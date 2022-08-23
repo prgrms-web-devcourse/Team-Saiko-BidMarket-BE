@@ -20,10 +20,15 @@ import org.springframework.util.Assert;
 
 import com.saiko.bidmarket.common.entity.BaseTime;
 
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "`user`")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTime {
 
   @Id
@@ -48,8 +53,6 @@ public class User extends BaseTime {
   private Group group;
 
   private static final String DEFAULT_DELETE_NAME = "Unknown";
-
-  protected User() {/*no-op*/}
 
   @Builder
   public User(
@@ -92,22 +95,6 @@ public class User extends BaseTime {
     this.profileImage = "";
     this.provider = null;
     this.providerId = null;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public Group getGroup() {
-    return group;
-  }
-
-  public String getProfileImage() {
-    return profileImage;
   }
 
   public void reportPenalty() {
