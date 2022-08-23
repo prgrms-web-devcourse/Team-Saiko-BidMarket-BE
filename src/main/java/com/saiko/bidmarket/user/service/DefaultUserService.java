@@ -1,11 +1,8 @@
 package com.saiko.bidmarket.user.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +44,10 @@ public class DefaultUserService implements UserService {
 
   @Override
   @Transactional
-  public User join(OAuth2User oAuth2User, String provider) {
+  public User join(
+      OAuth2User oAuth2User,
+      String provider
+  ) {
     Assert.notNull(oAuth2User, "OAuth2User must be provided");
     Assert.hasText(provider, "Provider must be provided");
 
@@ -58,7 +58,10 @@ public class DefaultUserService implements UserService {
         .orElse(createUser(oAuth2User, provider));
   }
 
-  private User createUser(OAuth2User oAuth2User, String provider) {
+  private User createUser(
+      OAuth2User oAuth2User,
+      String provider
+  ) {
     Group group = groupService.findByName("USER_GROUP");
     User user = User.of(oAuth2User, provider, group);
     return userRepository.save(user);
