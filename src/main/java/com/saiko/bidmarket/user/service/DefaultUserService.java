@@ -58,15 +58,6 @@ public class DefaultUserService implements UserService {
         .orElse(createUser(oAuth2User, provider));
   }
 
-  private User createUser(
-      OAuth2User oAuth2User,
-      String provider
-  ) {
-    Group group = groupService.findByName("USER_GROUP");
-    User user = User.of(oAuth2User, provider, group);
-    return userRepository.save(user);
-  }
-
   @Override
   public UserSelectResponse findById(long id) {
     Assert.isTrue(id > 0, "userId must be positive");
@@ -198,5 +189,14 @@ public class DefaultUserService implements UserService {
         .findAllByWriterIdAndProgressed(userId, true)
         .forEach(product -> biddingRepository.deleteAllBatchByProductId(product.getId()));
     productRepository.finishByUserId(userId);
+  }
+
+  private User createUser(
+      OAuth2User oAuth2User,
+      String provider
+  ) {
+    Group group = groupService.findByName("USER_GROUP");
+    User user = User.of(oAuth2User, provider, group);
+    return userRepository.save(user);
   }
 }
