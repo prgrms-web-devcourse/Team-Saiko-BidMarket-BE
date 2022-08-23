@@ -47,16 +47,15 @@ public class DefaultUserService implements UserService {
 
   @Override
   @Transactional
-  public User join(OAuth2User oAuth2User, String authorizedClientRegistrationId) {
+  public User join(OAuth2User oAuth2User, String provider) {
     Assert.notNull(oAuth2User, "OAuth2User must be provided");
-    Assert.hasText(authorizedClientRegistrationId,
-                   "AuthorizedClientRegistrationId must be provided");
+    Assert.hasText(provider, "Provider must be provided");
 
     String providerId = oAuth2User.getName();
 
     return userRepository
-        .findByProviderAndProviderId(authorizedClientRegistrationId, providerId)
-        .orElse(createUser(oAuth2User, authorizedClientRegistrationId));
+        .findByProviderAndProviderId(provider, providerId)
+        .orElse(createUser(oAuth2User, provider));
   }
 
   private User createUser(OAuth2User oAuth2User, String provider) {
