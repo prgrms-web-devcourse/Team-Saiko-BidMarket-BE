@@ -3,6 +3,7 @@ package com.saiko.bidmarket.user.entity;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,11 +21,9 @@ import org.springframework.util.Assert;
 import com.saiko.bidmarket.common.entity.BaseTime;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "`user`")
-@EqualsAndHashCode(of = {"provider", "providerId"}, callSuper = false)
 public class User extends BaseTime {
 
   @Id
@@ -135,5 +134,22 @@ public class User extends BaseTime {
         .group(group)
         .build();
 
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User user = (User)o;
+    return provider.equals(user.provider) && providerId.equals(user.providerId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(provider, providerId);
   }
 }
