@@ -1,9 +1,9 @@
-name: Deploy
+name: ci-deploy
 
 on:
   push:
     branches:
-      - release
+      - 'release'
 
 env:
   S3_BUCKET_NAME: bid-market-deploy-bucket
