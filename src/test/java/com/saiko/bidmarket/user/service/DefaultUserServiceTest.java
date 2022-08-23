@@ -15,7 +15,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -120,12 +119,14 @@ class DefaultUserServiceTest {
         //given
         String provider = "google";
         String providerId = "testProviderId";
+        String profileImage = "profileImage";
         User user = new User("username", "test", provider, providerId, new Group());
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(),
-                                                      Map.of("name", providerId), "name"
-        );
-        given(userRepository.findByProviderAndProviderId(anyString(), anyString())).willReturn(
-            Optional.of(user));
+        Map<String, Object> attributes = Map.of("name", providerId, "picture", profileImage);
+        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(), attributes, "name");
+
+        given(userRepository.findByProviderAndProviderId(anyString(), anyString()))
+            .willReturn(Optional.of(user));
+
         //when
         User joinedUser = defaultUserService.join(oAuth2User, provider);
 
@@ -150,9 +151,7 @@ class DefaultUserServiceTest {
       @DisplayName("유저를 생성하고 반환한다.")
       void It() {
         //given
-        Group userGroup = new Group();
-        ReflectionTestUtils.setField(userGroup, "name", "USER_GROUP");
-        given(groupService.findByName(anyString())).willReturn(userGroup);
+        given(groupService.findByName(anyString())).willReturn(new Group());
         given(userRepository.findByProviderAndProviderId(anyString(), anyString())).willReturn(
             Optional.empty());
 
@@ -673,7 +672,9 @@ class DefaultUserServiceTest {
 
         // then
         verify(heartRepository).save(any(Heart.class));
-        assertThat(heart).extracting("actived").isEqualTo(true);
+        assertThat(heart)
+            .extracting("actived")
+            .isEqualTo(true);
       }
     }
 
