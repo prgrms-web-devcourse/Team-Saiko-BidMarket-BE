@@ -1,4 +1,4 @@
-name: Jacoco Code Coverage
+name: ci-build
 
 on:
   push:
@@ -23,8 +23,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Test with Gradle
-        run: ./gradlew build jacocoTestReport
+      - name: Build and with Gradle
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build jacocoTestReport sonarqube --info
 
       - name: Codecov
         uses: codecov/codecov-action@v3.1.0
