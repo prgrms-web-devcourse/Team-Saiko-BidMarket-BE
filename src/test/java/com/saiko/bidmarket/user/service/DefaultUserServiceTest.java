@@ -73,46 +73,6 @@ class DefaultUserServiceTest {
   @InjectMocks
   DefaultUserService defaultUserService;
 
-  @Order(1)
-  @Nested
-  @DisplayName("findByProviderAndProviderId 는")
-  class DescribeFindByProviderAndProviderId {
-
-    @Nested
-    @DisplayName("provider 가 빈 값이면")
-    class ContextWithProviderIsBlank {
-
-      @ParameterizedTest
-      @NullAndEmptySource
-      @ValueSource(strings = {"\n", "\t"})
-      @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
-      void ItThrowsIllegalArgumentException(String src) {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> defaultUserService.findByProviderAndProviderId(src, "123")
-        );
-      }
-    }
-
-    @Nested
-    @DisplayName("providerId 가 빈 값이면")
-    class ContextWithProviderIdIsBlank {
-
-      @ParameterizedTest
-      @NullAndEmptySource
-      @ValueSource(strings = {"\n", "\t"})
-      @DisplayName("IllegalArgumentException 에러를 발생시킨다.")
-      void ItThrowsIllegalArgumentException(String src) {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> defaultUserService.findByProviderAndProviderId("123", src)
-        );
-
-      }
-    }
-  }
-
-  @Order(2)
   @Nested
   @DisplayName("join 메서드는")
   class DescribeJoin {

@@ -16,7 +16,6 @@ import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.User;
 
 public interface UserService {
-  User findByProviderAndProviderId(String provider, String providerId);
 
   User join(OAuth2User oAuth2User, String authorizedClientRegistrationId);
 
