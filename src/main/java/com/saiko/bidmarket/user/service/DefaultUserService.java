@@ -53,22 +53,31 @@ public class DefaultUserService implements UserService {
                    "AuthorizedClientRegistrationId must be provided");
 
     String providerId = oAuth2User.getName();
-    try {
-      return userRepository
-          .findByProviderAndProviderId(authorizedClientRegistrationId, providerId)
-          .orElseThrow(NotFoundException::new);
-    } catch (NotFoundException e) {
-      Map<String, Object> attributes = oAuth2User.getAttributes();
 
-      String username = (String)attributes.get("name");
-      String profileImage = (String)attributes.get("picture");
+    return userRepository
+        .findByProviderAndProviderId(authorizedClientRegistrationId, providerId)
+        .orElse(createUser(oAuth2User, authorizedClientRegistrationId));
+  }
 
-      Group group = groupService.findByName("USER_GROUP");
+  private User createUser(OAuth2User oAuth2User, String provider) {
+    Map<String, Object> attributes = oAuth2User.getAttributes();
 
-      User user = new User(username, profileImage, authorizedClientRegistrationId, providerId,
-                           group);
-      return userRepository.save(user);
-    }
+    String providerId = oAuth2User.getName();
+    String username = (String)attributes.get("name");
+    String profileImage = (String)attributes.get("picture");
+
+    Group group = groupService.findByName("USER_GROUP");
+
+    User user = User
+        .builder()
+        .username(username)
+        .profileImage(profileImage)
+        .provider(provider)
+        .providerId(providerId)
+        .group(group)
+        .build();
+
+    return userRepository.save(user);
   }
 
   @Override
