@@ -60,23 +60,8 @@ public class DefaultUserService implements UserService {
   }
 
   private User createUser(OAuth2User oAuth2User, String provider) {
-    Map<String, Object> attributes = oAuth2User.getAttributes();
-
-    String providerId = oAuth2User.getName();
-    String username = (String)attributes.get("name");
-    String profileImage = (String)attributes.get("picture");
-
     Group group = groupService.findByName("USER_GROUP");
-
-    User user = User
-        .builder()
-        .username(username)
-        .profileImage(profileImage)
-        .provider(provider)
-        .providerId(providerId)
-        .group(group)
-        .build();
-
+    User user = User.of(oAuth2User, provider, group);
     return userRepository.save(user);
   }
 
