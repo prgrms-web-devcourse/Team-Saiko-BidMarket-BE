@@ -55,7 +55,7 @@ public class DefaultUserService implements UserService {
 
     return userRepository
         .findByProviderAndProviderId(provider, providerId)
-        .orElse(createUser(oAuth2User, provider));
+        .orElseGet(() -> createUser(oAuth2User, provider));
   }
 
   @Override
