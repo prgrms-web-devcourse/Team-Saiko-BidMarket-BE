@@ -21,7 +21,7 @@ import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 
 @DataJpaTest()
 @ActiveProfiles("test")
@@ -51,7 +51,7 @@ class UserRepositoryTest {
         .provider("test")
         .providerId(providerId)
         .profileImage("test")
-        .userRole(UserRole.ROLE_USER)
+        .role(Role.USER)
         .build();
   }
 

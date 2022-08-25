@@ -51,7 +51,7 @@ import com.saiko.bidmarket.chat.service.dto.ChatMessageCreateParam;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 
 @ActiveProfiles("ws_test")
 @SpringBootTest(webEnvironment = DEFINED_PORT)
@@ -117,7 +117,7 @@ class ChatWebSocketControllerTest {
         .username("강철중")
         .profileImage("https://naver.com/img1")
         .provider("naver")
-        .userRole(UserRole.ROLE_USER)
+        .role(Role.USER)
         .providerId("1234")
         .build();
 

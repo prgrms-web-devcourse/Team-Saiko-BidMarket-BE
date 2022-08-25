@@ -47,7 +47,7 @@ import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -117,7 +117,7 @@ class DefaultUserServiceTest {
         String provider = "google";
         String providerId = "testProviderId";
         String profileImage = "profileImage";
-        User user = new User("username", "test", provider, providerId, UserRole.ROLE_USER);
+        User user = new User("username", "test", provider, providerId, Role.USER);
         Map<String, Object> attributes = Map.of("name", providerId, "picture", profileImage);
         OAuth2User oAuth2User = new DefaultOAuth2User(Collections.emptyList(), attributes, "name");
 
@@ -216,7 +216,7 @@ class DefaultUserServiceTest {
       void itReturnExistUser() {
         //given
         final long existUserId = 1;
-        final User existUser = new User("test", "test", "test", "test", UserRole.ROLE_USER);
+        final User existUser = new User("test", "test", "test", "test", Role.USER);
         ReflectionTestUtils.setField(existUser, "id", 1L);
         final UserSelectResponse expected = UserSelectResponse.from(existUser);
 
@@ -288,7 +288,7 @@ class DefaultUserServiceTest {
         final long userId = 1;
         final UserUpdateRequest request = new UserUpdateRequest("update", "update");
         final User targetUser =
-            new User("before", "before", "provider", "providerId", UserRole.ROLE_USER);
+            new User("before", "before", "provider", "providerId", Role.USER);
 
         ReflectionTestUtils.setField(targetUser, "id", 1L);
 
@@ -352,7 +352,7 @@ class DefaultUserServiceTest {
       @DisplayName("UserProductSelectResponse 를 반환한다")
       void ItResponseUserProductSelectResponse() {
         //given
-        User writer = new User("아루루", "image", "google", "1234", UserRole.ROLE_USER);
+        User writer = new User("아루루", "image", "google", "1234", Role.USER);
 
         UserProductSelectRequest request = new UserProductSelectRequest(0, 1, END_DATE_ASC);
 
@@ -410,7 +410,7 @@ class DefaultUserServiceTest {
       @DisplayName("UserBiddingSelectResponse 를 반환한다")
       void ItResponseUserBiddingSelectResponse() {
         //given
-        User writer = new User("아루루", "image", "google", "1234", UserRole.ROLE_USER);
+        User writer = new User("아루루", "image", "google", "1234", Role.USER);
 
         UserBiddingSelectRequest request = new UserBiddingSelectRequest(0, 1, END_DATE_ASC);
 
@@ -427,7 +427,7 @@ class DefaultUserServiceTest {
         long productId = 1L;
         ReflectionTestUtils.setField(product, "id", productId);
 
-        User bidder = new User("제로", "image", "google", "1234", UserRole.ROLE_USER);
+        User bidder = new User("제로", "image", "google", "1234", Role.USER);
         long userId = 1L;
         ReflectionTestUtils.setField(bidder, "id", userId);
 
@@ -512,7 +512,7 @@ class DefaultUserServiceTest {
             .profileImage("s")
             .provider("test")
             .providerId("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
 
         ReflectionTestUtils.setField(bidder, "id", 1L);
@@ -536,7 +536,7 @@ class DefaultUserServiceTest {
             .profileImage("s")
             .provider("test")
             .providerId("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
 
         ReflectionTestUtils.setField(seller, "id", 1L);
@@ -609,7 +609,7 @@ class DefaultUserServiceTest {
             .profileImage("s")
             .provider("test")
             .providerId("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
         ReflectionTestUtils.setField(user, "id", userId);
 
@@ -639,7 +639,7 @@ class DefaultUserServiceTest {
             .profileImage("s")
             .provider("test")
             .providerId("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
         ReflectionTestUtils.setField(user, "id", userId);
 
@@ -691,7 +691,7 @@ class DefaultUserServiceTest {
             .profileImage("s")
             .provider("test")
             .providerId("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
         ReflectionTestUtils.setField(user, "id", userId);
 
@@ -758,7 +758,7 @@ class DefaultUserServiceTest {
             .provider("test")
             .providerId("testId")
             .profileImage("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
         long userId = 1L;
         ReflectionTestUtils.setField(user, "id", userId);
@@ -838,7 +838,7 @@ class DefaultUserServiceTest {
         final User user = User
             .builder()
             .username("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .providerId("test")
             .provider("test")
             .profileImage("t")
@@ -883,7 +883,7 @@ class DefaultUserServiceTest {
         final User user = User
             .builder()
             .username("test")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .providerId("test")
             .provider("test")
             .profileImage("t")

@@ -28,7 +28,7 @@ import com.saiko.bidmarket.report.entity.Report;
 import com.saiko.bidmarket.report.repository.ReportRepository;
 import com.saiko.bidmarket.report.service.ReportValidator;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportExecuteForCommentTest {
@@ -56,7 +56,7 @@ public class ReportExecuteForCommentTest {
       .profileImage("imageUrl")
       .provider("provider")
       .providerId("providerId")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
 
   private static final long reportedUserId = Long.MAX_VALUE - reporterId;
@@ -67,7 +67,7 @@ public class ReportExecuteForCommentTest {
       .profileImage("imageUrl")
       .provider("provider2")
       .providerId("providerId2")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
 
   private static final long reportedCommentId = 1L;
