@@ -29,7 +29,7 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,7 +62,7 @@ class DefaultCommentServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("1234")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
   private static Product product = Product
       .builder()
@@ -80,7 +80,7 @@ class DefaultCommentServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("1234")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
   private static Comment comment = Comment
       .builder()

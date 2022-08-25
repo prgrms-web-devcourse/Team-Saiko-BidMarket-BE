@@ -84,10 +84,6 @@ public class OAuth2AuthenticationSuccessHandler extends
   }
 
   private String generateToken(User user) {
-    String[] userRoles = user
-        .getUserRole()
-        .getRoles();
-
-    return jwt.sign(Jwt.Claims.from(user.getId(), userRoles));
+    return jwt.sign(Jwt.Claims.of(user.getId(), user.getRole()));
   }
 }

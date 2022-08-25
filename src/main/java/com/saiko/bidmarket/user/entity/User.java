@@ -49,7 +49,7 @@ public class User extends BaseTime {
   private String providerId;
 
   @Enumerated(EnumType.STRING)
-  private UserRole userRole;
+  private Role role;
 
   private static final String DEFAULT_DELETE_NAME = "Unknown";
 
@@ -59,20 +59,20 @@ public class User extends BaseTime {
       String profileImage,
       String provider,
       String providerId,
-      UserRole userRole
+      Role role
   ) {
 
     Assert.isTrue(isNotBlank(username), "Username must be provided");
     Assert.isTrue(isNotBlank(profileImage), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(provider), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(providerId), "ProviderId must be provided");
-    Assert.notNull(userRole, "UserRole must be provided");
+    Assert.notNull(role, "UserRole must be provided");
 
     this.username = username;
     this.profileImage = profileImage;
     this.provider = provider;
     this.providerId = providerId;
-    this.userRole = userRole;
+    this.role = role;
   }
 
   public boolean isSameUser(long id) {
@@ -104,7 +104,7 @@ public class User extends BaseTime {
   public static User of(
       OAuth2User oAuth2User,
       String provider,
-      UserRole userRole
+      Role role
   ) {
     Map<String, Object> attributes = oAuth2User.getAttributes();
 
@@ -118,7 +118,7 @@ public class User extends BaseTime {
         .profileImage(profileImage)
         .provider(provider)
         .providerId(providerId)
-        .userRole(userRole)
+        .role(role)
         .build();
 
   }

@@ -22,7 +22,7 @@ import com.saiko.bidmarket.report.entity.Report;
 import com.saiko.bidmarket.report.service.strategy.ReportExecuteStrategy;
 import com.saiko.bidmarket.report.service.strategy.ReportExecutorFactory;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,7 +52,7 @@ class DefaultReportServiceTest {
       .profileImage("imageUrl")
       .provider("provider")
       .providerId("providerId")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
 
   @BeforeAll

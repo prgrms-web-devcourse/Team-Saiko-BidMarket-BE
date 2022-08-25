@@ -23,7 +23,7 @@ import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -72,7 +72,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("123")
-                                              .userRole(UserRole.ROLE_USER)
+                                              .role(Role.USER)
                                               .build());
         User bidder = userRepository.save(User
                                               .builder()
@@ -80,7 +80,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("321")
-                                              .userRole(UserRole.ROLE_USER)
+                                              .role(Role.USER)
                                               .build());
 
         Product product = productRepository.save(Product
@@ -155,7 +155,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("123")
-                                              .userRole(UserRole.ROLE_USER)
+                                              .role(Role.USER)
                                               .build());
 
         User bidder = userRepository.save(User
@@ -164,7 +164,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("321")
-                                              .userRole(UserRole.ROLE_USER)
+                                              .role(Role.USER)
                                               .build());
 
         Product product = productRepository.save(Product

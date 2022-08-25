@@ -43,7 +43,7 @@ import com.saiko.bidmarket.comment.entity.Comment;
 import com.saiko.bidmarket.comment.service.CommentService;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
@@ -76,7 +76,7 @@ class CommentApiControllerTest extends ControllerSetUp {
       .profileImage("image")
       .provider("google")
       .providerId("123")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
   private static Product product = Product
       .builder()

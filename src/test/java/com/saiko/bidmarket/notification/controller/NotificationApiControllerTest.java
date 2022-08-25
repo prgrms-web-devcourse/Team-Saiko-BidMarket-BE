@@ -36,7 +36,7 @@ import com.saiko.bidmarket.notification.service.NotificationService;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
@@ -57,7 +57,7 @@ public class NotificationApiControllerTest extends ControllerSetUp {
         .profileImage("imageURL")
         .provider("provider")
         .providerId("providerId")
-        .userRole(UserRole.ROLE_USER)
+        .role(Role.USER)
         .build();
   }
 
