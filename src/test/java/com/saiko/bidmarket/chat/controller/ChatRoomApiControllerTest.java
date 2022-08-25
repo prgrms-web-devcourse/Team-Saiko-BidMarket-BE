@@ -34,7 +34,7 @@ import com.saiko.bidmarket.chat.service.ChatRoomService;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
@@ -218,7 +218,7 @@ class ChatRoomApiControllerTest extends ControllerSetUp {
         .builder()
         .username("test")
         .profileImage("test")
-        .userRole(UserRole.ROLE_USER)
+        .role(Role.USER)
         .provider("test")
         .providerId("test")
         .build();

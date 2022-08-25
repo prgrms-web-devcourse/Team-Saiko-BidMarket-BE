@@ -41,7 +41,7 @@ import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.service.UserService;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
@@ -224,7 +224,8 @@ class UserApiControllerTest extends ControllerSetUp {
                                    "test",
                                    "test",
                                    "test",
-                                   UserRole.ROLE_USER);
+                                   Role.USER
+        );
         ReflectionTestUtils.setField(user, "id", userId);
 
         //when
@@ -292,7 +293,8 @@ class UserApiControllerTest extends ControllerSetUp {
                                    "test",
                                    "test",
                                    "test",
-                                   UserRole.ROLE_USER);
+                                   Role.USER
+        );
 
         ReflectionTestUtils.setField(user, "id", 1L);
 
@@ -363,7 +365,7 @@ class UserApiControllerTest extends ControllerSetUp {
                                  .images(List.of("image1"))
                                  .location("강원도")
                                  .minimumPrice(1000)
-                                 .writer(new User("감자킹", "image", "google", "123", UserRole.ROLE_USER))
+                                 .writer(new User("감자킹", "image", "google", "123", Role.USER))
                                  .build();
 
         ReflectionTestUtils.setField(product, "id", userId);
@@ -505,7 +507,7 @@ class UserApiControllerTest extends ControllerSetUp {
                         .profileImage("image")
                         .provider("google")
                         .providerId("123")
-                        .userRole(UserRole.ROLE_USER)
+                        .role(Role.USER)
                         .build();
         Product product = Product.builder()
                                  .title("감자팜")
@@ -730,7 +732,7 @@ class UserApiControllerTest extends ControllerSetUp {
                         .profileImage("image")
                         .provider("google")
                         .providerId("123")
-                        .userRole(UserRole.ROLE_USER)
+                        .role(Role.USER)
                         .build();
         Product product = Product.builder()
                                  .title("감자팜")

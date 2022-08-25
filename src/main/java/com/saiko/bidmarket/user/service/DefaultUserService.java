@@ -26,7 +26,7 @@ import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 import lombok.AccessLevel;
@@ -195,7 +195,7 @@ public class DefaultUserService implements UserService {
       OAuth2User oAuth2User,
       String provider
   ) {
-    User user = User.of(oAuth2User, provider, UserRole.ROLE_USER);
+    User user = User.of(oAuth2User, provider, Role.USER);
     return userRepository.save(user);
   }
 }

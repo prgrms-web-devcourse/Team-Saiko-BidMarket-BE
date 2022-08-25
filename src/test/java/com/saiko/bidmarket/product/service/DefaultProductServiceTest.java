@@ -27,7 +27,6 @@ import com.saiko.bidmarket.chat.entity.ChatRoom;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Category;
-import com.saiko.bidmarket.product.Role;
 import com.saiko.bidmarket.product.controller.dto.BiddingResultResponse;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductCreateResponse;
@@ -37,7 +36,7 @@ import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +76,7 @@ class DefaultProductServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("123")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
   private static final Product product = Product
       .builder()
@@ -95,7 +94,7 @@ class DefaultProductServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("123")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
   private static final User failedBidder = User
       .builder()
@@ -103,7 +102,7 @@ class DefaultProductServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("1234")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
 
   private static final Bidding successfulBidding = Bidding
@@ -269,7 +268,7 @@ class DefaultProductServiceTest {
       @DisplayName("찾은 객체에 대한 응답을 반환한다")
       void ItProduct() {
         //given
-        User writer = new User("제로", "image", "google", "1234", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "1234", Role.USER);
         Product product = Product
             .builder()
             .title("세탁기 팔아요")
@@ -318,7 +317,7 @@ class DefaultProductServiceTest {
       @DisplayName("요청에 해당하는 상품 리스트를 반환한다")
       void ItResponseProductList() {
         //when, then
-        User writer = new User("제로", "image", "google", "1234", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "1234", Role.USER);
         Product product = Product
             .builder()
             .title("세탁기 팔아요")
@@ -377,7 +376,7 @@ class DefaultProductServiceTest {
             .profileImage("imageURL")
             .provider("provider")
             .providerId("providerId")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
         User bidderOne = User
             .builder()
@@ -385,7 +384,7 @@ class DefaultProductServiceTest {
             .profileImage("imageURL")
             .provider("provider")
             .providerId("providerId")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
         Product product = Product
             .builder()
@@ -487,7 +486,7 @@ class DefaultProductServiceTest {
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(true);
         assertThat(biddingResult
                        .getChatRoomId()).isEqualTo(chatRoom.getId());
-        assertThat(biddingResult.getRole()).isEqualTo(Role.SELLER);
+        assertThat(biddingResult.getRole()).isEqualTo(com.saiko.bidmarket.product.Role.SELLER);
         assertThat(biddingResult.getWinningPrice()).isEqualTo(product.getWinningPrice());
       }
     }
@@ -506,7 +505,7 @@ class DefaultProductServiceTest {
             .profileImage("image")
             .provider("google")
             .providerId("123")
-            .userRole(UserRole.ROLE_USER)
+            .role(Role.USER)
             .build();
         ReflectionTestUtils.setField(writer, "id", 1L);
 
@@ -536,7 +535,7 @@ class DefaultProductServiceTest {
         // then
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(false);
         assertThat(biddingResult.getChatRoomId()).isEqualTo(null);
-        assertThat(biddingResult.getRole()).isEqualTo(Role.SELLER);
+        assertThat(biddingResult.getRole()).isEqualTo(com.saiko.bidmarket.product.Role.SELLER);
         assertThat(biddingResult.getWinningPrice()).isEqualTo(null);
       }
     }
@@ -568,7 +567,7 @@ class DefaultProductServiceTest {
         verify(biddingRepository).findByBidderIdAndProductId(anyLong(), anyLong());
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(true);
         assertThat(biddingResult.getChatRoomId()).isEqualTo(chatRoom.getId());
-        assertThat(biddingResult.getRole()).isEqualTo(Role.BIDDER);
+        assertThat(biddingResult.getRole()).isEqualTo(com.saiko.bidmarket.product.Role.BIDDER);
         assertThat(biddingResult.getWinningPrice()).isEqualTo(product.getWinningPrice());
       }
     }
@@ -597,7 +596,7 @@ class DefaultProductServiceTest {
         // then
         assertThat(biddingResult.isBiddingSucceed()).isEqualTo(false);
         assertThat(biddingResult.getChatRoomId()).isEqualTo(null);
-        assertThat(biddingResult.getRole()).isEqualTo(Role.BIDDER);
+        assertThat(biddingResult.getRole()).isEqualTo(com.saiko.bidmarket.product.Role.BIDDER);
         assertThat(biddingResult.getWinningPrice()).isEqualTo(null);
       }
     }

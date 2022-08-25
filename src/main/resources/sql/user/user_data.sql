@@ -1,4 +1,4 @@
-INSERT INTO `user`(username, provider, provider_id, profile_image, user_role, created_at)
+INSERT INTO `user`(username, provider, provider_id, profile_image, role, created_at)
 VALUES ('유재희', 'google', '113052825681484000000',
         'https://lh3.googleusercontent.com/a/AItbvmmujg3pE4C3iRbHWRZCd-BtvUykZ2BaaIAuSoo7=s96-c', 'ROLE_USER',
         '2022-07-03T18:06:15'),

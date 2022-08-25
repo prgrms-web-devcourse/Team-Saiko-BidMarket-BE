@@ -14,6 +14,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.saiko.bidmarket.user.entity.Role;
 
 public class Jwt {
 
@@ -94,19 +95,18 @@ public class Jwt {
       Claim userId = decodedJWT.getClaim("userId");
       if (!userId.isNull())
         this.userId = userId.asLong();
+
       Claim roles = decodedJWT.getClaim("roles");
-      if (!roles.isNull()) {
-        this.roles = roles.asArray(String.class);
-      }
+
       this.iat = decodedJWT.getIssuedAt();
       this.exp = decodedJWT.getExpiresAt();
     }
 
-    public static Claims from(Long userId, String[] roles) {
+    public static Claims of(Long userId, Role role) {
 
       Claims claims = new Claims();
       claims.userId = userId;
-      claims.roles = roles;
+      claims.roles = role.getAuthority();
       return claims;
     }
 

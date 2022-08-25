@@ -24,7 +24,7 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,7 +47,7 @@ class DefaultBiddingServiceTest {
       "imageURl",
       "provider",
       "providerId",
-      UserRole.ROLE_USER
+      Role.USER
   );
   private static long bidderId = 1L;
 
@@ -56,7 +56,7 @@ class DefaultBiddingServiceTest {
       "imageURl",
       "provider",
       "providerId",
-      UserRole.ROLE_USER
+      Role.USER
   );
 
   private static long writerId = 1L;

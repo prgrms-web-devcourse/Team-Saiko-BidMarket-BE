@@ -27,8 +27,8 @@ import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.report.entity.Report;
 import com.saiko.bidmarket.report.repository.ReportRepository;
 import com.saiko.bidmarket.report.service.ReportValidator;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportExecuteForProductTest {
@@ -38,6 +38,9 @@ public class ReportExecuteForProductTest {
 
   @Mock
   private ReportRepository reportRepository;
+
+  @Mock
+  private BiddingRepository biddingRepository;
 
   @Mock
   private ProductRepository productRepository;
@@ -56,7 +59,7 @@ public class ReportExecuteForProductTest {
       .profileImage("imageUrl")
       .provider("provider")
       .providerId("providerId")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
 
   private static final long reportedUserId = Long.MAX_VALUE - reporterId;
@@ -67,7 +70,7 @@ public class ReportExecuteForProductTest {
       .profileImage("imageUrl")
       .provider("provider2")
       .providerId("providerId2")
-      .userRole(UserRole.ROLE_USER)
+      .role(Role.USER)
       .build();
 
   private static final long reportedProductId = 1L;

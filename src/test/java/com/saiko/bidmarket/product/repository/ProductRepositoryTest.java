@@ -27,7 +27,7 @@ import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.entity.UserRole;
+import com.saiko.bidmarket.user.entity.Role;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -80,7 +80,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product progressProduct = productRepository.save(Product
@@ -127,7 +127,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product progressProduct = productRepository.save(Product
@@ -174,7 +174,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              CREATED_AT_DESC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -225,7 +225,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              MINIMUM_PRICE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -271,7 +271,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              MINIMUM_PRICE_DESC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -317,7 +317,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              null
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -363,7 +363,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -409,7 +409,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -455,7 +455,7 @@ public class ProductRepositoryTest {
             null, "true", Category.DIGITAL_DEVICE, 0, 2,
             Sort.END_DATE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -500,7 +500,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -546,7 +546,7 @@ public class ProductRepositoryTest {
             "노트북", "true", Category.DIGITAL_DEVICE, 0, 2,
             Sort.END_DATE_ASC
         );
-        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
+        User writer = new User("제로", "image", "google", "123", Role.USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -592,7 +592,7 @@ public class ProductRepositoryTest {
       @DisplayName("해당 유저가 판매한, 페이징 처리된 상품 목록을 반환한다")
       void itReturnProductList() {
         // given
-        User writer = new User("박동철", "image", "google", "1234", UserRole.ROLE_USER);
+        User writer = new User("박동철", "image", "google", "1234", Role.USER);
         writer = userRepository.save(writer);
 
         Product product = productRepository.save(
@@ -645,7 +645,7 @@ public class ProductRepositoryTest {
       @DisplayName("아이디에 해당하는 상품을 유저와 조인하여 반환한다")
       void itReturnProduct() {
         // given
-        User writer = new User("박동철", "image", "google", "1234", UserRole.ROLE_USER);
+        User writer = new User("박동철", "image", "google", "1234", Role.USER);
         writer = userRepository.save(writer);
 
         Product product = productRepository.save(
@@ -694,7 +694,7 @@ public class ProductRepositoryTest {
                 .username("test")
                 .provider("test")
                 .providerId("test")
-                .userRole(UserRole.ROLE_USER)
+                .role(Role.USER)
                 .profileImage("test")
                 .build()
         );
