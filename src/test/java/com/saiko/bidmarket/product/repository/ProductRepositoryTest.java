@@ -26,9 +26,8 @@ import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.dto.UserProductSelectQueryParameter;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.GroupRepository;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -38,9 +37,6 @@ import com.saiko.bidmarket.user.repository.UserRepository;
 public class ProductRepositoryTest {
   @Autowired
   private ProductRepository productRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
 
   @Autowired
   private BiddingRepository biddingRepository;
@@ -84,10 +80,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product progressProduct = productRepository.save(Product
@@ -134,10 +127,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product progressProduct = productRepository.save(Product
@@ -184,10 +174,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              CREATED_AT_DESC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -238,10 +225,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              MINIMUM_PRICE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -287,10 +271,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              MINIMUM_PRICE_DESC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -336,10 +317,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              null
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -385,10 +363,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -434,10 +409,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -483,10 +455,7 @@ public class ProductRepositoryTest {
             null, "true", Category.DIGITAL_DEVICE, 0, 2,
             Sort.END_DATE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -531,10 +500,7 @@ public class ProductRepositoryTest {
                                                                              2,
                                                                              Sort.END_DATE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -580,10 +546,7 @@ public class ProductRepositoryTest {
             "노트북", "true", Category.DIGITAL_DEVICE, 0, 2,
             Sort.END_DATE_ASC
         );
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-        User writer = new User("제로", "image", "google", "123", group);
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product1 = productRepository.save(Product
@@ -629,12 +592,7 @@ public class ProductRepositoryTest {
       @DisplayName("해당 유저가 판매한, 페이징 처리된 상품 목록을 반환한다")
       void itReturnProductList() {
         // given
-
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-
-        User writer = new User("박동철", "image", "google", "1234", group);
+        User writer = new User("박동철", "image", "google", "1234", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product = productRepository.save(
@@ -687,12 +645,7 @@ public class ProductRepositoryTest {
       @DisplayName("아이디에 해당하는 상품을 유저와 조인하여 반환한다")
       void itReturnProduct() {
         // given
-
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-
-        User writer = new User("박동철", "image", "google", "1234", group);
+        User writer = new User("박동철", "image", "google", "1234", UserRole.ROLE_USER);
         writer = userRepository.save(writer);
 
         Product product = productRepository.save(
@@ -735,17 +688,13 @@ public class ProductRepositoryTest {
       @DisplayName("해당 userId 상품들의 progressed를 false로 변경한다.")
       void itUpdateProgressedToFalse() {
         //given
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-
         final User user = userRepository.save(
             User
                 .builder()
                 .username("test")
                 .provider("test")
                 .providerId("test")
-                .group(group)
+                .userRole(UserRole.ROLE_USER)
                 .profileImage("test")
                 .build()
         );

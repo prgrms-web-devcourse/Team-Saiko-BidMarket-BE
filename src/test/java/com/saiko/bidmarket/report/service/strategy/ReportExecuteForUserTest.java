@@ -21,8 +21,8 @@ import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.report.entity.Report;
 import com.saiko.bidmarket.report.repository.ReportRepository;
 import com.saiko.bidmarket.report.service.ReportValidator;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +48,7 @@ public class ReportExecuteForUserTest {
       .profileImage("imageUrl")
       .provider("provider")
       .providerId("providerId")
-      .group(new Group())
+      .userRole(UserRole.ROLE_USER)
       .build();
 
   private static final long reportedUserId = Long.MAX_VALUE - reporterId;
@@ -59,7 +59,7 @@ public class ReportExecuteForUserTest {
       .profileImage("imageUrl")
       .provider("provider2")
       .providerId("providerId2")
-      .group(new Group())
+      .userRole(UserRole.ROLE_USER)
       .build();
 
   private static final String reason = "기본 신고 이유";

@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 
 import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectRequest;
 import com.saiko.bidmarket.chat.controller.dto.ChatMessageSelectResponse;
@@ -30,8 +29,8 @@ import com.saiko.bidmarket.chat.service.dto.ChatMessageCreateParam;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -241,7 +240,7 @@ class DefaultChatMessageServiceTest {
         .provider("test")
         .providerId("test")
         .profileImage("test")
-        .group(new Group())
+        .userRole(UserRole.ROLE_USER)
         .build();
 
     ReflectionTestUtils.setField(user, "id", userId);

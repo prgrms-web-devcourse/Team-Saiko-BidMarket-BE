@@ -9,15 +9,6 @@ ALTER TABLE `product`
 ALTER TABLE `image`
     ADD CONSTRAINT `PK_IMAGE` PRIMARY KEY (`id`);
 
-ALTER TABLE `permission`
-    ADD CONSTRAINT `PK_PERMISSION` PRIMARY KEY (`id`);
-
-ALTER TABLE `group`
-    ADD CONSTRAINT `PK_GROUP` PRIMARY KEY (`id`);
-
-ALTER TABLE `group_permission`
-    ADD CONSTRAINT `PK_GROUP_PERMISSION` PRIMARY KEY (`id`);
-
 ALTER TABLE `chat_message`
     ADD CONSTRAINT `PK_CHAT_MESSAGE` PRIMARY KEY (`id`);
 
@@ -96,14 +87,6 @@ ALTER TABLE `image`
     ADD CONSTRAINT `FK_PRODUCT_ID_FOR_IMAGE`
         FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE `group_permission`
-    ADD CONSTRAINT `FK_GROUP_ID_FOR_GROUP_PERMISSION`
-        FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
-ALTER TABLE `group_permission`
-    ADD CONSTRAINT `FK_PERMISSION_ID_FOR_GROUP_PERMISSION`
-        FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
 ALTER TABLE `chat_message`
     ADD CONSTRAINT `FK_CHAT_ROOM_ID_FOR_CHAT_MESSAGE`
         FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -124,10 +107,6 @@ ALTER TABLE `chat_room`
     ADD CONSTRAINT `FK_PRODUCT_ID_FOR_CHAT_ROOM`
         FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE `user`
-    ADD CONSTRAINT `FK_GROUP_ID_FOR_USER`
-        FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
 ALTER TABLE `report`
     ADD CONSTRAINT `FK_FROM_USER_ID_FOR_REPORT`
         FOREIGN KEY (`reporter_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -141,9 +120,6 @@ AlTER TABLE `heart`
         FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- Unique
-
-ALTER TABLE `group_permission`
-    ADD UNIQUE unq_group_id_permission_id (group_id, permission_id);
 
 ALTER TABLE `user`
     ADD UNIQUE unq_provider_and_id (provider, provider_id);

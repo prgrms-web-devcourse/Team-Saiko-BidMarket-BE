@@ -36,8 +36,8 @@ import com.saiko.bidmarket.product.controller.dto.ProductSelectRequest;
 import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +77,7 @@ class DefaultProductServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("123")
-      .group(new Group())
+      .userRole(UserRole.ROLE_USER)
       .build();
   private static final Product product = Product
       .builder()
@@ -95,7 +95,7 @@ class DefaultProductServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("123")
-      .group(new Group())
+      .userRole(UserRole.ROLE_USER)
       .build();
   private static final User failedBidder = User
       .builder()
@@ -103,7 +103,7 @@ class DefaultProductServiceTest {
       .profileImage("image")
       .provider("google")
       .providerId("1234")
-      .group(new Group())
+      .userRole(UserRole.ROLE_USER)
       .build();
 
   private static final Bidding successfulBidding = Bidding
@@ -269,7 +269,7 @@ class DefaultProductServiceTest {
       @DisplayName("찾은 객체에 대한 응답을 반환한다")
       void ItProduct() {
         //given
-        User writer = new User("제로", "image", "google", "1234", new Group());
+        User writer = new User("제로", "image", "google", "1234", UserRole.ROLE_USER);
         Product product = Product
             .builder()
             .title("세탁기 팔아요")
@@ -318,7 +318,7 @@ class DefaultProductServiceTest {
       @DisplayName("요청에 해당하는 상품 리스트를 반환한다")
       void ItResponseProductList() {
         //when, then
-        User writer = new User("제로", "image", "google", "1234", new Group());
+        User writer = new User("제로", "image", "google", "1234", UserRole.ROLE_USER);
         Product product = Product
             .builder()
             .title("세탁기 팔아요")
@@ -377,7 +377,7 @@ class DefaultProductServiceTest {
             .profileImage("imageURL")
             .provider("provider")
             .providerId("providerId")
-            .group(new Group())
+            .userRole(UserRole.ROLE_USER)
             .build();
         User bidderOne = User
             .builder()
@@ -385,7 +385,7 @@ class DefaultProductServiceTest {
             .profileImage("imageURL")
             .provider("provider")
             .providerId("providerId")
-            .group(new Group())
+            .userRole(UserRole.ROLE_USER)
             .build();
         Product product = Product
             .builder()
@@ -506,7 +506,7 @@ class DefaultProductServiceTest {
             .profileImage("image")
             .provider("google")
             .providerId("123")
-            .group(new Group())
+            .userRole(UserRole.ROLE_USER)
             .build();
         ReflectionTestUtils.setField(writer, "id", 1L);
 

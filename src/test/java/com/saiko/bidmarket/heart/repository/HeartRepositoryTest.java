@@ -15,18 +15,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.saiko.bidmarket.bidding.entity.Bidding;
-import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.heart.entity.Heart;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
-import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserHeartSelectRequest;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.GroupRepository;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -34,8 +30,6 @@ import com.saiko.bidmarket.user.repository.UserRepository;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(value = QueryDslConfig.class)
 public class HeartRepositoryTest {
-  @Autowired
-  private GroupRepository groupRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -46,18 +40,14 @@ public class HeartRepositoryTest {
   @Autowired
   private HeartRepository heartRepository;
 
-  private User getUser(
-      String name,
-      Group group,
-      String providerId
-  ) {
+  private User getUser(String name, String providerId) {
     return User
         .builder()
         .username(name)
         .provider("test")
         .providerId(providerId)
         .profileImage("test")
-        .group(group)
+        .userRole(UserRole.ROLE_USER)
         .build();
   }
 
@@ -100,11 +90,7 @@ public class HeartRepositoryTest {
       @DisplayName("페이징 처리된 입찰 상품 목록을 반환한다")
       void itReturnHeartProductList() {
         // given
-        Group userGroup = groupRepository
-            .findByName("USER_GROUP")
-            .get();
-
-        User user = userRepository.save(getUser("test1", userGroup, "test1"));
+        User user = userRepository.save(getUser("test1", "test1"));
         Product product = productRepository.save(getProduct("test", user));
         Heart heart = Heart.of(user, product);
         heart.toggle();

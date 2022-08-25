@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,9 +22,8 @@ import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
 import com.saiko.bidmarket.user.controller.dto.UserBiddingSelectRequest;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.GroupRepository;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -35,9 +33,6 @@ import com.saiko.bidmarket.user.repository.UserRepository;
 public class BiddingRepositoryTest {
   @Autowired
   private BiddingRepository biddingRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -70,9 +65,6 @@ public class BiddingRepositoryTest {
       @DisplayName("페이징 처리된 입찰 상품 목록을 반환한다")
       void itReturnBiddingProductList() {
         // given
-        Group group = groupRepository
-            .findById(1L)
-            .get();
 
         User writer = userRepository.save(User
                                               .builder()
@@ -80,7 +72,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("123")
-                                              .group(group)
+                                              .userRole(UserRole.ROLE_USER)
                                               .build());
         User bidder = userRepository.save(User
                                               .builder()
@@ -88,7 +80,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("321")
-                                              .group(group)
+                                              .userRole(UserRole.ROLE_USER)
                                               .build());
 
         Product product = productRepository.save(Product
@@ -156,9 +148,6 @@ public class BiddingRepositoryTest {
       @DisplayName("Bidding이 포함된 Optional 객체를 반환한다.")
       void itReturnBiddingWithOptional() {
         // given
-        Group group = groupRepository
-            .findById(1L)
-            .get();
 
         User writer = userRepository.save(User
                                               .builder()
@@ -166,7 +155,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("123")
-                                              .group(group)
+                                              .userRole(UserRole.ROLE_USER)
                                               .build());
 
         User bidder = userRepository.save(User
@@ -175,7 +164,7 @@ public class BiddingRepositoryTest {
                                               .profileImage("image")
                                               .provider("google")
                                               .providerId("321")
-                                              .group(group)
+                                              .userRole(UserRole.ROLE_USER)
                                               .build());
 
         Product product = productRepository.save(Product

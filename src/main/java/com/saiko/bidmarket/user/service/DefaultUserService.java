@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.bidding.repository.BiddingRepository;
 import com.saiko.bidmarket.common.exception.NotFoundException;
 import com.saiko.bidmarket.heart.entity.Heart;
@@ -24,8 +25,8 @@ import com.saiko.bidmarket.user.controller.dto.UserProductSelectRequest;
 import com.saiko.bidmarket.user.controller.dto.UserProductSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserSelectResponse;
 import com.saiko.bidmarket.user.controller.dto.UserUpdateRequest;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 import lombok.AccessLevel;
@@ -40,7 +41,6 @@ public class DefaultUserService implements UserService {
   private final BiddingRepository biddingRepository;
   private final UserRepository userRepository;
   private final HeartRepository heartRepository;
-  private final GroupService groupService;
 
   @Override
   @Transactional
@@ -105,7 +105,7 @@ public class DefaultUserService implements UserService {
     return biddingRepository
         .findAllUserBidding(userId, request)
         .stream()
-        .map((bidding) -> bidding.getProduct())
+        .map(Bidding::getProduct)
         .map(UserBiddingSelectResponse::from)
         .collect(Collectors.toList());
   }
@@ -195,8 +195,7 @@ public class DefaultUserService implements UserService {
       OAuth2User oAuth2User,
       String provider
   ) {
-    Group group = groupService.findByName("USER_GROUP");
-    User user = User.of(oAuth2User, provider, group);
+    User user = User.of(oAuth2User, provider, UserRole.ROLE_USER);
     return userRepository.save(user);
   }
 }

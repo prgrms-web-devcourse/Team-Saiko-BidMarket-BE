@@ -22,9 +22,8 @@ import com.saiko.bidmarket.notification.repository.dto.NotificationRepoDto;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.GroupRepository;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest
@@ -32,8 +31,6 @@ import com.saiko.bidmarket.user.repository.UserRepository;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(value = QueryDslConfig.class)
 public class NotificationRepositoryTest {
-  @Autowired
-  private GroupRepository groupRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -46,7 +43,6 @@ public class NotificationRepositoryTest {
 
   private User user(
       String name,
-      Group group,
       String providerId
   ) {
     return User
@@ -55,7 +51,7 @@ public class NotificationRepositoryTest {
         .provider("test")
         .providerId(providerId)
         .profileImage("test")
-        .group(group)
+        .userRole(UserRole.ROLE_USER)
         .build();
   }
 
@@ -112,11 +108,7 @@ public class NotificationRepositoryTest {
       @DisplayName("페이징 처리된 알림 전체 목록을 반환한다")
       void ItReturnNotificationList() {
         //given
-        Group userGroup = groupRepository
-            .findByName("USER_GROUP")
-            .get();
-
-        User user = userRepository.save(user("test1", userGroup, "test1"));
+        User user = userRepository.save(user("test1", "test1"));
         Product product = productRepository.save(product("test", user));
         Notification notification = notificationRepository.save(notification(user, product));
 
