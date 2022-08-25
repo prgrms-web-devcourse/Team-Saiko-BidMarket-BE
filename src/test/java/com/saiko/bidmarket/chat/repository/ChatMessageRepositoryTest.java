@@ -22,9 +22,8 @@ import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.GroupRepository;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -41,9 +40,6 @@ public class ChatMessageRepositoryTest {
 
   @Autowired
   private ProductRepository productRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -67,8 +63,8 @@ public class ChatMessageRepositoryTest {
       @Test
       @DisplayName("해당 채팅방의 마지막 채팅 메시지를 반환한다")
       void It() throws InterruptedException {
-        User seller = userRepository.save(getUser("1", getUserGroup()));
-        User winner = userRepository.save(getUser("2", getUserGroup()));
+        User seller = userRepository.save(getUser("1"));
+        User winner = userRepository.save(getUser("2"));
 
         Product product = getProduct(seller);
         productRepository.save(product);
@@ -104,8 +100,8 @@ public class ChatMessageRepositoryTest {
       @Test
       @DisplayName("해당 채팅방의 메시지를 페이지 범위만큼 반환한다")
       void ItResponseChatMessages() throws InterruptedException {
-        User seller = userRepository.save(getUser("1", getUserGroup()));
-        User winner = userRepository.save(getUser("2", getUserGroup()));
+        User seller = userRepository.save(getUser("1"));
+        User winner = userRepository.save(getUser("2"));
 
         Product product = productRepository.save(getProduct(seller));
         ChatRoom chatRoom = chatRoomRepository.save(getChatRoom(seller, winner, product));
@@ -126,21 +122,11 @@ public class ChatMessageRepositoryTest {
     }
   }
 
-  @SuppressWarnings("all")
-  private Group getUserGroup() {
-    return groupRepository
-        .findById(1L)
-        .get();
-  }
-
-  private User getUser(
-      String providerId,
-      Group group
-  ) {
+  private User getUser(String providerId) {
     return User
         .builder()
         .username("제로")
-        .group(group)
+        .userRole(UserRole.ROLE_USER)
         .profileImage("image")
         .provider("google")
         .providerId(providerId)

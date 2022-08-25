@@ -26,8 +26,8 @@ import com.saiko.bidmarket.notification.repository.NotificationRepository;
 import com.saiko.bidmarket.notification.repository.dto.NotificationRepoDto;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 
 @ExtendWith(MockitoExtension.class)
 public class DefaultNotificationServiceTest {
@@ -44,7 +44,7 @@ public class DefaultNotificationServiceTest {
         .profileImage("imageURL")
         .provider("provider")
         .providerId("providerId")
-        .group(new Group())
+        .userRole(UserRole.ROLE_USER)
         .build();
   }
 

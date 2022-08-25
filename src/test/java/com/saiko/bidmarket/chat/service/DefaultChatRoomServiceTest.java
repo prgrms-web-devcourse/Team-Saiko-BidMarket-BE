@@ -26,8 +26,8 @@ import com.saiko.bidmarket.chat.repository.ChatMessageRepository;
 import com.saiko.bidmarket.chat.repository.ChatRoomRepository;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -182,7 +182,7 @@ class DefaultChatRoomServiceTest {
         .provider("test")
         .providerId("test")
         .profileImage("test")
-        .group(new Group())
+        .userRole(UserRole.ROLE_USER)
         .build();
 
     ReflectionTestUtils.setField(user, "id", userId);

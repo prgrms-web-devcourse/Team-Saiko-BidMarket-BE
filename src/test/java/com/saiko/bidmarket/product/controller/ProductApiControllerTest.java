@@ -48,8 +48,8 @@ import com.saiko.bidmarket.product.controller.dto.ProductSelectResponse;
 import com.saiko.bidmarket.product.entity.Image;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.util.ControllerSetUp;
 import com.saiko.bidmarket.util.WithMockCustomLoginUser;
 
@@ -106,7 +106,7 @@ class ProductApiControllerTest extends ControllerSetUp {
       .images(List.of("image1"))
       .location("제주도")
       .minimumPrice(1000)
-      .writer(new User("제로", "image", "google", "123", new Group()))
+      .writer(new User("제로", "image", "google", "123", UserRole.ROLE_USER))
       .build();
   private static long productId = 1;
 
@@ -531,7 +531,7 @@ class ProductApiControllerTest extends ControllerSetUp {
       void itResponseOkWithProductDomainObjectHasInputId() throws Exception {
         // given
         long inputId = 1;
-        User writer = new User("제로", "image", "google", "123", new Group());
+        User writer = new User("제로", "image", "google", "123", UserRole.ROLE_USER);
         ReflectionTestUtils.setField(writer, "id", 1L);
 
         Product foundProduct = Product

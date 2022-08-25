@@ -20,9 +20,8 @@ import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.GroupRepository;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -36,9 +35,6 @@ public class ChatRoomRepositoryTest {
 
   @Autowired
   private ProductRepository productRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -58,12 +54,8 @@ public class ChatRoomRepositoryTest {
     @DisplayName("판매자와 낙찰자가 참여한 채팅방을 반환한다")
     void ItReturnChatRoom() {
       //given
-      @SuppressWarnings({"all"})
-      Group group = groupRepository
-          .findById(1L)
-          .get();
-      User seller = userRepository.save(getUser("1234", group));
-      User winner = userRepository.save(getUser("123", group));
+      User seller = userRepository.save(getUser("1234"));
+      User winner = userRepository.save(getUser("123"));
 
       Product product = productRepository.save(getProduct(seller));
       ChatRoom chatRoom = chatRoomRepository.save(getChatRoom(seller, winner, product));
@@ -90,14 +82,9 @@ public class ChatRoomRepositoryTest {
     @DisplayName("해당 유저가 속해있는 모든 채팅방을 반환한다")
     void ItReturnAllChatRoomThatJoinInto() {
       //given
-      @SuppressWarnings("all")
-      Group group = groupRepository
-          .findById(1L)
-          .get();
-
-      User user1 = userRepository.save(getUser("1", group));
-      User user2 = userRepository.save(getUser("2", group));
-      User user3 = userRepository.save(getUser("3", group));
+      User user1 = userRepository.save(getUser("1"));
+      User user2 = userRepository.save(getUser("2"));
+      User user3 = userRepository.save(getUser("3"));
 
       Product product1 = productRepository.save(getProduct(user1));
       Product product2 = productRepository.save(getProduct(user2));
@@ -117,14 +104,11 @@ public class ChatRoomRepositoryTest {
     }
   }
 
-  private User getUser(
-      String providerId,
-      Group group
-  ) {
+  private User getUser(String providerId) {
     return User
         .builder()
         .username("제로")
-        .group(group)
+        .userRole(UserRole.ROLE_USER)
         .profileImage("image")
         .provider("google")
         .providerId(providerId)

@@ -24,8 +24,8 @@ import com.saiko.bidmarket.common.config.ScheduledConfig;
 import com.saiko.bidmarket.common.config.ScheduledConfig.Scheduler;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.service.ProductService;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 
 @SpringJUnitConfig(ScheduledConfig.class)
 public class SchedulerTest {
@@ -50,7 +50,7 @@ public class SchedulerTest {
       @DisplayName("경매 종료 로직을 실행한다.")
       void ItExecuteClosingProduct() {
         // given
-        User writer = new User("제로", "image", "google", "1234", new Group());
+        User writer = new User("제로", "image", "google", "1234", UserRole.ROLE_USER);
         ReflectionTestUtils.setField(writer, "id", 1L);
         Product product = Product.builder()
                                  .title("텀블러 팝니다")

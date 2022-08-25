@@ -11,8 +11,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.saiko.bidmarket.bidding.entity.Bidding;
 import com.saiko.bidmarket.product.Category;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 
 public class ProductTest {
   @Nested
@@ -126,7 +126,7 @@ public class ProductTest {
         .profileImage("imageURL")
         .provider("provider")
         .providerId("providerId")
-        .group(new Group())
+        .userRole(UserRole.ROLE_USER)
         .build();
   }
 

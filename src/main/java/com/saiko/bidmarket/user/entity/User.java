@@ -7,11 +7,11 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -48,9 +48,8 @@ public class User extends BaseTime {
   @Column(length = 80)
   private String providerId;
 
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "group_id")
-  private Group group;
+  @Enumerated(EnumType.STRING)
+  private UserRole userRole;
 
   private static final String DEFAULT_DELETE_NAME = "Unknown";
 
@@ -60,19 +59,20 @@ public class User extends BaseTime {
       String profileImage,
       String provider,
       String providerId,
-      Group group
+      UserRole userRole
   ) {
+
     Assert.isTrue(isNotBlank(username), "Username must be provided");
     Assert.isTrue(isNotBlank(profileImage), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(provider), "ProfileImage must be provided");
     Assert.isTrue(isNotBlank(providerId), "ProviderId must be provided");
-    Assert.notNull(group, "Group must be provided");
+    Assert.notNull(userRole, "UserRole must be provided");
 
     this.username = username;
     this.profileImage = profileImage;
     this.provider = provider;
     this.providerId = providerId;
-    this.group = group;
+    this.userRole = userRole;
   }
 
   public boolean isSameUser(long id) {
@@ -104,7 +104,7 @@ public class User extends BaseTime {
   public static User of(
       OAuth2User oAuth2User,
       String provider,
-      Group group
+      UserRole userRole
   ) {
     Map<String, Object> attributes = oAuth2User.getAttributes();
 
@@ -118,7 +118,7 @@ public class User extends BaseTime {
         .profileImage(profileImage)
         .provider(provider)
         .providerId(providerId)
-        .group(group)
+        .userRole(userRole)
         .build();
 
   }

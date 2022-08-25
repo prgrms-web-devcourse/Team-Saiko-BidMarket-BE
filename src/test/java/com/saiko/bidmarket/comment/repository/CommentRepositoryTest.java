@@ -21,9 +21,8 @@ import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
-import com.saiko.bidmarket.user.repository.GroupRepository;
+import com.saiko.bidmarket.user.entity.UserRole;
 import com.saiko.bidmarket.user.repository.UserRepository;
 
 @DataJpaTest()
@@ -33,9 +32,6 @@ import com.saiko.bidmarket.user.repository.UserRepository;
 public class CommentRepositoryTest {
   @Autowired
   private CommentRepository commentRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -68,17 +64,13 @@ public class CommentRepositoryTest {
       @DisplayName("등록순으로 정렬된 상품 목록 리스트를 반환한다")
       void itReturnCreatedAtAscProductList() {
         // given
-        Group group = groupRepository
-            .findById(1L)
-            .get();
-
         User writer = User
             .builder()
             .username("제로")
             .profileImage("image")
             .provider("google")
             .providerId("123")
-            .group(group)
+            .userRole(UserRole.ROLE_USER)
             .build();
         writer = userRepository.save(writer);
         Product product = productRepository.save(Product
@@ -98,7 +90,7 @@ public class CommentRepositoryTest {
             .profileImage("image")
             .provider("google")
             .providerId("1234")
-            .group(group)
+            .userRole(UserRole.ROLE_USER)
             .build();
 
         commentWriter = userRepository.save(commentWriter);

@@ -20,8 +20,8 @@ import com.saiko.bidmarket.common.config.QueryDslConfig;
 import com.saiko.bidmarket.product.Category;
 import com.saiko.bidmarket.product.entity.Product;
 import com.saiko.bidmarket.product.repository.ProductRepository;
-import com.saiko.bidmarket.user.entity.Group;
 import com.saiko.bidmarket.user.entity.User;
+import com.saiko.bidmarket.user.entity.UserRole;
 
 @DataJpaTest()
 @ActiveProfiles("test")
@@ -41,12 +41,8 @@ class UserRepositoryTest {
   @Autowired
   BiddingRepository biddingRepository;
 
-  @Autowired
-  GroupRepository groupRepository;
-
   private User getUser(
       String name,
-      Group group,
       String providerId
   ) {
     return User
@@ -55,7 +51,7 @@ class UserRepositoryTest {
         .provider("test")
         .providerId(providerId)
         .profileImage("test")
-        .group(group)
+        .userRole(UserRole.ROLE_USER)
         .build();
   }
 
@@ -91,12 +87,8 @@ class UserRepositoryTest {
 
     String bidderName = "testWinner";
 
-    Group userGroup = groupRepository
-        .findByName("USER_GROUP")
-        .get();
-
-    User user1 = getUser("test1", userGroup, "test1");
-    User user2 = getUser(bidderName, userGroup, "test2");
+    User user1 = getUser("test1", "test1");
+    User user2 = getUser(bidderName, "test2");
     User savedUser1 = userRepository.save(user1);
     User savedUser2 = userRepository.save(user2);
 
